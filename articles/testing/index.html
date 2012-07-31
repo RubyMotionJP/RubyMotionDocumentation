@@ -1051,7 +1051,7 @@ a.image {
 <h1>Writing Tests for RubyMotion Apps</h1>
 <div id="preamble">
 <div class="sectionbody">
-<div class="paragraph"><p>このドキュメントは、既存の RubyMotion アプリに対して機能テストを記述する方法を説明します。テストは、遵守することになっている仕様のセットを提供し、謝ったコード変更によるリグレッションを捕捉するために使用できます。</p></div>
+<div class="paragraph"><p>このドキュメントは、既存の RubyMotion アプリケーションに対して機能テストを記述する方法を説明します。テストは、遵守することになっている仕様のセットを提供し、謝ったコード変更によるリグレッションを捕捉するために使用できます。</p></div>
 </div>
 </div>
 <div id="toc">
@@ -1086,7 +1086,7 @@ a.image {
 <pre>$ rake spec</pre>
 </div>
 </div>
-<div class="paragraph"><p>このコマンドは、Spec フレームワーク、ヘルパー、Spec ファイルを含んだ特別バージョンのアプリケーションをコンパイルします。そして、シミュレータ上でバックグラウンドで実行します。</p></div>
+<div class="paragraph"><p>このコマンドは、Spec フレームワーク、ヘルパー、Spec ファイルを含んだ特別バージョンのアプリケーションをコンパイルします。そして、シミュレータ上でバックグラウンド実行します。</p></div>
 <div class="paragraph"><p>いったん spec が実行されると、プログラムは適切なステータスコード (<span class="monospaced">0</span> の場合は成功、失敗の場合には <span class="monospaced">1</span>) をコマンドラインのプロンプトにもたらします。</p></div>
 </div>
 <div class="sect2">
@@ -1102,7 +1102,7 @@ a.image {
 </div>
 <div class="sect2">
 <h3 id="_output_format">1.5. Output Format</h3>
-<div class="paragraph"><p>環境変数 <span class="monospaced">outpu</span> に値を指定することで、<span class="monospaced">rake spec</span> の出力フォーマットをカスタマイズすることができます。利用可能な出力フォーマットは、<span class="monospaced">spec_dox</span> (デフォルト), <span class="monospaced">fast</span>, <span class="monospaced">test_unit</span>, <span class="monospaced">tap</span> と <span class="monospaced">knock</span> です。</p></div>
+<div class="paragraph"><p>環境変数 <span class="monospaced">output</span> に値を指定することで、<span class="monospaced">rake spec</span> の出力フォーマットをカスタマイズすることができます。利用可能な出力フォーマットは、<span class="monospaced">spec_dox</span> (デフォルト), <span class="monospaced">fast</span>, <span class="monospaced">test_unit</span>, <span class="monospaced">tap</span> と <span class="monospaced">knock</span> です。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>$ rake spec output=test_unit</pre>
@@ -1199,7 +1199,7 @@ end</pre>
 </div>
 <div class="sect2">
 <h3 id="_device_events">3.3. Device Events</h3>
-<div class="paragraph"><p>以降のメソッドはデバイスレベルで影響を与えるイベントを生成します。それらのメソッドは、アクセシビリティラベルや特定のビューをとりません。</p></div>
+<div class="paragraph"><p>以降のメソッドはデバイスレベルで影響を与えるイベントを生成します。それらのメソッドは、アクセシビリティラベルや特定のビューを取りません。</p></div>
 <div class="sect3">
 <h4 id="_rotate_device">3.3.1. rotate_device</h4>
 <div class="paragraph"><p>指定された方向にデバイスを回転させます。</p></div>
@@ -1361,7 +1361,7 @@ views(UIButton) # =&gt; [button1, button2]</pre>
 <td class="icon">
 <img src="../../icons/note.png" alt="Note">
 </td>
-<td class="content">一般的に、すべての UIKit コントローラはアクセシビリティラベルの適切なデフォルト値を持っています。タイトルが“Take over the world”のボタンは、アクセシビリティラベルに同じ値を持っています。しかしながら、カスタムビューを利用したり、デフォルト値を上書きする必要がある場合には、<span class="monospaced">accessibilityLabel</span> 属性を設定することによってそれを行うことができます。</td>
+<td class="content">一般的に、すべての UIKit コントローラはアクセシビリティラベルの適切なデフォルト値を持っています。タイトルが“Take over the world”のボタンは、アクセシビリティラベルに同じ値を持っています。しかしながら、カスタムビューを利用する場合や、デフォルト値を上書きする必要がある場合には、<span class="monospaced">accessibilityLabel</span> 属性を設定することによってそれを行うことができます。</td>
 </tr></table>
 </div>
 <div class="paragraph"><p><em>location</em> を必要とされる場合には、<span class="monospaced">CGPoint</span> のインスタンスか以下の定数のいずれかを指定できます。</p></div>
@@ -1650,7 +1650,7 @@ view('Scrollable scrollview').contentOffset.y # =&gt; 400</pre>
 <div id="footnotes"><hr></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2012-07-31 11:32:22 JST
+Last updated 2012-08-01 00:57:14 JST
 </div>
 </div>
 <script>/*! jQuery v1.7.1 jquery.com | jquery.org/license */
