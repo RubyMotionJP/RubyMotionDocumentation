@@ -2,18 +2,18 @@ Writing Ruby gems for RubyMotion
 ================================
 Laurent Sansonetti <lrz@hipbyte.com>
 
-RubyMotion projects can be extended through the use of RubyGems, the Ruby de-facto packaging system. This article will cover how to write RubyMotion-specific gems.
+Ruby の標準的なパッケージングシステムである RubyGems を使用し、RubyMotion プロジェクトを拡張することができます。この記事では、RubyMotion 固有の gems の記述方法について説明します。
 
-This article was inspired by http://reality.hk/posts/2012/05/22/create-gems-for-rubymotion[Create gems for RubyMotion], by Francis Chong.
+この記事は、Francis Chong による http://reality.hk/posts/2012/05/22/create-gems-for-rubymotion[Create gems for RubyMotion] にインスパイアされました。
 
 Getting started
 ---------------
 
-RubyMotion being a statically-built flavor of the Ruby language, existing Ruby gems will not work out of the box in RubyMotion. RubyMotion gems need to be specifically architectured for RubyMotion itself.
+RubyMotion は静的にビルドする Ruby 言語ですが、RubyMotion では既存の Ruby 用に作られた gems は動作しません。RubyMotion の gems は、RubyMotion 向けに特別に構成する必要があります。
 
-In RubyMotion, gems are required in a project's 'Rakefile' and are responsible to extend the project's configuration, for instance by adding files to the project or introducing new settings or +rake+ tasks.
+RubyMotion では、gems はプロジェクトの 'Rakefile' で require され、プロジェクトの設定を拡張します。たとえば、プロジェクトにファイルを追加したり、新しい設定や、+rake+ タスクを導入します。
 
-In this article we will work with the fictional +foo+ gem, which has the following file tree.
+この記事では、仮の +foo+ という gem を題材にします。その gem は以下のようなファイル構造です。
 
 ----
 foo.gemspec
@@ -21,7 +21,7 @@ lib
   foo.rb
 ----
 
-The +foo+ gem can be used in a RubyMotion project simply by requiring it in its 'Rakefile'.
++foo+ gem は RubyMotion プロジェクトの 'Rakefile' で単に require することで使用できます。
 
 ----
 $:.unshift("/Library/RubyMotion/lib")
@@ -33,9 +33,9 @@ require 'foo'
 # ...
 ----
 
-NOTE: the +require "rubygems"+ line is not necessary if you use Ruby 1.9.
+NOTE: Ruby 1.9 を使用している場合には +require "rubygems"+ は必要ありません。
 
-The +foo.rb+ file is the entry point of the gem.  It is a good idea to protect this file from being required outside RubyMotion, by adding the following code.
++foo.rb+ は gem の最初に呼び出されるファイルです。次のようなコードをこのファイルに追加し、RubyMotion 以外の Ruby から require されることを防止しておくと良いでしょう。
 
 ----
 unless defined?(Motion::Project::Config)
@@ -46,9 +46,9 @@ end
 Adding source files
 -------------------
 
-A Gem can add files to a RubyMotion project, simply by opening the +Motion::Project::App+ block and appending their paths to the +app.files+ variable.
+gem は、+Motion::Project::App+ ブロックを用い +app.files+ 変数へパスを追加することで、RubyMotion プロジェクトにファイルを追加することができます。
 
-As an example, let's assume the +foo+ gem has a bunch of files under the 'lib/foo' directory that are intended to be mixed in to a RubyMotion project.
+例として、'lib/foo' 内にいくつかファイルを保有する +foo+ gem を仮定しましょう。'lib/foo' 内のファイルは RubyMotion プロジェクトへミックスされることを意図しています。
 
 ----
 foo.gemspec
@@ -60,7 +60,7 @@ lib
     foo-controller.rb
 ----
 
-The 'lib/foo.rb' file can be modified as such.
+'lib/foo.rb' は次のように修正することができます。
 
 ----
 unless defined?(Motion::Project::Config)
@@ -74,14 +74,14 @@ Motion::Project::App.setup do |app|
 end
 ----
 
-The 'foo-model.rb', 'foo-view.rb' and 'foo-controller.rb' files will be compiled and used by the build system before any other files in the project.
+'foo-model.rb', 'foo-view.rb' と 'foo-controller.rb' はプロジェクトのほかのファイルよりも前にビルドシステムによってコンパイルされます。
 
 Adding dependencies
 -------------------
 
-The +foo+ gem is not limited to adding source files. Since it has access to the +Motion::Project::Config+ object, it has access to the same set of project settings a RubyMotion project does.
++foo+ gem はソースファイル追加に制限がされていません。そのため、+Motion::Project::Config+ や、RubyMotion プロジェクトで行う同じ設定にアクセスできます。
 
-For instance, we can assume that our +foo+ gem comes with Objective-C source code.
+たとえば、+foo+ gem が Objective-C のソースコードを持っているものと仮定しましょう。 
 
 ----
 foo.gemspec
@@ -95,9 +95,9 @@ vendor
     native-foo-controller.{m,h}
 ----
 
-This code requires the +CoreData+ framework to be linked with the app.
+このコードは +CoreData+ framework をアプリにリンクされることを必要とします。
 
-We can change the 'foo.rb' file accordingly to vendor the native code and set a framework dependency.
+vendor のネイティブコードに応じて 'foo.rb' を変更することができ、framework の依存関係を設定できます。
 
 ----
 unless defined?(Motion::Project::Config)
@@ -116,11 +116,11 @@ end
 Adding +rake+ tasks
 -------------------
 
-A RubyMotion gem can also very easily extend the build system to introduce new +rake+ tasks. 
+RubyMotion gem は新しい +rake+ タスクを導入するためにビルドシステムを拡張することが非常に簡単にできます。
 
-Since the 'foo.rb' file is required within the RubyMotion project 'Rakefile', it's just a matter of defining the tasks there.
+'foo.rb' は RubyMotion プロジェクトの 'Rakefile' ファイル内で require されるので、タスクをそこで定義するだけです。
 
-As an example, let's define the +foo+ task which would connect to an imaginary service.
+例として、核のサービスに接続する +foo+ タスクを定義しましょう。
 
 ----
 unless defined?(Motion::Project::Config)

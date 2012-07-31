@@ -1,54 +1,54 @@
 Writing Tests for RubyMotion Apps
 =================================
 
-This document describes how to write functional tests for an existing RubyMotion app. Tests provide a set of specifications an application is supposed to conform to and can be used to catch regressions after an unfortunate change in the code. 
+このドキュメントは、既存の RubyMotion アプリに対して機能テストを記述する方法を説明します。テストは、遵守することになっている仕様のセットを提供し、謝ったコード変更によるリグレッションを捕捉するために使用できます。
 
 Getting Started
 ---------------
 
-RubyMotion integrates https://github.com/chneukirchen/bacon/[Bacon], a small clone of the popular http://rspec.info/[RSpec] framework written by https://github.com/chneukirchen[Christian Neukirchen].
+RubyMotion では https://github.com/chneukirchen/bacon/[Bacon] が利用できます。これは、有名な http://rspec.info/[RSpec] framework の小規模なクローンで、https://github.com/chneukirchen[Christian Neukirchen] によって開発されました。
 
-More specifically, RubyMotion uses a version of Bacon called https://github.com/alloy/MacBacon[MacBacon] which has been extended to integrate well with iOS. MacBacon is maintained by https://github.com/alloy[Eloy Duran].
+とりわけ、RubyMotion では、iOS 向けに拡張された https://github.com/alloy/MacBacon[MacBacon] と呼ばれるバージョンを使用しています。MacBacon は https://github.com/alloy[Eloy Duran] によってメンテナンスされています。
 
 Spec Files
 ~~~~~~~~~~
 
-Spec files are responsible to contain the tests of your project.
+Spec ファイルはプロジェクトのテストを含みます。
 
-Spec files are created under the 'spec' directory of a RubyMotion project.
+Spec ファイルは RubyMotion プロジェクトの 'spec' ディレクトリ配下に作成されます。
 
-By default, a RubyMotion project has a 'spec/main_spec.rb' file which contains a single test that ensures that the application has a window.
+デフォルトでは、RubyMotion プロジェクトには 'spec/main_spec.rb' ファイルがあり、このファイルにはアプリケーションが単一のウィンドウを持っていることを保証する 1 つのテストが書かれています。
 
 Spec Helpers
 ~~~~~~~~~~~~
 
-Spec helpers can be used to extend the testing framework, for instance by introducing a common set of classes or methods that will be used by the spec files. Spec helpers will be compiled and executed before the actual spec files.
+たとえば Spec ファイルで使用される共通のクラスやメソッドのセットを導入というような、テストフレームワークを拡張するために、Spec ヘルパーは使用できます。Spec ファイルよりも前に、Spec ヘルパーはコンパイル・実行されます。
 
-Spec helpers are created under the 'spec/helpers' directory of a RubyMotion project. An example could be 'spec/helpers/extension.rb'.
+Spec ヘルパーは RubyMotion プロジェクトの 'spec/helpers' ディレクトリ下に作成されます(例 : 'spec/helpers/extension.rb')。
 
-By default, a RubyMotion project has no spec helper.
+デフォルトでは、RubyMotion プロジェクトに Spec ヘルパーは用意されていません。
 
 Running the Tests
 ~~~~~~~~~~~~~~~~~
 
-The +spec+ Rake task can be used to run the test suite of a RubyMotion project.
+RubyMotion プロジェクトのテストスイートを実行するために、rake タスクの +spec+ を使用します。
 
 ----
 $ rake spec
 ----
 
-This command compiles a special version of your app that includes the spec framework, helpers and files and executes it in the simulator in the background.
+このコマンドは、Spec フレームワーク、ヘルパー、Spec ファイルを含んだ特別バージョンのアプリケーションをコンパイルします。そして、シミュレータ上でバックグラウンドで実行します。
 
-Once the specs are performed, the program yields back to the command-line prompt with a proper status code (+0+ in case of success, +1+ otherwise).
+いったん spec が実行されると、プログラムは適切なステータスコード (+0+ の場合は成功、失敗の場合には +1+) をコマンドラインのプロンプトにもたらします。
 
 Run Selected Spec Files
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Sometimes you may not want to run the entire test suite but only one or more isolated spec files.
+テストスイート全体を実行するのではなく、1 つまたはいくつかの Spec ファイルのみを実行したい場合があるかもしれません。
 
-The +files+ environment variable can be set to a series of comma-delimited patterns in order to filter the spec files that should be executed. Patterns can be either the basename of a spec file (without the file extension) or its path.
+実行すべき Spec ファイルをフィルターするために、環境変数 +files+ にカンマ区切りの一連のパターンを設定できます。パターンは、Spec ファイルの basename (ファイルの拡張子を取り除いたもの) か、ファイルパスのいずれかになります。
 
-As an example, the following command will only run the 'spec/foo_spec.rb' and 'spec/bar_spec.rb' files.
+例として、以下のコマンドは 'spec/foo_spec.rb' と 'spec/bar_spec.rb' のみを実行します。
 
 ----
 $ rake spec files=foo_spec,spec/bar_spec.rb
@@ -57,7 +57,7 @@ $ rake spec files=foo_spec,spec/bar_spec.rb
 Output Format
 ~~~~~~~~~~~~~
 
-It is possible to customize the output format of +rake spec+ by specifying a value for the +output+ environment variable. Possible output formats are: +spec_dox+ (default), +fast+, +test_unit+, +tap+ and +knock+.
+環境変数 +outpu+ に値を指定することで、+rake spec+ の出力フォーマットをカスタマイズすることができます。利用可能な出力フォーマットは、+spec_dox+ (デフォルト), +fast+, +test_unit+, +tap+ と +knock+ です。
 
 ----
 $ rake spec output=test_unit
@@ -66,18 +66,16 @@ $ rake spec output=test_unit
 Basic Testing
 -------------
 
-You can refer to MacBacon's https://github.com/alloy/MacBacon/blob/master/README.md[README] file for a list of assertions and core predicates that the framework supports.
+MacBacon フレームワークがサポートしている Assertion や Predicate のリストは、MacBacon の https://github.com/alloy/MacBacon/blob/master/README.md[README] ファイルを参照してください。
 
 Views and Controllers Testing
 -----------------------------
 
-This layer lets you write functional tests for your controllers and interact with its views through
-a set of high-level event generating APIs, by leveraging the functionality of Apple's http://developer.apple.com/library/ios/#documentation/DeveloperTools/Reference/UIAutomationRef/_index.html[UIAutomation] framework without forcing you to write the tests in Javascript.
+このレイヤーでは、コントローラに対する機能テストを記述し、ハイレベルなイベント生成 API を通じてやりとりができます。みなさんは、JavaScript でテストを記述することなく、Apple の http://developer.apple.com/library/ios/#documentation/DeveloperTools/Reference/UIAutomationRef/_index.html[UIAutomation] フレームワーク機能を活用できます。
 
-This consists of a small API available to your specifications, some runloop helpers, and a couple
-of `UIView` extensions.
+小規模な API で構成されており、Spec や、いくつかの Run Loop ヘルパー と `UIView` で利用できます。
 
-IMPORTANT: This is **not** meant for full application acceptance tests. Therefore you should not let the application launch as normal. This can, for instance, be done by using the +RUBYMOTION_ENV+ to return early from +application:didFinishLaunchingWithOptions:+:
+IMPORTANT: これは、完全なアプリケーションの受け入れテストのためのもの **ではありません**。したがって、アプリケーションを通常通り起動させるすべきではありません。たとえば、+application:didFinishLaunchingWithOptions:+ から素早く return するために、+RUBYMOTION_ENV+ を使用することで行えます。
 
 ----
 class AppDelegate
@@ -89,8 +87,7 @@ class AppDelegate
 Configuring your Context
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-You need to tell the specification context which controller will be specified and extend it with
-the required API. You do this by specifying your view controller class in the following way:
+Spec のコンテキストに、コントローラが指定されることを教える必要があります。必要な API で拡張します。次のような方法で、ビューコントローラクラスを指定することで、これを行います。
 
 ----
 describe "The 'taking over the world' view" do
@@ -100,71 +97,58 @@ describe "The 'taking over the world' view" do
 end
 ----
 
-This will, before each specification, instantiate a new window and a new instance of your view
-controller class. These are available in your specifications as `window` and `controller`.
+各 Spec の前に、新しい window とビューコントローラクラスのインスタンスが作成されます。これらは、`window` と `controller` として Spec で利用できます。
 
-TIP: If you need to perform custom instantiation of either the window or controller then you can
-     do so from a `before` filter __before__ calling `tests`.
+TIP: window または controller のカスタムインスタンスの作成を行う必要がある場合には、`tests` の前に呼ばれる `before` でそれを行うことができます。
 
 Storyboards
 ^^^^^^^^^^^
 
-You can test controllers from a http://developer.apple.com/library/ios/#DOCUMENTATION/UIKit/Reference/UIStoryboard_Class/Reference/Reference.html[storyboard]
-by passing the `tests` method the Xcode identifier of the controller in the `:id` option:
+`tests` メソッドに `:id` オプションでコントローラの Xcode identifier を渡すことで、http://developer.apple.com/library/ios/#DOCUMENTATION/UIKit/Reference/UIStoryboard_Class/Reference/Reference.html[storyboard] からコントローラをテストできます。
 
 ----
 tests StoryboardViewController, :id => 'controller-id'
 ----
 
-By default, controllers will be loaded from the __MainStoryboard.storyboard__ file in the project
-__resources__ directory. You can load a controller from a different file by passing the storyboard
-name in the `:storyboard` option.
+デフォルトでは、プロジェクトの __resources__ ディレクトリにある __MainStoryboard.storyboard__ ファイルからコントローラがロードされます。`:storyboard` オプションで storyboard のファイル名を渡すことで、異なるファイルからコントローラをロードすることができます。
 
 ----
 tests StoryboardViewController, :storyboard => 'AlternateStoryboard', :id => 'controller-id'
 ----
 
-TIP: The __Identifier__ field corresponding to the `:id` option is found within the __View Controller__
-     section of the __Attributes Inspector__ in Xcode. The __Attributes Inspector__ can be reached with
-     the __command-option-4__ keyboard shortcut.
+TIP: `:id` オプションに対応する __Identifier__ フィールドは、Xcode で __View Controller__ の __Attributes Inspector__ で確認できます。__Attributes Inspector__ は __command-option-4__ というキーボードショートカットで表示できます。
 
 Durations
 ~~~~~~~~~
 
-Some methods take a `:duration` option which specifies the period of time, in seconds, during which
-events will be generated. This is **always** optional.
+いくつかのメソッドは、秒単位でイベントが生成される期間を指定するために、`:duration` オプションがあります。`:duration` は**常に**オプションです。
 
-TIP: The default duration value can be changed through `Bacon::Functional.default_duration=`.
+TIP: `Bacon::Functional.default_duration=` で、デフォルトの継続時間の値を変更できます。
 
 Device Events
 ~~~~~~~~~~~~~
 
-These methods generate events that operate on the device level. As such, they don’t take an
-accessibility label or specific view.
+以降のメソッドはデバイスレベルで影響を与えるイベントを生成します。それらのメソッドは、アクセシビリティラベルや特定のビューをとりません。
 
 rotate_device
 ^^^^^^^^^^^^^
 
-Rotates the device to the specified orientation.
+指定された方向にデバイスを回転させます。
 
 ----
 rotate_device(:to => orientation, :button => location)
 ----
 
-*     **to**: The orientation to rotate the device to, which can be either `:portrait` or `:landscape`.
-* **button**: Used to indicate a specific portrait/landscape orientation which can be either
-              `:bottom` or `:top` in portrait mode, or either `:left` or `:right` in landscape
-              mode. If omitted, it will default to `:bottom` in portrait mode and `:left` in
-              landscape mode.
+*     **to**: デバイスを回転させる方向。`:portrait` か `:landscape` のいずれかを指定します。
+* **button**: portrait/landscape の向きを示すために使用します。`:portrait` モードでは `:bottom` か `:top` のいずれか、`:landscape` モードでは `:left` か `:right` のいずれかを指定します。省略した場合には、`:portrait` モードでは `:bottom` 、`:landscape` モードでは `:left` がデフォルトとなります。
 
-The following example rotates the device to the landscape orientation with the home button on the
-left-hand side of the device:
+以下の例では、デバイスの左側にホームボタンが来るように、横方向へデバイスを回転します。
 
 ----
 rotate_device :to => :landscape
 ----
 
-Or to have the button on the right-hand side of the device:
+あるいは、デバイスの右側にホームボタンが来なくてはいけない場合には、以下のようになります。
 
 ----
 rotate_device :to => :landscape, :button => :right
@@ -173,23 +157,20 @@ rotate_device :to => :landscape, :button => :right
 accelerate
 ^^^^^^^^^^
 
-Generates accelerometer events.
+加速度のイベントを生成します。
 
 ----
 accelerate(:x => x_axis_acceleration, :y => y_axis_acceleration,
            :z => z_axis_acceleration, :duration => duration)
 ----
 
-From the http://bit.ly/nWAu5X[UIAcceleration class reference]:
+http://bit.ly/nWAu5X[UIAcceleration class reference] より、
 
-* **x**: With the device held in portrait orientation and the screen facing you, the x axis runs
-         from left (negative values) to right (positive values) across the face of the device.
-* **y**: With the device held in portrait orientation and the screen facing you, the y axis runs
-         from bottom (negative values) to top (positive values) across the face of the device.
-* **z**: With the device held in portrait orientation and the screen facing you, the z axis runs
-         from back (negative values) to front (positive values) through the device.
+* **x**: デバイスを縦方向で画面を正面に保持した状態で、x 軸はデバイスの左側 (マイナス) から右側 (プラス) の方向にあります。
+* **y**: デバイスを縦方向で画面を正面に保持した状態で、y 軸はデバイスの底部 (マイナス) から上部 (プラス) の方向にあります。 
+* **z**: デバイスを縦方向で画面を正面に保持した状態で、y 軸はデバイスの背面 (マイナス) から正面 (プラス) の方向にあります。 
 
-This will simulate a device laying still on its back:
+背面方向にデバイスを振る動作をシミュレートするには、次のようになります。
 
 ----
 accelerate :x => 0, :y => 0, :z => -1
@@ -198,40 +179,37 @@ accelerate :x => 0, :y => 0, :z => -1
 shake
 ^^^^^
 
-Essentially generates accelerometer events.
+加速度のイベントを生成します。
 
 ----
 shake()
 ----
 
-Use this when you want to specifically trigger a shake motion event.
+特に上下左右に揺さぶる (Shaking-Motion) イベントを引き起こしたい場合に、このメソッドを使用します。
 
-For more information see the http://bit.ly/MV57Y9[event handling guide].
+詳しくは http://bit.ly/MV57Y9[event handling guide] を参照ください。
 
 Finding Views
 ~~~~~~~~~~~~~
 
-These methods allow you to retrieve views. They traverse down through the view hierarchy, starting
-from the current `window`.
+ビューを取得するためのメソッドをこのセクションで扱います。これらのメソッドは、現在の `window` からビュー階層を下層へ走査します。
 
-If no view matches, then they will keep re-trying it during the `timeout`, which defaults to three
-seconds. This means you don’t need to worry about wether or not the view you’re looking for is
-still being loaded or animated.
+一致するビューがない場合、`timeout` で指定された間はリトライし続けます。`timeout` のデフォルト値は 3 秒です。探しているビューがまだロードされているか、あるいはアニメーションしているかどうか心配する必要はないでしょう。
 
-Finally, if the timeout passes and **no** view matches an exception will be raised.
+タイムアウトが発生し、一致するビューがない場合には例外が発生します。
 
-TIP: The default timeout value can be changed through `Bacon::Functional.default_timeout=`.
+TIP: デフォルトのタイムアウト値は `Bacon::Functional.default_timeout=` で変更できます。
 
 view
 ^^^^
 
-Returns the view that matches the specified accessibility label.
+指定されたアクセシビリティラベルと一致するビューを返します。
 
 ----
 view(label)
 ----
 
-Example:
+例:
 
 ----
 button = UIButton.buttonWithType(UIButtonTypeRoundedRect)
@@ -241,18 +219,18 @@ window.addSubview(button)
 view('Take over the world') # => button
 ----
 
-TIP: See `UIView#viewByName(accessibilityLabel, timeout)`.
+TIP: `UIView#viewByName(accessibilityLabel, timeout)` を参照ください (https://github.com/HipByte/RubyMotion/blob/0928fafe6fffba2a99043bc66725d3b582aa99ae/lib/motion/spec/helpers/ui.rb#L123 で定義されています)。
 
 views
 ^^^^^
 
-Returns an array of all the views that match the given class.
+指定されたクラスと一致するすべてのビューの配列を返します。
 
 ----
 views(view_class)
 ----
 
-Example:
+例:
 
 ----
 button1 = UIButton.buttonWithType(UIButtonTypeRoundedRect)
@@ -266,21 +244,16 @@ window.addSubview(button2)
 views(UIButton) # => [button1, button2]
 ----
 
-TIP: See `UIView#viewsByClass(viewClass, timeout)`.
+TIP: `UIView#viewsByClass(viewClass, timeout)` を参照ください (https://github.com/HipByte/RubyMotion/blob/0928fafe6fffba2a99043bc66725d3b582aa99ae/lib/motion/spec/helpers/ui.rb#L127 で定義されています)。
 
 View Events
 ~~~~~~~~~~~
 
-These methods all operate on views. You specify the view to operate on by its ‘accessibility label’
-or pass in a view instance.
+このセクションで扱うメソッドはすべてビューを操作します。操作するビューのアクセシビリティラベルか、ビューのインスタンスを渡すことでビューを指定します。
 
-NOTE: In general all the UIKit controls will have decent default values for their accessibility
-      labels. E.g. a UIButton with title “Take over the world” will have the same value for its
-      accessibility label. If, however, you have custom views, or otherwise need to override the
-      default, then you can do so by setting its `accessibilityLabel` attribute.
+NOTE: 一般的に、すべての UIKit コントローラはアクセシビリティラベルの適切なデフォルト値を持っています。タイトルが“Take over the world”のボタンは、アクセシビリティラベルに同じ値を持っています。しかしながら、カスタムビューを利用したり、デフォルト値を上書きする必要がある場合には、`accessibilityLabel` 属性を設定することによってそれを行うことができます。
 
-Wherever a ‘location’ is required you can either specify a `CGPoint` instance or use one of the
-following constants:
+'location' を必要とされる場合には、`CGPoint` のインスタンスか以下の定数のいずれかを指定できます。
 
 * `:top_left`
 * `:top`
@@ -291,29 +264,26 @@ following constants:
 * `:bottom_left`
 * `:left`
 
-NOTE: `CGPoint` instances have to be specified in window coordinates.
+NOTE: `CGPoint` のインスタンスは window 座標で指定されなければなりません。
 
-TIP: Some of the methods take a `:from` location and a `:to` location option. If __only__ `:from`
-     or `:to` is specified and __with__ a location constant, then the other option can be omitted
-     and will default to the opposite of the specified location. If, however, a `CGPoint` instance
-     is used, then the other option __has__ to be specified as well.
+TIP: いくつかのメソッドは、`:from` と `:to` を location オプションで取ります。上記の location 定数で `:from` か `:to` のみを指定した場合にはほかのオプションは省略でき、指定した location の反対側がデフォルトで設定されます。 `CGPoint` のインスタンスを使用する場合には、ほかのオプションも同様に指定しなければなりません。
 
 tap
 ^^^
 
-Generates events that simulate tapping a view.
+ビューのタップをシミュレートするイベントを生成します。
 
 ----
 tap(label_or_view, :at => location, :times => number_of_taps, :touches => number_of_fingers)
 ----
 
-All of these options are optional:
+以下のオプションはすべて省略可能です。
 
-*      **at**: The location where the tap will occur. Defaults to the center of the view.
-*   **times**: The number of times to tap the view. Defaults to a single tap.
-* **touches**: The number of fingers used to tap the view. Defaults to a single touch.
+*      **at**: タップを発生させる location を指定します。デフォルトはビューの中央が設定されます。
+*   **times**: ビューをタップする回数を指定します。デフォルトはシングルタップが設定されます。
+* **touches**: ビューをタップするのに使用する指の数を指定します。デフォルトではシングルタッチが設定されます。
 
-Tapping a view __once__ only requires:
+ビューを 1 回タップする場合は次のようになります。
 
 ----
 button = UIButton.buttonWithType(UIButtonTypeRoundedRect)
@@ -323,7 +293,7 @@ window.addSubview(button)
 tap 'Take over the world'
 ----
 
-Tapping a view twice with two fingers requires you to specify those options:
+ビューを 2 回 2 本の指でタップする場合は、次のようにオプションを指定します。
 
 ----
 view = UIView.alloc.initWithFrame(CGRectMake(0, 0, 100, 100))
@@ -339,16 +309,16 @@ tap 'tappable view', :times => 2, :touches => 2
 flick
 ^^^^^
 
-Generates a short fast drag gesture.
+フリック操作のイベントを生成します。
 
 ----
 flick(label_or_view, :from => location, :to => location, :duration => duration)
 ----
 
-* **from**: The location where the drag will start.
-*   **to**: The location where the drag will end.
+* **from**: ドラッグを開始する location を指定します。
+*   **to**: ドラッグが終了する location を指定します。
 
-Flicking a switch would be done like so:
+スイッチをフリックする場合は、次のようになります。
 
 ----
 switch = UISwitch.alloc.initWithFrame(CGRectMake(0, 0, 100, 100))
@@ -361,18 +331,16 @@ flick 'Enable rainbow theme', :to => :right
 pinch_open
 ^^^^^^^^^^
 
-Generates an __opening__ pinch gesture.
+ピンチアウト操作のイベントを生成します。
 
 ----
 pinch_open(label_or_view, :from => location, :to => location, :duration => duration)
 ----
 
-* **from**: The location where __both__ fingers are at the start of the gesture. Defaults to
-            `:left`.
-*   **to**: The location where the __moving__ finger will be at the end of the gesture. Defaults to
-            `:right`.
+* **from**: 両方の指がジェスチャーを開始する location を指定します。デフォルトでは `:left` が設定されます。
+*   **to**: 移動する方の指のジェスチャーが終わる location を指定します。デフォルトでは `:right` が設定されます。
 
-The following zooms in on the content view of a `UIScrollView`:
+以下は、`UIScrollView` のコンテンツを拡大表示します。
 
 ----
 view('Zooming scrollview').zoomScale # => 1.0
@@ -383,17 +351,16 @@ view('Zooming scrollview').zoomScale # => 2.0
 pinch_close
 ^^^^^^^^^^^
 
-Generates a __closing__ pinch gesture.
+ピンチイン操作のイベントを生成します。
 
 ----
 pinch_close(label_or_view, :from => location, :to => location, :duration => duration)
 ----
 
-* **from**: The location where the __moving__ finger will be at the start of the gesture. Defaults
-            to `:right`.
-*   **to**: The location where __both__ fingers are at the end of the gesture. Defaults to `:left`.
+* **from**: 移動する方の指のジェスチャーを開始する location を指定します。デフォルトでは `:right` が設定されます。
+*   **to**: 両方の指がジェスチャーを終了する location を指定します。デフォルトでは `:left` が設定されます。
 
-The following zooms out of the content view of a `UIScrollView`:
+以下は、`UIScrollView` のコンテンツを縮小表示します。
 
 ----
 view('Zooming scrollview').zoomScale # => 1.0
@@ -404,25 +371,22 @@ view('Zooming scrollview').zoomScale # => 0.5
 drag
 ^^^^
 
-Generates a drag gesture (i.e. panning, scrolling) over a path interpolated between the start and
-end location.
+指定された開始・終了位置の間をドラッグする操作のイベントを生成します。
 
 ----
 drag(label_or_view, :from => location, :to => location, :number_of_points => steps,
      :points => path, :touches => number_of_fingers, :duration => duration)
 ----
 
-*             **from**: The location where the drag will start. Not used if `:points` is specified.
-*               **to**: The location where the drag will end. Not used if `:points` is specified.
-* **number_of_points**: The number of points along the path that is interpolated between `:from`
-                        and `:to`. Defaults to 20. Not used if `:points` is specified.
-*           **points**: An array of `CGPoint` instances that specify the drag path.
-*          **touches**: The number of fingers used to drag. Defaults to a single touch.
+*             **from**: ドラッグを開始する location を指定します。`:points` が指定された場合には、使われません。
+*               **to**: ドラッグを終了する location を指定します。`:points` が指定された場合には、使われません。
+* **number_of_points**: `:from` から `:to` を補間するパスのポイント数を指定します。デフォルトでは 20 が設定されます。`:points` が指定された場合には、使われません。
+*           **points**: ドラッグするパスを指定する `CGPoint` インスタンスの配列を指定します。
+*          **touches**: ドラッグに使用する指の数を指定します。デフォルトではシングルタッチが設定されます。
 
-NOTE: Keep in mind that **scrolling** into a direction means **dragging** into the __opposite__
-      direction.
+NOTE: ドラッグした方向とは逆方向にスクロールすることに注意してください。
 
-The following will scroll down in a scroll view:
+以下は、スクロールビューを下へスクロールします。
 
 ----
 view('Scrollable scrollview').contentOffset.y # => 0
@@ -433,13 +397,13 @@ view('Scrollable scrollview').contentOffset.y # => 400
 rotate
 ^^^^^^
 
-Generates a clockwise rotation gesture around the center point of the view.
+ビュー中央を中心に時計回りに回転操作するイベントを生成します。
 
 ----
 rotate(label_or_view, :radians => angle, :degrees => angle, :touches => number_of_fingers,
        :duration => duration)
 ----
 
-* **radians**: The angle of the rotation in radians. Defaults to π.
-* **degrees**: The angle of the rotation in degrees. Defaults to 180.
-* **touches**: The number of fingers used to rotate. Defaults to 2.
+* **radians**: ラジアン単位の回転角度を指定します。デフォルトでは π が設定されます。
+* **degrees**: 度単位の回転角度を指定します。デフォルトでは 180 が設定されます。
+* **touches**: 回転に使用する指の数を指定します。デフォルトでは 2 が設定されます。

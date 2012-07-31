@@ -2,34 +2,34 @@ Submit RubyMotion Apps to TestFlight
 ====================================
 Laurent Sansonetti <lrz@hipbyte.com>
 
-In this article we will cover how you can submit development builds of your RubyMotion apps to http://testflightapp.com[TestFlight].
+この記事では、RubyMotion アプリの開発ビルドを http://testflightapp.com[TestFlight] に提出する方法について説明します。
 
 Synopsis
 --------
 
-TestFlight is a platform that you can use to distribute development builds of your apps to you team members. You receive feedback, console logs and crash reports automatically. It can very useful during the development cycle of an app.
+TestFlight は開発用にビルドしたアプリを配布するために利用できるプラットフォームです。あなたは、フィードバックやコンソールログ、クラッシュレポートを自動的に受信できます。それはアプリの開発サイクルにおいて非常に有用でしょう。
 
-You can create an account on http://testflightapp.com[http://testflightapp.com]. It's free.
+http://testflightapp.com[http://testflightapp.com] で、無料でアカウントを作成することができます。
 
 Installation
 ------------
 
-We recommend the use of the +motion-testflight+ gem which provides a seemingless experience.
++motion-testflight+ gem の使用をお勧めします。
 
 ----
 $ sudo gem install motion-testflight
 ----
 
-The source code of the +motion-testflight+ gem lives on the http://github.com/HipByte/motion-testflight[HipByte/motion-testflight] GitHub repository.
++motion-testflight+ gem のソースコードは Github レポジトリの http://github.com/HipByte/motion-testflight[HipByte/motion-testflight]  にあります。
 
 Unpack the SDK
 --------------
 
-You will need to download the TestFlight SDK package from http://testflightapp.com/sdk/download and unpack it into the 'vendor/TestFlightSDK' directory of your RubyMotion project.
+http://testflightapp.com/sdk/download から TestFlight SDK パッケージをダウンロードし、RubyMotion プロジェクトの 'vendor/TestFlightSDK' ディレクトリに解凍する必要があります。
 
-Create the 'vendor' directory if it does not exist.
+'vendor' ディレクトリがなければ作成します。
 
-You should then have something like this.
+次のように TestFlight SDK を配置します。
 
 ----
 $ ls vendor/TestFlightSDK
@@ -40,15 +40,15 @@ TestFlight.h			release_notes.txt
 Change your project configuration
 ---------------------------------
 
-You will need to change the 'Rakefile' of your project in order to set up the gem.
+gem をセットアップするため、プロジェクトの 'Rakefile' を変更します。
 
-First, you need to require the gem. Add the following line at the beginning of the file, right after the other +require+ statements.
+はじめに、gem を require します。'Rakefile' の先頭で、ほかの require 文の後に次の行を追加します。
 
 ----
 require 'motion-testflight'
 ----
 
-Now that the gem is loaded, it's time to configure it. Inside your application configuration block, add the following lines.
+次に設定します。アプリケーションの Configuration ブロック内に、次の行を追加します。
 
 ----
 Motion::Project::App.setup do |app|
@@ -59,9 +59,9 @@ Motion::Project::App.setup do |app|
 end
 ----
 
-You can retrieve the values for +api_token+ and +team_token+ from your TestFlight account page.
++api_token+ と +team_token+ の値は TestFlight アカウントページから取得することができます。
 
-Optionally, you can use the +distribution_lists+ key if you do want to set up a distribution list for your submissions.
+オプションとして、アプリを提出する配布リストをセットアップする場合には、+distribution_lists+ を使用することができます。
 
 ----
 Motion::Project::App.setup do |app|
@@ -73,9 +73,9 @@ end
 Usage
 -----
 
-You will see that a new rake task is available, +rake testflight+, which will automatically submit a development build of your app to TestFlight.
++rake testflight+ が、新しい rake タスクとして利用できるようになります。このタスクは、TestFlight へアプリの開発ビルドを自動的に提出します。
 
-The +notes+ argument must be provided, its content will be the actual release notes for the submission.
++notes+ 引数の内容は提出したアプリの実際のリリースノートなり、この引数は必須となります。
 
 ----
 $ rake testflight notes='zomg!'

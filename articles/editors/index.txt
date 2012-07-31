@@ -2,44 +2,43 @@ Setting up your editor to work with RubyMotion
 ==============================================
 Laurent Sansonetti <lrz@hipbyte.com>
 
-RubyMotion was designed so that developers do not need to switch to a particular editor or IDE in order to use it and can simply keep using the text editor they already know and love.
+RubyMotion は、開発者が RubyMotion を利用するために特定のエディタや IDE に切り替える必要がないように、そしてお気に入りのエディタを使用し続けることができるように設計されています。
 
-This article covers the text editors that provide support for RubyMotion. We try to keep this article up-to-date following the contributions from the community.
+この記事では RubyMotion をサポートしているテキストエディタを説明します。この記事は、コミュニティーからの貢献によってアップデートされます。
 
 TextMate
 --------
 
-http://macromates.com/[TextMate] is a popular editor on OS X.
+http://macromates.com/[TextMate] は OS X をサポートする有名なエディタです。
 
-A https://github.com/libin/RubyMotion.tmbundle[RubyMotion.tmbundle] plugin is available. It provides code completion and an integration with the build system. It is developed by https://github.com/libin[Libin Pan] and https://github.com/berklee[Berklee].
+https://github.com/libin/RubyMotion.tmbundle[RubyMotion.tmbundle] プラグインが利用できます。このプラグインはコード補完やビルドシステムとの統合した機能を提供します。https://github.com/libin[Libin Pan] と https://github.com/berklee[Berklee] によって開発されています。
 
 Sublime Text
 ------------
 
-http://www.sublimetext.com/[Sublime Text] is a relatively new editor for OS X, Windows and Linux that is gaining a lot of interest.
+http://www.sublimetext.com/[Sublime Text] は多くの注目を集めている、OS X、Windows、そして Linux をサポートする比較的新しいエディタです。
 
-https://github.com/haraken3/SublimeRubyMotionBuilder[SublimeRubyMotionBuilder] is a plugin that provides code completion and an integration with the build system. It is developed by https://github.com/haraken3[Kentaro Hara].
+https://github.com/haraken3/SublimeRubyMotionBuilder[SublimeRubyMotionBuilder] のプラグインは、コード補完やビルドシステムとの統合した機能を提供します。https://github.com/haraken3[Kentaro Hara] によって開発されています。
 
 Redcar
 ------
 
-http://redcareditor.com/[Redcar] is an Open Source editor written in Ruby.
+http://redcareditor.com/[Redcar] は Ruby で記述されているオープンソースなエディタです。
 
-https://github.com/kattrali/redcar-rubymotion[redcar-rubymotion] is a plugin that integrates the RubyMotion workflow in Redcar. All features of RubyMotion are integrated. It is developed by https://github.com/kattrali[Delisa Mason].
+https://github.com/kattrali/redcar-rubymotion[redcar-rubymotion] のプラグインは、Redcar において RubyMotion のワークフローを統合されており、RubyMotion の全ての機能が統合されています。https://github.com/kattrali[Delisa Mason] によって開発されています。
 
 Vim
 ---
 
-http://www.vim.org/[Vim] is the most popular clone of http://en.wikipedia.org/wiki/Vi[vi]. Vim ships in OS X. http://code.google.com/p/macvim/[MacVim] is a flavor of Vim for OS X that runs outside the terminal.
+http://www.vim.org/[Vim] は http://en.wikipedia.org/wiki/Vi[vi] の最も有名なクローンです。Vim は OS X に付属しています。http://code.google.com/p/macvim/[MacVim] は OS X をサポートする Terminal 外で動作するエディタです。
 
-The builtin +rake ctags+ task can be used to generate a +tags+ file containing all the APIs the project can call into. This file can then be used to automatically complete API calls in the editor. RubyMotion uses http://ctags.sourceforge.net/[Exuberant Ctags]. Ctags is a format understood by a variety of text editors, Vim included.
+RubyMotion に組み込まれている、+rake ctags+ タスクはプロジェクトで呼び出せるすべての API を含んだ +tags+ ファイルを生成するために使用することができます。このファイルはエディタで API の自動補完に使用することができます。RubyMotion では http://ctags.sourceforge.net/[Exuberant Ctags] を使用しています。Ctags はさまざまなエディタで利用できるフォーマットで、Vim がそれに含まれています。
 
-Better auto-completion can be provided by using the https://github.com/rcyrus/snipmate-snippets-rubymotion[snipmate-snippets-rubymotion] plugin, courtesy of https://github.com/rcyrus[Rajeev Cyrus].
+https://github.com/rcyrus[Rajeev Cyrus] のおかげで、より良い自動補完は https://github.com/rcyrus/snipmate-snippets-rubymotion[snipmate-snippets-rubymotion] プラグインによって提供されます。
 
 Emacs
 -----
 
-http://www.gnu.org/software/emacs/[Emacs] is a popular text editor. Emacs ships in OS X.
+http://www.gnu.org/software/emacs/[Emacs] は有名なテキストエディタで、OS X に付属しています。
 
-It is possible to configure RubyMotion to emit a +tags+ file readable by Emacs by following the instructions in http://stirredbits.com/blog/2012/05/06/rubymotion-completion-with-emacs/[this article].
-
+http://stirredbits.com/blog/2012/05/06/rubymotion-completion-with-emacs/[this article] の指示に従って、Emacs で読むことが出る +tags+ ファイルを生成するための RubyMotion を構成できます。
