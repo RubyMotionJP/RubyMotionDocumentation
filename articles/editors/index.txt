@@ -25,7 +25,7 @@ Redcar
 
 http://redcareditor.com/[Redcar] は Ruby で記述されているオープンソースなエディタです。
 
-https://github.com/kattrali/redcar-rubymotion[redcar-rubymotion] のプラグインは、Redcar において RubyMotion のワークフローを統合されており、RubyMotion の全ての機能が統合されています。https://github.com/kattrali[Delisa Mason] によって開発されています。
+https://github.com/kattrali/redcar-rubymotion[redcar-rubymotion] のプラグインは、Redcar において RubyMotion のワークフローを統合されており、RubyMotion のすべての機能が統合されています。https://github.com/kattrali[Delisa Mason] によって開発されています。
 
 Vim
 ---

@@ -11,7 +11,7 @@ Getting started
 
 RubyMotion は静的にビルドする Ruby 言語ですが、RubyMotion では既存の Ruby 用に作られた gems は動作しません。RubyMotion の gems は、RubyMotion 向けに特別に構成する必要があります。
 
-RubyMotion では、gems はプロジェクトの 'Rakefile' で require され、プロジェクトの設定を拡張します。たとえば、プロジェクトにファイルを追加したり、新しい設定や、+rake+ タスクを導入します。
+RubyMotion では、gems はプロジェクトの 'Rakefile' で require され、プロジェクトの設定を拡張します。たとえば、プロジェクトにファイルの追加や、新しい設定や、+rake+ タスクを導入します。
 
 この記事では、仮の +foo+ という gem を題材にします。その gem は以下のようなファイル構造です。
 

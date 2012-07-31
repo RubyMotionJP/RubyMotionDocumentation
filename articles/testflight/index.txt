@@ -20,7 +20,7 @@ Installation
 $ sudo gem install motion-testflight
 ----
 
-+motion-testflight+ gem のソースコードは Github レポジトリの http://github.com/HipByte/motion-testflight[HipByte/motion-testflight]  にあります。
++motion-testflight+ gem のソースコードは GitHub レポジトリの http://github.com/HipByte/motion-testflight[HipByte/motion-testflight]  にあります。
 
 Unpack the SDK
 --------------
