@@ -41,4 +41,4 @@ Emacs
 
 http://www.gnu.org/software/emacs/[Emacs] は有名なテキストエディタで、OS X に付属しています。
 
-http://stirredbits.com/blog/2012/05/06/rubymotion-completion-with-emacs/[this article] の指示に従って、Emacs で読むことが出る +tags+ ファイルを生成するための RubyMotion を構成できます。
+http://stirredbits.com/blog/2012/05/06/rubymotion-completion-with-emacs/[this article] の指示に従って、Emacs で読むことができる +tags+ ファイルを生成するための RubyMotion を構成できます。
