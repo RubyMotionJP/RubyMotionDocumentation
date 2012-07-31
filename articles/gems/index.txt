@@ -120,7 +120,7 @@ RubyMotion gem は新しい +rake+ タスクを導入するためにビルドシ
 
 'foo.rb' は RubyMotion プロジェクトの 'Rakefile' ファイル内で require されるので、タスクをそこで定義するだけです。
 
-例として、核のサービスに接続する +foo+ タスクを定義しましょう。
+例として、架空のサービスに接続する +foo+ タスクを定義しましょう。
 
 ----
 unless defined?(Motion::Project::Config)
