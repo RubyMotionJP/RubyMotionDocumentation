@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="generator" content="AsciiDoc 8.6.7">
-<title>Submit RubyMotion Apps to TestFlight</title>
+<title>Debugging RubyMotion applications</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -1043,15 +1043,16 @@ a.image {
 <body class="article" style="max-width:55em">
 <div id="topbar" style="display: none">
 	<div class="title">
-		<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAKCAYAAAEV95QVAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9sGCRMSACDxkZwAAAAidEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIEdJTVAgb24gYSBNYWOHqHdDAAAAZUlEQVQY032PSxbAIAjEIlfygL6ePF3UUvpzNjgSYWwqAMEhUQnANnsC7TQPeJpsVWzMuh2sog4vDTUbqP081zECrW4dtdaQGSIKlWluPyjK+VXxAz5XfcKufCzA130AfQHWB30HZxlPaP080xsAAAAASUVORK5CYII=" width="11" height="10" alt=""><a href="javascript:void(Mizuho.smoothlyScrollToToc())">Submit RubyMotion Apps to TestFlight</a>
+		<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAKCAYAAAEV95QVAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9sGCRMSACDxkZwAAAAidEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIEdJTVAgb24gYSBNYWOHqHdDAAAAZUlEQVQY032PSxbAIAjEIlfygL6ePF3UUvpzNjgSYWwqAMEhUQnANnsC7TQPeJpsVWzMuh2sog4vDTUbqP081zECrW4dtdaQGSIKlWluPyjK+VXxAz5XfcKufCzA130AfQHWB30HZxlPaP080xsAAAAASUVORK5CYII=" width="11" height="10" alt=""><a href="javascript:void(Mizuho.smoothlyScrollToToc())">Debugging RubyMotion applications</a>
 	</div>
 	<a href="javascript:void(0)" id="current_section"></a>
 </div>
 <div id="header">
-<h1>Submit RubyMotion Apps to TestFlight</h1>
+<h1>Debugging RubyMotion applications</h1>
 <div id="preamble">
 <div class="sectionbody">
-<div class="paragraph"><p>この記事では、RubyMotion アプリの開発ビルドを <a href="http://testflightapp.com">TestFlight</a> に提出する方法について説明します。</p></div>
+<div class="paragraph"><p>この記事は、ビルトインのデバッギング機能を用いて RubyMotion プロジェクトをデバッグする方法について説明します。シミュレータやデバイス上で RubyMotion アプリをデバッグすることができます。</p></div>
+<div class="paragraph"><p>この記事の執筆時では、RubyMotion でのデバッギングについてまだ作業中なので、このドキュメントは作業の進捗に合わせて随時変更される可能性があります。</p></div>
 </div>
 </div>
 <span id="author">Laurent Sansonetti</span><br><span id="email" class="monospaced">&lt;<a href="mailto:lrz@hipbyte.com">lrz@hipbyte.com</a>&gt;</span><br><div id="toc">
@@ -1064,72 +1065,269 @@ a.image {
 <div class="sect1">
 <h2 id="_synopsis">1. Synopsis</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>TestFlight は開発用にビルドしたアプリを配布するために利用できるプラットフォームです。あなたは、フィードバックやコンソールログ、クラッシュレポートを自動的に受信できます。それはアプリの開発サイクルにおいて非常に有用でしょう。</p></div>
-<div class="paragraph"><p><a href="http://testflightapp.com">http://testflightapp.com</a> で、無料でアカウントを作成することができます。</p></div>
+<div class="paragraph"><p>RubyMotion のデバッガは GNU Project のデバッガ <a href="http://www.gnu.org/software/gdb/">GDB</a> をベースとしています。</p></div>
+<div class="paragraph"><p>GDB は伝統的に C 言語ベースで書かれたプログラムをデバッグするために用いられてきました。RubyMotion は GDB に Ruby のサポートをもたらし、RubyMotion アプリのプロセスへの接続と内部の調査ができるようにします。</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="../../icons/note.png" alt="Note">
+</td>
+<td class="content">現時点では、GDB サポートは実験的なもので、またとても低レベルなものです。我々の目標は、より高いレベル、より友好的なデバッガを GDB 上に構築し、Ruby 開発者のみなさんにより良いエクスペリエンスを提供することです。</td>
+</tr></table>
+</div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="../../icons/note.png" alt="Note">
+</td>
+<td class="content">執筆時点では、<a href="http://lldb.llvm.org/">LLDB</a> (Apple の新しいデバッガ) はまだ成熟していません。LLDB が成熟したときには最終的にはデバッガを切り替えるかもしれません。</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>このドキュメントは GDB で RubyMotion アプリをデバッグするために必要な主要な機能について説明するもので、GDB の完全なマニュアルではありません。完全なガイドを必要とされる場合には公式の GDB ドキュメントを参照することをお勧めします。</p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_installation">2. Installation</h2>
+<h2 id="_debugging_symbols">2. Debugging symbols</h2>
 <div class="sectionbody">
-<div class="paragraph"><p><span class="monospaced">motion-testflight</span> gem の使用をお勧めします。</p></div>
-<div class="listingblock">
-<div class="content monospaced">
-<pre>$ gem install motion-testflight</pre>
-</div>
-</div>
-<div class="paragraph"><p><span class="monospaced">motion-testflight</span> gem のソースコードは GitHub レポジトリの <a href="http://github.com/HipByte/motion-testflight">HipByte/motion-testflight</a>  にあります。</p></div>
+<div class="paragraph"><p>RubyMotion コンパイラは Ruby 言語向けに <a href="http://www.dwarfstd.org">DWARF</a> と呼ばれるデバッグ用のデータフォーマットを実装しています。これはデバッガやプロファイラといった外部プログラムが、RubyMotion アプリケーションについてソースレベルの情報を取得するためのものです。</p></div>
+<div class="paragraph"><p>メタデータは <em>.dSYM</em> バンドルファイルへ保存されます。このファイルはみなさんのプロジェクトの <em>build</em> ディレクトリの <em>.app</em> バンドルと同じ階層にあります。</p></div>
+<div class="paragraph"><p><span class="monospaced">development</span> と <span class="monospaced">release</span> モードの双方でデバッギング用のシンボルを保持します。しかし、<span class="monospaced">release</span> モードではコンパイル時の最適化が有効となるため、<span class="monospaced">development</span> モードの方がより良いデバッギング体験をもたらすでしょう。たとえば、<span class="monospaced">release</span> モードではローカル変数は CPU レジスタにフィットするように最適化され、デバッガでローカル変数へアクセスできない場合があります。</p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_unpack_the_sdk">3. Unpack the SDK</h2>
+<h2 id="_starting_the_debugger">3. Starting the debugger</h2>
 <div class="sectionbody">
-<div class="paragraph"><p><a href="http://testflightapp.com/sdk/download">http://testflightapp.com/sdk/download</a> から TestFlight SDK パッケージをダウンロードし、RubyMotion プロジェクトの <em>vendor</em> ディレクトリに解凍する必要があります。</p></div>
-<div class="paragraph"><p><em>vendor</em> ディレクトリがなければ作成します。</p></div>
-<div class="paragraph"><p>次のように TestFlight SDK を配置します。</p></div>
+<div class="paragraph"><p>デバッガを起動するために、<span class="monospaced">debug</span> オプションを用います。適切な rake タスクと一緒に、<span class="monospaced">debug</span> オプションに任意の値を設定します。</p></div>
+<div class="paragraph"><p>rake の <span class="monospaced">simulator</span> タスクで作業する場合、インタラクティブシェル (REPL) は置き換えられ、デバッガはアプリに直接付属するようになります。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>$ ls vendor/TestFlight
-README.txt                      libTestFlight.a
-TestFlight.h                    release_notes.txt</pre>
+<pre>$ rake simulator debug=1</pre>
+</div>
+</div>
+<div class="paragraph"><p>rake の <span class="monospaced">device</span> タスクで作業する場合、アプリケーションがデバイスに deploy された後に、ビルドシステムはデバイス上で iOS デバッギングサーバを起動し、そしてシェル上でデバッガがリモートのサーバと接続します。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ rake device debug=1</pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_entering_commands_before_starting">3.1. Entering commands before starting</h3>
+<div class="paragraph"><p>デフォルトでは、デバッガが起動したあとにアプリケーションが実行されます。アプリケションが実行される前に GDB コマンドを実行したいケースがあります。</p></div>
+<div class="paragraph"><p><span class="monospaced">no_continue</span> オプションに任意の値を設定することで、それができるようになります。オプションが設定された場合、デバッガはアプリケーションに対して continue を行わないようになります。これにより、デバッギングの設定などを変更するチャンスがもたらされます(たとえば、ブレークポイントの設定など)。アプリケーションの実行を再開する準備ができたら、<span class="monospaced">continue</span> コマンドを実行しましょう。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ rake debug=1 no_continue=1
+[...]
+(gdb) break hello_view.rb:10
+Breakpoint 4 (hello_view.rb:10) pending.
+(gdb) continue
+Continuing.</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_saving_commands">3.2. Saving commands</h3>
+<div class="paragraph"><p>アプリケーションを実行したときに自動的に実行されたいコマンドをファイルに保存しておくこともできます。</p></div>
+<div class="paragraph"><p>デバッガはプロジェクトのルートディレクトリ内の <em>debugger_cmds</em> というファイルを参照します。もしこのファイルが存在すれば、ファイルの内容は改行文字で区切られたデバッグコマンドのリストとして解釈されます。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ echo "break hello_view.rb:10" &gt; debugger_cmds
+$ rake debug=1
+[...]</pre>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_change_your_project_configuration">4. Change your project configuration</h2>
+<h2 id="_managing_breakpoints">4. Managing breakpoints</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>gem をセットアップするため、プロジェクトの <em>Rakefile</em> を変更します。</p></div>
-<div class="paragraph"><p>はじめに、gem を require します。<em>Rakefile</em> の先頭で、ほかの require 文の後に次の行を追加します。</p></div>
+<div class="paragraph"><p>ブレークポイントを設定するには、<span class="monospaced">break</span> コマンドを用いてソースコードの場所を指定します。デバッガは指定された場所で実行を停止します。停止する場所は <span class="monospaced">file:line</span> という表記を用いて指定します。</p></div>
+<div class="paragraph"><p>例として、次のコマンドは <em>hello_view.rb</em> ファイルの 10 行目にブレークポイントを設定します。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>require 'motion-testflight'</pre>
+<pre>$ break hello_view.rb:10</pre>
 </div>
 </div>
-<div class="paragraph"><p>次に設定します。アプリケーションの Configuration ブロック内に、次の行を追加します。</p></div>
+<div class="paragraph"><p>現在のデバッグ環境で設定されているブレークポイントを確認するには <span class="monospaced">info breakpoints</span> コマンドを用いることができます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>app.testflight.sdk = 'vendor/TestFlight'
-app.testflight.api_token = '&lt;insert your API token here&gt;'
-app.testflight.team_token = '&lt;insert your team token here&gt;'</pre>
+<pre>(gdb) info breakpoints
+Num Type           Disp Enb Address    What
+1   breakpoint     keep y   0x0003b656 &lt;rb_exc_raise+6&gt;
+2   breakpoint     keep y   0x94c13827 &lt;malloc_error_break+6&gt;
+3   breakpoint     keep y   0x0000b1b0 in rb_scope__drawRect:__ at hello_view.rb:10
+        breakpoint already hit 1 time
+[...]</pre>
 </div>
 </div>
-<div class="paragraph"><p><span class="monospaced">api_token</span> と <span class="monospaced">team_token</span> の値は TestFlight アカウントページから取得することができます。</p></div>
-<div class="paragraph"><p>オプションとして、アプリを提出する配布リストをセットアップする場合には、<span class="monospaced">distribution_lists</span> を使用することができます。</p></div>
+<div class="paragraph"><p>先ほど指定したブレークポイント <span class="monospaced">hello_view.rb:10</span> と、それが有効であることを確認できます。<span class="monospaced">enable</span> と <span class="monospaced">disable</span> コマンドは、指定された番号のブレークポイントを有効・無効にすることができます。</p></div>
+<div class="paragraph"><p>私たちが追加したブレークポイントはリストの 3 番で、これを無効にするには次のように実行します。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>app.testflight.distribution_lists = ['CoolKids']</pre>
+<pre>(gdb) disable 3</pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_usage">5. Usage</h2>
+<h2 id="_getting_the_backtrace">5. Getting the backtrace</h2>
 <div class="sectionbody">
-<div class="paragraph"><p><span class="monospaced">rake testflight</span> が、新しい rake タスクとして利用できるようになります。このタスクは、TestFlight へアプリの開発ビルドを自動的に提出します。</p></div>
-<div class="paragraph"><p><span class="monospaced">notes</span> 引数の内容は提出したアプリの実際のリリースノートなり、この引数は必須となります。</p></div>
+<div class="paragraph"><p>ブレークポイントにヒットし実行が停止すると、そのメソッドがどこから呼び出されたのかを教えてくれる、バックトレースを確認することは興味深いことでしょう。</p></div>
+<div class="paragraph"><p><span class="monospaced">backtrace</span> コマンドを用いることで、それを行うことができます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>$ rake testflight notes='zomg!'</pre>
+<pre>Breakpoint 4, rb_scope__drawRect:__ (self=0x43a00003, rect=0x9353a10) at hello_view.rb:10
+10            bgcolor = UIColor.blackColor
+(gdb) backtrace
+#0  rb_scope__drawRect:__ (self=0x43a00003, rect=0x9353a10) at hello_view.rb:10
+#1  0x0000b90f in __unnamed_9 ()
+#2  0x0054b4be in -[UIView(CALayerDelegate) drawLayer:inContext:] ()
+#3  0x01e15a3f in -[CALayer drawInContext:] ()
+#4  0x01e1596b in backing_callback ()
+#5  0x01d27697 in CABackingStoreUpdate_ ()
+#6  0x01e1583c in CA::Layer::display_ ()
+#7  0x01e159ba in -[CALayer _display] ()
+#8  0x01e152b6 in CA::Layer::display ()
+#9  0x01e15994 in -[CALayer display] ()
+#10 0x01e0a0e2 in CA::Layer::display_if_needed ()</pre>
+</div>
+</div>
+<div class="paragraph"><p>みなさんのコードのバックトレース・フレームは <span class="monospaced">rb_scope__</span> というプレフィックスと、ファイル名と行番号の情報で確認することができます。</p></div>
+<div class="sect2">
+<h3 id="_frames">5.1. Frames</h3>
+<div class="paragraph"><p>バックトレースの一番最初のフレームは、ブレークポイントが設定されている <span class="monospaced">drawRect:</span> というメソッドです。ブレークポイントより下の他のフレームはネイティブの iOS から呼び出されたものです。<span class="monospaced">drawRect:</span> は <span class="monospaced">UIView</span> クラスから正しく呼び出されていることが確認できます。</p></div>
+<div class="paragraph"><p><span class="monospaced">frame</span> コマンドを使用すると、バックトレースの特定フレームに切り替えることができます。デフォルトでは、トップフレーム (#0) ですが、状況を確認するためにフレーム #4 へ移動したいと仮定しましょう。次のコマンドを実行することでフレームを切り替えることができます。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>(gdb) frame 4
+[...]</pre>
+</div>
+</div>
+<div class="paragraph"><p>言うまでもありませんが、バックトレースの特定の Ruby で定義されたメソッドへ移動したいときに主に重要となります。</p></div>
+</div>
+<div class="sect2">
+<h3 id="_threads">5.2. Threads</h3>
+<div class="paragraph"><p><span class="monospaced">backtrace</span> コマンドは現在実行しているスレッドのバックトレースのみを表示します。マルチスレッドプログラムを扱う際に、たとえば競合状態をデバッグするときに、実行中のすべてのスレッドのバックトレースを表示したいことがあるでしょう。</p></div>
+<div class="paragraph"><p>次のコマンドを実行すると、Terminal に実行中のすべてのスレッドのバックトレースが表示されます。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>(gdb) thread apply all backtrace
+[...]</pre>
+</div>
+</div>
+<div class="paragraph"><p>フレームの切り替えと同じように、<span class="monospaced">thread</span> コマンドを用いるとデバッガはスレッドを切り替えます。他の実行中スレッドで特定の Ruby メソッドを調査したいという場合に役立つでしょう。次のコマンドを実行すると、デバッガのプロンプトはスレッド #4 に切り替わります。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>(gdb) thread 4
+[...]</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_inspecting_objects">6. Inspecting objects</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>バックトレースを確認したあと、オブジェクトについて調査したいことがあるでしょう。デバッガは特別なコマンドを用いることでそれらを表示します。</p></div>
+<div class="sect2">
+<h3 id="_local_variables">6.1. Local variables</h3>
+<div class="paragraph"><p><span class="monospaced">drawRect:(rect)</span> メソッドで設定されているブレークポイントにヒットして停止しています。ブレークポイントの内容から、<span class="monospaced">self</span> と <span class="monospaced">rect</span> という二つの引数を受け付けるメソッドの内部にいることが分かります。<span class="monospaced">rect</span> は間違いなく <span class="monospaced">CGRect</span> 引数です。<span class="monospaced">self</span> は何でしょうか？</p></div>
+<div class="paragraph"><p>RubyMotion では、<span class="monospaced">self</span> 引数は Ruby で公開されている <span class="monospaced">self</span> オブジェクトへのポインターで、メソッドのレシーバを表しています。デバッガでは、<span class="monospaced">self</span> はメソッドの第一引数として表示されます。</p></div>
+<div class="paragraph"><p><span class="monospaced">print-ruby-object</span> コマンドを使用することで、<span class="monospaced">self</span> と <span class="monospaced">rect</span> の両方の値を調査することができます。 RubyMotion で定義されているこのコマンドは、指定されたオブジェクトに <span class="monospaced">inspect</span> メッセージを送信しその値を返します。このコマンドは利用しやすいように <span class="monospaced">pro</span> というショートカットで呼び出すこともできます。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>Breakpoint 4, rb_scope__drawRect:__ (self=0x43a00003, rect=0x9353a10) at hello_view.rb:10
+10            bgcolor = UIColor.blackColor
+(gdb) print-ruby-object self
+#&lt;HelloView:0x934d580&gt;
+(gdb) pro rect
+#&lt;CGRect origin=#&lt;CGPoint x=0.0 y=0.0&gt; size=#&lt;CGSize width=320.0 height=480.0&gt;&gt;</pre>
+</div>
+</div>
+<div class="paragraph"><p>ローカル変数のリストは <span class="monospaced">info locals</span> コマンドを用いて表示できます。リストでは各ローカル変数のアドレスも表示されます。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>(gdb) info locals
+bgcolor = (VALUE) 0x75a81d0
+red = (VALUE) 0x4
+green = (VALUE) 0x4
+blue = (VALUE) 0x4
+text = (VALUE) 0x75a9020
+font = (VALUE) 0x4</pre>
+</div>
+</div>
+<div class="paragraph"><p>これらのローカル変数は <span class="monospaced">pro</span> コマンドを用いて Terminal 上で個別に調査することもできます。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>(gdb) pro bgcolor
+#&lt;UICachedDeviceWhiteColor:0x75a81d0&gt;
+(gdb) pro text
+"Hello RubyMotion!"
+(gdb) pro font
+nil</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_instance_variables">6.2. Instance variables</h3>
+<div class="paragraph"><p><span class="monospaced">print-ruby-ivar</span> コマンドまたはショートカットの <span class="monospaced">pri</span> を使用することで、オブジェクトのインスタンス変数を表示することができます。</p></div>
+<div class="paragraph"><p>コマンドに二つの引数を与えた場合には、一つ目はインスタンス変数を取得する対象のオブジェクトとなります。二つ目はインスタンス変数を表す文字列でなければなりません。インスタンス変数名には <span class="monospaced">@</span> を必ず含めてください。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>(gdb) pri self "@touches"
+2</pre>
+</div>
+</div>
+<div class="paragraph"><p>一つだけの引数でコマンドを実行すると、コマンドは <span class="monospaced">self</span> から指定されたインスタンス変数を取得します。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>(gdb) pri "@touches"
+2</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_control_flow">7. Control flow</h2>
+<div class="sectionbody">
+<div class="paragraph"><p><span class="monospaced">next</span> コマンドはソースコードレベルで次の行まで実行を継続します。たいていの場合、Ruby ソースコードの次の行までとなります。Terminal には、ソースコードの行が表示されます。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>(gdb) next
+15          UIBezierPath.bezierPathWithRect(frame).fill
+(gdb) next
+17          font = UIFont.systemFontOfSize(24)
+(gdb) next
+18          UIColor.whiteColor.set
+(gdb) next
+19          text.drawAtPoint(CGPoint.new(10, 20), withFont:font)</pre>
+</div>
+</div>
+<div class="paragraph"><p><span class="monospaced">continue</span> コマンドで、ブレークポイントに到達するまで実行を再開します。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>(gdb) continue
+[...]</pre>
+</div>
+</div>
+<div class="paragraph"><p>プログラム実行中に、<span class="monospaced">control+c</span> (<span class="monospaced">^C</span>) をタイプすることでいつでも実行を停止しデバッガのプロンプトに戻ることができます。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>^C
+Program received signal SIGINT, Interrupt.
+0x910217d2 in mach_msg_trap ()
+(gdb)</pre>
+</div>
+</div>
+<div class="paragraph"><p>デバッガを終了する場合には、<span class="monospaced">quit</span> コマンドを実行し終了確認をします。アプリケーションを終了しシェルプロンプトへ戻ります。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>(gdb) quit
+The program is running.  Quit anyway (and detach it)? (y or n) y
+Detaching from process 91850.
+$</pre>
 </div>
 </div>
 </div>
