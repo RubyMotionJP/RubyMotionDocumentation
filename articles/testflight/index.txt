@@ -17,7 +17,7 @@ Installation
 +motion-testflight+ gem の使用をお勧めします。
 
 ----
-$ sudo gem install motion-testflight
+$ gem install motion-testflight
 ----
 
 +motion-testflight+ gem のソースコードは GitHub レポジトリの http://github.com/HipByte/motion-testflight[HipByte/motion-testflight]  にあります。
@@ -25,14 +25,14 @@ $ sudo gem install motion-testflight
 Unpack the SDK
 --------------
 
-http://testflightapp.com/sdk/download から TestFlight SDK パッケージをダウンロードし、RubyMotion プロジェクトの 'vendor/TestFlightSDK' ディレクトリに解凍する必要があります。
+http://testflightapp.com/sdk/download から TestFlight SDK パッケージをダウンロードし、RubyMotion プロジェクトの 'vendor' ディレクトリに解凍する必要があります。
 
 'vendor' ディレクトリがなければ作成します。
 
 次のように TestFlight SDK を配置します。
 
 ----
-$ ls vendor/TestFlightSDK
+$ ls vendor/TestFlight
 README.txt			libTestFlight.a
 TestFlight.h			release_notes.txt
 ----
@@ -51,12 +51,9 @@ require 'motion-testflight'
 次に設定します。アプリケーションの Configuration ブロック内に、次の行を追加します。
 
 ----
-Motion::Project::App.setup do |app|
-  # ...
-  app.testflight.sdk = 'vendor/TestFlight'
-  app.testflight.api_token = '<insert your API token here>'
-  app.testflight.team_token = '<insert your team token here>'
-end
+app.testflight.sdk = 'vendor/TestFlight'
+app.testflight.api_token = '<insert your API token here>'
+app.testflight.team_token = '<insert your team token here>'
 ----
 
 +api_token+ と +team_token+ の値は TestFlight アカウントページから取得することができます。
@@ -64,10 +61,7 @@ end
 オプションとして、アプリを提出する配布リストをセットアップする場合には、+distribution_lists+ を使用することができます。
 
 ----
-Motion::Project::App.setup do |app|
-  # ...
-  app.testflight.distribution_lists = ['CoolKids']
-end
+app.testflight.distribution_lists = ['CoolKids']
 ----
 
 Usage

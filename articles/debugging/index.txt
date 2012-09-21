@@ -1,0 +1,271 @@
+Debugging RubyMotion applications
+=================================
+Laurent Sansonetti <lrz@hipbyte.com>
+
+この記事は、ビルトインのデバッギング機能を用いて RubyMotion プロジェクトをデバッグする方法について説明します。シミュレータやデバイス上で RubyMotion アプリをデバッグすることができます。
+
+この記事の執筆時では、RubyMotion でのデバッギングについてまだ作業中なので、このドキュメントは作業の進捗に合わせて随時変更される可能性があります。
+
+Synopsis
+--------
+
+RubyMotion のデバッガは GNU Project のデバッガ http://www.gnu.org/software/gdb/[GDB] をベースとしています。
+
+GDB は伝統的に C 言語ベースで書かれたプログラムをデバッグするために用いられてきました。RubyMotion は GDB に Ruby のサポートをもたらし、RubyMotion アプリのプロセスへの接続と内部の調査ができるようにします。
+
+NOTE: 現時点では、GDB サポートは実験的なもので、またとても低レベルなものです。我々の目標は、より高いレベル、より友好的なデバッガを GDB 上に構築し、Ruby 開発者のみなさんにより良いエクスペリエンスを提供することです。
+
+NOTE: 執筆時点では、http://lldb.llvm.org/[LLDB] (Apple の新しいデバッガ) はまだ成熟していません。LLDB が成熟したときには最終的にはデバッガを切り替えるかもしれません。
+
+このドキュメントは GDB で RubyMotion アプリをデバッグするために必要な主要な機能について説明するもので、GDB の完全なマニュアルではありません。完全なガイドを必要とされる場合には公式の GDB ドキュメントを参照することをお勧めします。
+
+Debugging symbols
+-----------------
+
+RubyMotion コンパイラは Ruby 言語向けに http://www.dwarfstd.org[DWARF] と呼ばれるデバッグ用のデータフォーマットを実装しています。これはデバッガやプロファイラといった外部プログラムが、RubyMotion アプリケーションについてソースレベルの情報を取得するためのものです。
+
+メタデータは '.dSYM' バンドルファイルへ保存されます。このファイルはみなさんのプロジェクトの 'build' ディレクトリの '.app' バンドルと同じ階層にあります。
+
++development+ と +release+ モードの双方でデバッギング用のシンボルを保持します。しかし、+release+ モードではコンパイル時の最適化が有効となるため、+development+ モードの方がより良いデバッギング体験をもたらすでしょう。たとえば、+release+ モードではローカル変数は CPU レジスタにフィットするように最適化され、デバッガでローカル変数へアクセスできない場合があります。
+
+Starting the debugger
+---------------------
+
+デバッガを起動するために、+debug+ オプションを用います。適切な rake タスクと一緒に、+debug+ オプションに任意の値を設定します。
+
+rake の +simulator+ タスクで作業する場合、インタラクティブシェル (REPL) は置き換えられ、デバッガはアプリに直接付属するようになります。
+
+----
+$ rake simulator debug=1
+----
+
+rake の +device+ タスクで作業する場合、アプリケーションがデバイスに deploy された後に、ビルドシステムはデバイス上で iOS デバッギングサーバを起動し、そしてシェル上でデバッガがリモートのサーバと接続します。
+
+----
+$ rake device debug=1
+----
+
+Entering commands before starting
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+デフォルトでは、デバッガが起動したあとにアプリケーションが実行されます。アプリケションが実行される前に GDB コマンドを実行したいケースがあります。
+
++no_continue+ オプションに任意の値を設定することで、それができるようになります。オプションが設定された場合、デバッガはアプリケーションに対して continue を行わないようになります。これにより、デバッギングの設定などを変更するチャンスがもたらされます(たとえば、ブレークポイントの設定など)。アプリケーションの実行を再開する準備ができたら、+continue+ コマンドを実行しましょう。
+
+----
+$ rake debug=1 no_continue=1
+[...]
+(gdb) break hello_view.rb:10
+Breakpoint 4 (hello_view.rb:10) pending.
+(gdb) continue
+Continuing.
+----
+
+Saving commands
+~~~~~~~~~~~~~~~
+
+アプリケーションを実行したときに自動的に実行されたいコマンドをファイルに保存しておくこともできます。
+
+デバッガはプロジェクトのルートディレクトリ内の 'debugger_cmds' というファイルを参照します。もしこのファイルが存在すれば、ファイルの内容は改行文字で区切られたデバッグコマンドのリストとして解釈されます。
+
+----
+$ echo "break hello_view.rb:10" > debugger_cmds
+$ rake debug=1
+[...]
+----
+
+Managing breakpoints
+--------------------
+
+ブレークポイントを設定するには、+break+ コマンドを用いてソースコードの場所を指定します。デバッガは指定された場所で実行を停止します。停止する場所は +file:line+ という表記を用いて指定します。
+
+例として、次のコマンドは 'hello_view.rb' ファイルの 10 行目にブレークポイントを設定します。
+
+----
+$ break hello_view.rb:10 
+----
+
+現在のデバッグ環境で設定されているブレークポイントを確認するには +info breakpoints+ コマンドを用いることができます。
+
+----
+(gdb) info breakpoints 
+Num Type           Disp Enb Address    What
+1   breakpoint     keep y   0x0003b656 <rb_exc_raise+6>
+2   breakpoint     keep y   0x94c13827 <malloc_error_break+6>
+3   breakpoint     keep y   0x0000b1b0 in rb_scope__drawRect:__ at hello_view.rb:10
+	breakpoint already hit 1 time
+[...]
+----
+
+先ほど指定したブレークポイント +hello_view.rb:10+ と、それが有効であることを確認できます。+enable+ と +disable+ コマンドは、指定された番号のブレークポイントを有効・無効にすることができます。
+
+私たちが追加したブレークポイントはリストの 3 番で、これを無効にするには次のように実行します。
+
+----
+(gdb) disable 3
+----
+
+Getting the backtrace
+---------------------
+
+ブレークポイントにヒットし実行が停止すると、そのメソッドがどこから呼び出されたのかを教えてくれる、バックトレースを確認することは興味深いことでしょう。
+
++backtrace+ コマンドを用いることで、それを行うことができます。
+
+----
+Breakpoint 4, rb_scope__drawRect:__ (self=0x43a00003, rect=0x9353a10) at hello_view.rb:10
+10	      bgcolor = UIColor.blackColor
+(gdb) backtrace
+#0  rb_scope__drawRect:__ (self=0x43a00003, rect=0x9353a10) at hello_view.rb:10
+#1  0x0000b90f in __unnamed_9 ()
+#2  0x0054b4be in -[UIView(CALayerDelegate) drawLayer:inContext:] ()
+#3  0x01e15a3f in -[CALayer drawInContext:] ()
+#4  0x01e1596b in backing_callback ()
+#5  0x01d27697 in CABackingStoreUpdate_ ()
+#6  0x01e1583c in CA::Layer::display_ ()
+#7  0x01e159ba in -[CALayer _display] ()
+#8  0x01e152b6 in CA::Layer::display ()
+#9  0x01e15994 in -[CALayer display] ()
+#10 0x01e0a0e2 in CA::Layer::display_if_needed ()
+----
+
+みなさんのコードのバックトレース・フレームは +rb_scope__+ というプレフィックスと、ファイル名と行番号の情報で確認することができます。
+
+Frames
+~~~~~~
+
+バックトレースの一番最初のフレームは、ブレークポイントが設定されている +drawRect:+ というメソッドです。ブレークポイントより下の他のフレームはネイティブの iOS から呼び出されたものです。+drawRect:+ は +UIView+ クラスから正しく呼び出されていることが確認できます。
+
++frame+ コマンドを使用すると、バックトレースの特定フレームに切り替えることができます。デフォルトでは、トップフレーム (#0) ですが、状況を確認するためにフレーム #4 へ移動したいと仮定しましょう。次のコマンドを実行することでフレームを切り替えることができます。
+
+----
+(gdb) frame 4
+[...]
+----
+
+言うまでもありませんが、バックトレースの特定の Ruby で定義されたメソッドへ移動したいときに主に重要となります。
+
+Threads
+~~~~~~~
+
++backtrace+ コマンドは現在実行しているスレッドのバックトレースのみを表示します。マルチスレッドプログラムを扱う際に、たとえば競合状態をデバッグするときに、実行中のすべてのスレッドのバックトレースを表示したいことがあるでしょう。
+
+次のコマンドを実行すると、Terminal に実行中のすべてのスレッドのバックトレースが表示されます。
+
+----
+(gdb) thread apply all backtrace
+[...]
+----
+
+フレームの切り替えと同じように、+thread+ コマンドを用いるとデバッガはスレッドを切り替えます。他の実行中スレッドで特定の Ruby メソッドを調査したいという場合に役立つでしょう。次のコマンドを実行すると、デバッガのプロンプトはスレッド #4 に切り替わります。
+
+----
+(gdb) thread 4
+[...]
+----
+
+Inspecting objects
+------------------
+
+バックトレースを確認したあと、オブジェクトについて調査したいことがあるでしょう。デバッガは特別なコマンドを用いることでそれらを表示します。
+
+Local variables
+~~~~~~~~~~~~~~~
+
++drawRect:(rect)+ メソッドで設定されているブレークポイントにヒットして停止しています。ブレークポイントの内容から、+self+ と +rect+ という二つの引数を受け付けるメソッドの内部にいることが分かります。+rect+ は間違いなく +CGRect+ 引数です。+self+ は何でしょうか？
+
+RubyMotion では、+self+ 引数は Ruby で公開されている +self+ オブジェクトへのポインターで、メソッドのレシーバを表しています。デバッガでは、+self+ はメソッドの第一引数として表示されます。
+
++print-ruby-object+ コマンドを使用することで、+self+ と +rect+ の両方の値を調査することができます。 RubyMotion で定義されているこのコマンドは、指定されたオブジェクトに +inspect+ メッセージを送信しその値を返します。このコマンドは利用しやすいように +pro+ というショートカットで呼び出すこともできます。
+
+----
+Breakpoint 4, rb_scope__drawRect:__ (self=0x43a00003, rect=0x9353a10) at hello_view.rb:10
+10            bgcolor = UIColor.blackColor
+(gdb) print-ruby-object self
+#<HelloView:0x934d580>
+(gdb) pro rect
+#<CGRect origin=#<CGPoint x=0.0 y=0.0> size=#<CGSize width=320.0 height=480.0>>
+----
+
+ローカル変数のリストは +info locals+ コマンドを用いて表示できます。リストでは各ローカル変数のアドレスも表示されます。
+
+----
+(gdb) info locals
+bgcolor = (VALUE) 0x75a81d0
+red = (VALUE) 0x4
+green = (VALUE) 0x4
+blue = (VALUE) 0x4
+text = (VALUE) 0x75a9020
+font = (VALUE) 0x4
+----
+
+これらのローカル変数は +pro+ コマンドを用いて Terminal 上で個別に調査することもできます。
+
+----
+(gdb) pro bgcolor
+#<UICachedDeviceWhiteColor:0x75a81d0>
+(gdb) pro text   
+"Hello RubyMotion!"
+(gdb) pro font
+nil
+----
+
+Instance variables
+~~~~~~~~~~~~~~~~~~
+
++print-ruby-ivar+ コマンドまたはショートカットの +pri+ を使用することで、オブジェクトのインスタンス変数を表示することができます。
+
+コマンドに二つの引数を与えた場合には、一つ目はインスタンス変数を取得する対象のオブジェクトとなります。二つ目はインスタンス変数を表す文字列でなければなりません。インスタンス変数名には +@+ を必ず含めてください。
+
+----
+(gdb) pri self "@touches"
+2
+----
+
+一つだけの引数でコマンドを実行すると、コマンドは +self+ から指定されたインスタンス変数を取得します。
+
+----
+(gdb) pri "@touches"
+2
+----
+
+Control flow
+------------
+
++next+ コマンドはソースコードレベルで次の行まで実行を継続します。たいていの場合、Ruby ソースコードの次の行までとなります。Terminal には、ソースコードの行が表示されます。
+
+----
+(gdb) next
+15	    UIBezierPath.bezierPathWithRect(frame).fill
+(gdb) next
+17	    font = UIFont.systemFontOfSize(24)
+(gdb) next
+18	    UIColor.whiteColor.set
+(gdb) next
+19	    text.drawAtPoint(CGPoint.new(10, 20), withFont:font)
+----
+
++continue+ コマンドで、ブレークポイントに到達するまで実行を再開します。
+
+----
+(gdb) continue
+[...]
+----
+
+プログラム実行中に、+control+c+ (+^C+) をタイプすることでいつでも実行を停止しデバッガのプロンプトに戻ることができます。
+
+----
+^C
+Program received signal SIGINT, Interrupt.
+0x910217d2 in mach_msg_trap ()
+(gdb)
+----
+
+デバッガを終了する場合には、+quit+ コマンドを実行し終了確認をします。アプリケーションを終了しシェルプロンプトへ戻ります。
+
+----
+(gdb) quit
+The program is running.  Quit anyway (and detach it)? (y or n) y
+Detaching from process 91850.
+$
+----
