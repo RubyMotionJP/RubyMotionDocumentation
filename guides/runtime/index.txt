@@ -296,7 +296,7 @@ Functions
 
 C 言語の関数は、+Object+ クラスのメソッドとして使用できます。フレームワークのヘッダファイルで実装されているインライン関数もサポートしてます。
 
-例として、+CGMakePoint+ 関数は Ruby で +CGRect+ 構造体を生成するのに使用できます。
+例として、+CGPointMake+ 関数は Ruby で +CGRect+ 構造体を生成するのに使用できます。
 
 ----
 pt = CGPointMake(100, 200)
