@@ -45,6 +45,7 @@ gem をセットアップするため、プロジェクトの 'Rakefile' を変�
 はじめに、gem を require します。'Rakefile' の先頭で、ほかの require 文の後に次の行を追加します。
 
 ----
+require 'rubygems'
 require 'motion-testflight'
 ----
 

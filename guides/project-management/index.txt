@@ -391,4 +391,6 @@ Distribution
 
 +rake archive+  タスクは開発向け・リリース向けの両方で '.ipa'  のアーカイブを生成するのに利用できます。'.ipa' アーカイブは ad-hoc な配信や App Store への提出に適しています。
 
+App Store 用に '.ipa' アーカイブを作る際には、+rake archive:distribution+ コマンドを使用します。
+
 このタスクは、アプリケーションバンドルを CodeSign するために適切な証明書とプロビジョニングプロファイルが必要となります。

@@ -39,6 +39,7 @@ Usage
 プロジェクトの 'Rakefile' で、さきほどの gem を require する必要があります。
 
 ----
+require 'rubygems'
 require 'motion-cocoapods'
 ----
 
