@@ -48,6 +48,7 @@ Configuration
 | Variable | Discussion
 |+name+ | プロジェクト名 (+String+)。+motion create+ で指定した名前となります。
 |+version+ | プロジェクトのバージョン (+String+)。デフォルト値は +"1.0"+ です。
+|+short_version+ | プロジェクトのショートバージョン (+String+)。 App Store にリリースするごとにユニークな値にする必要があります。デフォルト値は +"1"+ です。
 |+identifier+ | プロジェクト識別子 (+String+)。逆 DNS 形式で指定します。デフォルト値は +"com.yourcompany."+ と +name+ 変数の値を結合した値です。
 |+delegate_class+ | アプリケーションの delegate クラス名 (+String+)。デフォルト値は +"AppDelegate"+ で、このクラスは 'app/main.rb' で定義されています。
 |+files+ | プロジェクトで使用するファイル (+Array+)。デフォルト値は +Dir.glob('./app/**/*.rb')+ を評価した結果となります ('app' ディレクトリ内のすべての '.rb')。
