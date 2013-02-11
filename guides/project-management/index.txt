@@ -66,7 +66,7 @@ Configuration
 |+sdk_version+ | 使用する SDK のバージョン番号 (+String+)。デフォルト値は +xcode_dir+ 内の最新 SDK のバージョン番号です (例 : +"5.0"+)。
 |+deployment_target+ | ターゲットとする SDK のバージョン番号 (+String+)。デフォルト値は +sdk_version+ の値です。古いバージョンの iOS をターゲットするために値を下げることができます (例 : +"4.3"+)。
 |+codesign_certificate+ | CodeSign に使用する証明書の名前を指定します (+String+)。デフォルト値は keychain で最初に見つかる iPhone Developer 証明書です (例 : +"iPhone Developer: Darth Vader (A3LKZY369Q)"+)。
-|+provisioning_profile+ | deployment に使用するプロビジョニングプロファイルのパスを指定します (+String+)。デフォルト値は '~/Library/MobileDevice/Provisioning' で最初に見つかる '.mobileprovision' ファイルです。
+|+provisioning_profile+ | deployment に使用するプロビジョニングプロファイルのパスを指定します (+String+)。デフォルト値は '~/Library/MobileDevice/Provisioning Profiles' で最初に見つかる '.mobileprovision' ファイルです。
 |+seed_id+ | アプリケーションのプロビジョニング識別子 (+String+)。iOSプロビジョニングポータル (iOS Provisioning Portal) によって生成された 10 文字の (App Store内で) ユニークな識別子です。デフォルト値は +provisioning_profile+ で最初に見つかるアプリケーション識別子です。
 |====
 
