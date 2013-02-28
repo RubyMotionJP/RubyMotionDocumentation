@@ -53,6 +53,7 @@ Configuration
 |+delegate_class+ | アプリケーションの delegate クラス名 (+String+)。デフォルト値は +"AppDelegate"+ で、このクラスは 'app/main.rb' で定義されています。
 |+files+ | プロジェクトで使用するファイル (+Array+)。デフォルト値は +Dir.glob('./app/**/*.rb')+ を評価した結果となります ('app' ディレクトリ内のすべての '.rb')。
 |+frameworks+ | リンクする iOS フレームワークの名前 (+Array+)。'/System/Library/Frameworks' で示されるような、public な iOS フレームワークの名前を指定します。ビルドシステムは依存関係に対処できます。たとえば、+"Foundation"+ を利用していれば +"CoreFoundation"+ を指定する必要はありません。デフォルト値は +["UIKit", "Foundation", "CoreGraphics"]+ です。
+|+weak_frameworks+ | +frameworks+ と同様のものですが、+deployment_target+ で指定したバージョンのデバイスで利用可能な場合にのみリンクされます。これは XCode の +Optional+ 設定に関連しており、 +deployment_target+ で使用できないフレームワークを使用するプロジェクトで役立ちます。 http://developer.apple.com/library/ios/#documentation/miscellaneous/conceptual/iphoneostechoverview/iPhoneOSFrameworks/iPhoneOSFrameworks.html[iOS Frameworks] でフレームワークを確認できます。 デフォルト値は空の配列 +[]+ です。
 | +libs+ | リンクするライブラリのパス (+Array+)。システムライブラリの +"/usr/lib/libz.dylib"+ のような、public なライブラリのパスを指定します。デフォルト値は空の配列 +[]+ です。
 |+build_dir+ | アプリをビルドする際に使用するディレクトリのパス (+String+)。プロジェクトディレクトリからの相対パスを指定します。指定されたディレクトリが存在しない場合には、ビルドシステムによって作成されます。もしディレクトリが作成できない場合、テンポラリディレクトリが代わりに使われます。デフォルト値は +"build"+ です。
 |+resources_dir+ | リソースファイルを置くディレクトリのパス (+String+)。プロジェクトディレクトリからの相対パスを指定する必要があります。デフォルト値は +"resources"+ です。
