@@ -795,11 +795,13 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install(3);
+asciidoc.install();
 /*]]>*/
 </script><style type="text/css">
 body {
-	margin: 1em 10% 1em 10%;
+	margin: 1em auto 1em auto;
+	padding: 0 1em 0 1em;
+	max-width: 800px;
 }
 
 a.image {
@@ -876,6 +878,10 @@ a.image {
 
 #comments_lightbox_contents > .shell {
 	margin: 2em;
+}
+
+pre {
+	overflow: auto;
 }
 
 @media print {
@@ -1038,6 +1044,15 @@ a.image {
 	border-bottom-right-radius: 0;
 }
 
+/* http://nicolasgallagher.com/jump-links-and-viewport-positioning/ */
+.anchor_helper {
+	position: relative;
+	display: block;
+	top: -50px;
+	width: 1px;
+	height: 1px;
+}
+
 </style>
 </head>
 <body class="article" style="max-width:55em">
@@ -1049,20 +1064,40 @@ a.image {
 </div>
 <div id="header">
 <h1>RubyMotion Project Management Guide</h1>
-<div id="preamble">
+<span id="author">Laurent Sansonetti</span><br><span id="email" class="monospaced">&lt;<a href="mailto:lrz@hipbyte.com">lrz@hipbyte.com</a>&gt;</span><br><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph"><p>In this guide we will explain how to create new RubyMotion projects, then configure and maintain them.</p></div>
 </div>
 </div>
-<span id="author">Laurent Sansonetti</span><br><span id="email" class="monospaced">&lt;<a href="mailto:lrz@hipbyte.com">lrz@hipbyte.com</a>&gt;</span><br><div id="toc">
-  <div id="toctitle">Table of Contents</div>
-  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+<div id="toc">
+<div id="toctitle">Table of Contents</div>
+<div class="foo toclevel2"><a href="#_creation">1. Creation</a></div>
+<div class="foo toclevel3"><a href="#_project_anatomy">1.1. Project Anatomy</a></div>
+<div class="foo toclevel2"><a href="#_configuration">2. Configuration</a></div>
+<div class="foo toclevel3"><a href="#_files_dependencies">2.1. Files Dependencies</a></div>
+<div class="foo toclevel3"><a href="#_using_3rd_party_libraries">2.2. Using 3rd-Party Libraries</a></div>
+<div class="foo toclevel3"><a href="#_entitlements">2.3. Entitlements</a></div>
+<div class="foo toclevel3"><a href="#_advanced_info_plist_settings">2.4. Advanced Info.plist Settings</a></div>
+<div class="foo toclevel2"><a href="#_build">3. Build</a></div>
+<div class="foo toclevel3"><a href="#_xcode_resource_files">3.1. Xcode Resource Files</a></div>
+<div class="foo toclevel3"><a href="#_parallel_compilation">3.2. Parallel Compilation</a></div>
+<div class="foo toclevel3"><a href="#_cleaning">3.3. Cleaning</a></div>
+<div class="foo toclevel2"><a href="#_simulation">4. Simulation</a></div>
+<div class="foo toclevel3"><a href="#_interactive_console">4.1. Interactive Console</a></div>
+<div class="foo toclevel3"><a href="#_universal_applications">4.2. Universal Applications</a></div>
+<div class="foo toclevel3"><a href="#_retina_mode">4.3. Retina Mode</a></div>
+<div class="foo toclevel3"><a href="#_cleaning_the_sandbox">4.4. Cleaning the Sandbox</a></div>
+<div class="foo toclevel2"><a href="#_testing">5. Testing</a></div>
+<div class="foo toclevel2"><a href="#_archiving">6. Archiving</a></div>
+<div class="foo toclevel3"><a href="#_development_vs_release">6.1. Development vs Release</a></div>
+<div class="foo toclevel3"><a href="#_install_on_device">6.2. Install on Device</a></div>
+<div class="foo toclevel3"><a href="#_distribution">6.3. Distribution</a></div>
 </div>
 </div>
 <div id="content">
 
 <div class="sect1">
-<h2 id="_creation">1. Creation</h2>
+<span class="anchor_helper" id="_creation"></span><h2 data-anchor="_creation">1. Creation</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>RubyMotion の新規プロジェクトを作るには、<em>/usr/bin/motion</em> に <span class="monospaced">create</span> コマンドを指定します。このコマンドにより新規プロジェクトのディレクトリが作成されます。</p></div>
 <div class="listingblock">
@@ -1074,7 +1109,7 @@ Rakefile app resources spec</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_project_anatomy">1.1. Project Anatomy</h3>
+<span class="anchor_helper" id="_project_anatomy"></span><h3 data-anchor="_project_anatomy">1.1. Project Anatomy</h3>
 <div class="paragraph"><p>下の表は、プロジェクトのディレクトリ構成について示したものです。</p></div>
 <table class="tableblock frame-all grid-all" style="
 ">
@@ -1125,7 +1160,7 @@ Rakefile app resources spec</pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_configuration">2. Configuration</h2>
+<span class="anchor_helper" id="_configuration"></span><h2 data-anchor="_configuration">2. Configuration</h2>
 <div class="sectionbody">
 <div class="paragraph"><p><span class="monospaced">rake config</span> タスクは、プロジェクトの設定をダンプします。各設定値には適切なデフォルト値が設定されており、<em>Rakefile</em> を編集することで設定を変更できます。</p></div>
 <table class="tableblock frame-all grid-all" style="
@@ -1164,6 +1199,10 @@ Rakefile app resources spec</pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">frameworks</span></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">リンクする iOS フレームワークの名前 (<span class="monospaced">Array</span>)。<em>/System/Library/Frameworks</em> で示されるような、public な iOS フレームワークの名前を指定します。ビルドシステムは依存関係に対処できます。たとえば、<span class="monospaced">"Foundation"</span> を利用していれば <span class="monospaced">"CoreFoundation"</span> を指定する必要はありません。デフォルト値は <span class="monospaced">["UIKit", "Foundation", "CoreGraphics"]</span> です。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">weak_frameworks</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">frameworks</span> と同様のものですが、<span class="monospaced">deployment_target</span> で指定したバージョンのデバイスで利用可能な場合にのみリンクされます。これは XCode の <span class="monospaced">Optional</span> 設定に関連しており、 <span class="monospaced">deployment_target</span> で使用できないフレームワークを使用するプロジェクトで役立ちます。 <a href="http://developer.apple.com/library/ios/#documentation/miscellaneous/conceptual/iphoneostechoverview/iPhoneOSFrameworks/iPhoneOSFrameworks.html">iOS Frameworks</a> でフレームワークを確認できます。 デフォルト値は空の配列 <span class="monospaced">[]</span> です。</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">libs</span></p></td>
@@ -1239,7 +1278,7 @@ end</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_files_dependencies">2.1. Files Dependencies</h3>
+<span class="anchor_helper" id="_files_dependencies"></span><h3 data-anchor="_files_dependencies">2.1. Files Dependencies</h3>
 <div class="paragraph"><p>デフォルトでは、RubyMotion はファイルシステムによって決定されるソート順でファイルをコンパイルします。RubyMotion アプリケーションが起動したあとで、各ファイルのメインスコープは特定の順序で実行されます。</p></div>
 <div class="paragraph"><p>たとえば、あるファイルで使用する定数が他のファイルで定義しているという依存関係がある場合に、実行順序のカスタマイズが必要となるでしょう。</p></div>
 <div class="listingblock">
@@ -1265,7 +1304,7 @@ end</pre>
 <div class="paragraph"><p>この変更の後は、ビルドシステムは <em>bar.rb</em> の前に <em>foo.rb</em> をコンパイルします。</p></div>
 </div>
 <div class="sect2">
-<h3 id="_using_3rd_party_libraries">2.2. Using 3rd-Party Libraries</h3>
+<span class="anchor_helper" id="_using_3rd_party_libraries"></span><h3 data-anchor="_using_3rd_party_libraries">2.2. Using 3rd-Party Libraries</h3>
 <div class="paragraph"><p>iOS SDK には非常に多くの機能が組み込まれていて、それらを RubyMotion から使用することができます。しかし、時には iOS に不足している機能を提供するサードパーティライブラリを使用しなければならないかもしれません。</p></div>
 <div class="paragraph"><p>RubyMotion でサードパーティライブラリを利用するには、ソースコードがファイルシステム上の存在し利用可能でなければなりません。サードパーティライブラリは、プロジェクトのディレクトリ内 (たとえば、<em>vendor</em> ディレクトリの配下) に置くことをおすすめします。</p></div>
 <div class="paragraph"><p><em>Rakefile</em> で <span class="monospaced">vendor_project</span> メソッドを使用しサードパーティライブラリを設定します。第一引数にはサードパーティライブラリへのパスを必ず指定します (例 : <span class="monospaced">"vendor/OAuth2Client"</span>)。第二引数にはサードパーティライブラリのプロジェクトの種類を示す symbol を必ず指定します (例 : <span class="monospaced">:xcode</span>)。そのほかの引数は key/value のリストとして指定できます。</p></div>
@@ -1339,7 +1378,7 @@ end</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_entitlements">2.3. Entitlements</h3>
+<span class="anchor_helper" id="_entitlements"></span><h3 data-anchor="_entitlements">2.3. Entitlements</h3>
 <div class="paragraph"><p>エンタイトルメント (Entitlements)  はアプリケーションに特定の機能やセキュリティ許可を与えます。システムの特定の機能にアクセスしようとすると、Apple によってエンタイトルメントのリクエストが必要とされるでしょう。</p></div>
 <div class="paragraph"><p>iOS デバイス上で動作するアプリケーションがそのような機能を使用するとき、エンタイトルメントがなければ動作時にエラーとなります。App Store へ登録することもできないでしょう。</p></div>
 <div class="paragraph"><p>エンタイトルメントはビルドの CodeSign 処理中に使用されます。</p></div>
@@ -1357,7 +1396,7 @@ end</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_advanced_info_plist_settings">2.4. Advanced Info.plist Settings</h3>
+<span class="anchor_helper" id="_advanced_info_plist_settings"></span><h3 data-anchor="_advanced_info_plist_settings">2.4. Advanced Info.plist Settings</h3>
 <div class="paragraph"><p>iOS アプリはアプリケーション内にバンドルされた、<em>Info.plist</em>  で設定を記述します。このファイルには key と value の組み合わせを記述します。それらについては  <a href="http://developer.apple.com/library/ios/#documentation/General/Reference/InfoPlistKeyReference/Introduction/Introduction.html">Info.plist reference</a> ガイドで詳細に説明されています。</p></div>
 <div class="paragraph"><p>RubyMotion プロジェクトでは、<em>Info.plist</em> は <em>Rakefile</em>  で設定されたオブジェクトを元にします。たとえば、<em>Info.plist</em> の <span class="monospaced">CFBundleName</span> は <em>Rakefile</em> の <span class="monospaced">name</span> を元にします。Configuration の各オブジェクトは、ほとんどプロジェクトで必要となる設定をします。</p></div>
 <div class="paragraph"><p>しかし、より高度なプロジェクトの設定が必要なケースがあるかもしれません。
@@ -1379,7 +1418,7 @@ end</pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_build">3. Build</h2>
+<span class="anchor_helper" id="_build"></span><h2 data-anchor="_build">3. Build</h2>
 <div class="sectionbody">
 <div class="paragraph"><p><span class="monospaced">rake build</span> タスクは、テンポラリーな <em>build</em> ディレクトリにプロジェクトをビルドします。ビルドには 2 種類あり、一つは (Mac 上で動作する) iOS シミュレータ向け、もう一つは iOS デバイス向けのビルドです。</p></div>
 <div class="paragraph"><p>以下は、ビルド処理中で行われる行程です。</p></div>
@@ -1407,7 +1446,7 @@ end</pre>
 </ol></div>
 <div class="paragraph"><p><em>build</em> タスクは他のタスクの依存関係により実行されるので、通常は明示的に <em>build</em> タスクを実行する必要はありません。</p></div>
 <div class="sect2">
-<h3 id="_xcode_resource_files">3.1. Xcode Resource Files</h3>
+<span class="anchor_helper" id="_xcode_resource_files"></span><h3 data-anchor="_xcode_resource_files">3.1. Xcode Resource Files</h3>
 <div class="paragraph"><p>ビルドシステムは、次の <em>resources</em> ディレクトリ内の Xcode リソースファイルを検出し、適切にコンパイルし生成された <em>.app</em> バンドル内にコピーします。</p></div>
 <table class="tableblock frame-all grid-all" style="
 ">
@@ -1440,7 +1479,7 @@ end</pre>
 <div class="paragraph"><p>コンパイルされたファイルは <em>rake clean</em> によって削除できます。</p></div>
 </div>
 <div class="sect2">
-<h3 id="_parallel_compilation">3.2. Parallel Compilation</h3>
+<span class="anchor_helper" id="_parallel_compilation"></span><h3 data-anchor="_parallel_compilation">3.2. Parallel Compilation</h3>
 <div class="paragraph"><p>Ruby ソースファイルの機械語へのコンパイルは、多くの時間がかかります。</p></div>
 <div class="paragraph"><p>プロジェクトをビルドするのに使用する Mac がマルチコアプロセッサであれば、コンパイル処理を並列分散することができます。非常に多くのファイルを含んだプロジェクトをビルドする場合に、これは非常に役に立つでしょう。</p></div>
 <div class="paragraph"><p>ビルドシステムは、コンパイル処理をどれだけ並列して行えるか決定するために sysctl の <span class="monospaced">machdep.cpu.thread_count</span>  の値を使用します。たとえば、Intel Core i7 プロセッサで動作する MacBook Pro は 4 つのコアを持っています。それぞれのコアは 2 つのスレッドを平行実行できるので、ビルドシステムは最大 8 つのファイルを同時にコンパイルします。</p></div>
@@ -1452,7 +1491,7 @@ end</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_cleaning">3.3. Cleaning</h3>
+<span class="anchor_helper" id="_cleaning"></span><h3 data-anchor="_cleaning">3.3. Cleaning</h3>
 <div class="paragraph"><p><span class="monospaced">rake clean</span> タスクは <em>build</em> ディレクトリを空にし、ベンダープロジェクトの build ディレクトリをクリーンします。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
@@ -1463,7 +1502,7 @@ end</pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_simulation">4. Simulation</h2>
+<span class="anchor_helper" id="_simulation"></span><h2 data-anchor="_simulation">4. Simulation</h2>
 <div class="sectionbody">
 <div class="paragraph"><p><span class="monospaced">rake simulator</span> タスクは iOS シミュレータ向けにプロジェクトをビルドし、シミュレータ上でアプリを実行します。</p></div>
 <div class="paragraph"><p><span class="monospaced">rake</span> のデフォルトタスクは <span class="monospaced">rake simulator</span> のショートカットとなっています。</p></div>
@@ -1474,7 +1513,7 @@ $ rake</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_interactive_console">4.1. Interactive Console</h3>
+<span class="anchor_helper" id="_interactive_console"></span><h3 data-anchor="_interactive_console">4.1. Interactive Console</h3>
 <div class="paragraph"><p>iOS シミュレータ上でアプリを実行するときに、Ruby の <span class="monospaced">irb</span>  と類似した、interactive shell が利用できます。</p></div>
 <div class="paragraph"><p>interactive shell で式を評価できます。interactive shell は実行中のアプリをブロックしません。入力された式は、アプリを実行するメインスレッドに送られます。
 NOTE: REPL (read-eval-print-loop) のサポートはアプリの必要に応じてロードされます。デフォルトでは、シミュレータ向けにビルドされたアプリは、iOS デバイス向けにビルドされたアプリよりもコードが含まれません。</p></div>
@@ -1482,7 +1521,7 @@ NOTE: REPL (read-eval-print-loop) のサポートはアプリの必要に応じ�
 <div class="paragraph"><p>interactive shell にはシミュレータ上で、view を選択する機能もあります。<span class="monospaced">command</span> キーを押しながらマウスをシミュレータのウィンドウ上を移動します。view の周りには赤い枠が表示され、interactive shell 上に選択されているオブジェクトが表示されます。クリックすると、interactive shell は選択した view のコンテキスト (<span class="monospaced">self</span> オブジェクト) で新しい session を開きます。</p></div>
 </div>
 <div class="sect2">
-<h3 id="_universal_applications">4.2. Universal Applications</h3>
+<span class="anchor_helper" id="_universal_applications"></span><h3 data-anchor="_universal_applications">4.2. Universal Applications</h3>
 <div class="paragraph"><p>ユニバーサルアプリケーションは iPhone と iPad デバイスの両方をターゲットとします (詳細はプロジェクトの Configuration の <span class="monospaced">device_family</span> 設定を確認してください)。</p></div>
 <div class="paragraph"><p>このようなケースでは、シミュレータで使用するデバイスの種類を指定できると便利です。シミュレータにはプロジェクトの Configuration 設定で最初に指定されたデバイスを使用します。</p></div>
 <div class="paragraph"><p>デフォルトで起動するシミュレータの種類を、環境変数 <span class="monospaced">device_family</span> で <span class="monospaced">iphone</span> か <span class="monospaced">ipad</span> を指定し変更できます。たとえば、ユニバーサルアプリを iPad シミュレータで起動するには以下のように実行します。</p></div>
@@ -1493,7 +1532,7 @@ NOTE: REPL (read-eval-print-loop) のサポートはアプリの必要に応じ�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_retina_mode">4.3. Retina Mode</h3>
+<span class="anchor_helper" id="_retina_mode"></span><h3 data-anchor="_retina_mode">4.3. Retina Mode</h3>
 <div class="paragraph"><p>環境変数 <span class="monospaced">retina</span> を <span class="monospaced">true</span> と設定することにより、シミュレータを Retina モードで起動することができます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
@@ -1502,7 +1541,7 @@ NOTE: REPL (read-eval-print-loop) のサポートはアプリの必要に応じ�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_cleaning_the_sandbox">4.4. Cleaning the Sandbox</h3>
+<span class="anchor_helper" id="_cleaning_the_sandbox"></span><h3 data-anchor="_cleaning_the_sandbox">4.4. Cleaning the Sandbox</h3>
 <div class="paragraph"><p>各アプリケーションは、iOS シミュレータのサンドボックス内のディレクトリにあります。このディレクトリはアプリケーションバンドルや、<em>Documents</em> 、<em>Library</em> フォルダを含み、ファイルシステムの状態を保持します。シミュレータ上でアプリケーションを実行する際に、サンドボックスがなければ作成され、あるいは既存のサンドボックスにアプリケーションがコピーされます。</p></div>
 <div class="paragraph"><p>シミュレータを実行する前に、アプリケーションのサンドボックスをきれいにしたいと望むかもれません。たとえば、プロジェクトからリソースファイルが削除された場合や、アプリケーションの状態のデータをクリーンアップする必要があるときなどがあげられます。</p></div>
 <div class="paragraph"><p>サンドボックスのクリーンアップは、環境変数 <span class="monospaced">clean</span> に何か値を設定すると、シミュレータを実行する前に、アプリケーションのサンドボックスを掃除します。</p></div>
@@ -1515,7 +1554,7 @@ NOTE: REPL (read-eval-print-loop) のサポートはアプリの必要に応じ�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_testing">5. Testing</h2>
+<span class="anchor_helper" id="_testing"></span><h2 data-anchor="_testing">5. Testing</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>RubyMotion は、アプリケーションの spec を取り扱う、ビルトインの <a href="http://en.wikipedia.org/wiki/Behavior_Driven_Development">Behavior-Driven Development</a> 機能を持っています。RubyMotion は iOS システムと統合するために若干修正した <a href="http://github.com/alloy/MacBacon">Bacon</a> フレームワークを使用します。</p></div>
 <div class="paragraph"><p>spec ファイルは、<em>spec</em> ディレクトリに置かれます。</p></div>
@@ -1547,11 +1586,11 @@ My Awesome App
 </div>
 </div>
 <div class="sect1">
-<h2 id="_archiving">6. Archiving</h2>
+<span class="anchor_helper" id="_archiving"></span><h2 data-anchor="_archiving">6. Archiving</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>RubyMotion プロジェクトは、App Store へアプリを提出し配信するためにアーカイブすることができます。</p></div>
 <div class="sect2">
-<h3 id="_development_vs_release">6.1. Development vs Release</h3>
+<span class="anchor_helper" id="_development_vs_release"></span><h3 data-anchor="_development_vs_release">6.1. Development vs Release</h3>
 <div class="paragraph"><p>RubyMotion プロジェクトは、開発向けあるいはリリース向けにビルドできます。シミュレータ上での実行や開発用の iOS デバイスで実行するために、開発向けにビルドされます。App Store へ提出するためにアーカイブを作成する際にはリリース向けにプロジェクトはビルドされます。</p></div>
 <div class="paragraph"><p>現在、RubyMotion アプリの開発向けとリリース向けのビルドは、実行可能なファイルからすべてのシンボルが取り除かれるかとういう違いだけです。この処理によって、アプリケーションバンドルから、およそ 1 MB のデータを取り除きます。しかしこれはデバッグを困難に、開発には適しません。</p></div>
 <div class="paragraph"><p>プロジェクトをリリース向けにビルドする場合に、<em>Rakefile</em> で異なる設定を行うこともできます。</p></div>
@@ -1568,7 +1607,7 @@ end</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_install_on_device">6.2. Install on Device</h3>
+<span class="anchor_helper" id="_install_on_device"></span><h3 data-anchor="_install_on_device">6.2. Install on Device</h3>
 <div class="paragraph"><p><span class="monospaced">rake device</span> は iOS デバイス向けに開発用のアーカイブをビルドしアップロードします。</p></div>
 <div class="paragraph"><p>1 つの iOS デバイスが Mac と USB 接続していなければいけません。
 この処理では、USB 接続されている最初に見つかった iOS デバイスにアプリケーションがアップロードします。</p></div>
@@ -1598,7 +1637,7 @@ iOS デバイスが USB 接続されていない。
 <div class="paragraph"><p>処理が成功すると、アプリケーションはデバイスの SpringBoard 上で利用できます。</p></div>
 </div>
 <div class="sect2">
-<h3 id="_distribution">6.3. Distribution</h3>
+<span class="anchor_helper" id="_distribution"></span><h3 data-anchor="_distribution">6.3. Distribution</h3>
 <div class="paragraph"><p><span class="monospaced">rake archive</span>  タスクは開発向け・リリース向けの両方で <em>.ipa</em>  のアーカイブを生成するのに利用できます。<em>.ipa</em> アーカイブは ad-hoc な配信や App Store への提出に適しています。</p></div>
 <div class="paragraph"><p>App Store 用に <em>.ipa</em> アーカイブを作る際には、<span class="monospaced">rake archive:distribution</span> コマンドを使用します。</p></div>
 <div class="paragraph"><p>このタスクは、アプリケーションバンドルを CodeSign するために適切な証明書とプロビジョニングプロファイルが必要となります。</p></div>
@@ -1609,7 +1648,7 @@ iOS デバイスが USB 接続されていない。
 <div id="footnotes"><hr></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2013-02-11 14:35:16 JST
+Last updated 2013-02-28 23:26:28 JST
 </div>
 </div>
 <script>/*! jQuery v1.7.1 jquery.com | jquery.org/license */
@@ -1947,6 +1986,7 @@ Mizuho.initializeTopBar = $.proxy(function() {
 	var isMobileDevice = this.isMobileDevice();
 	var timerId;
 	
+	// Create the floating table of contents used in the top bar.
 	var $floattoc = $('<div id="floattoc"></div>').html($('#toc').html());
 	$floattoc.find('#toctitle').remove();
 	$floattoc.find('.comments').remove();
@@ -1965,6 +2005,8 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		self.internalLinkClicked(this, event);
 	});
 	
+	// Callback for when the user clicks on the Table of Contents
+	// button on the top bar.
 	function showFloatingToc() {
 		var scrollUpdateTimerId;
 		
@@ -2057,6 +2099,9 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		$window.bind('scroll', onScroll);
 	}
 	
+	// Called whenever the user scrolls. Updates the title of the
+	// Table of Contents button in the top bar to the section that
+	// the user is currently reading.
 	function update() {
 		if ($title.offset().top + $title.height() < $document.scrollTop()) {
 			if (!$topbar.is(':visible')) {
@@ -2099,6 +2144,7 @@ Mizuho.initializeTopBar = $.proxy(function() {
 			update();
 		}, 100);
 	}
+	
 	
 	if (isMobileDevice) {
 		// Mobile devices don't support position fixed.
