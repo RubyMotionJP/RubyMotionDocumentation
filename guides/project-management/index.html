@@ -1213,12 +1213,12 @@ Rakefile app resources spec</pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">アプリをビルドする際に使用するディレクトリのパス (<span class="monospaced">String</span>)。プロジェクトディレクトリからの相対パスを指定します。指定されたディレクトリが存在しない場合には、ビルドシステムによって作成されます。もしディレクトリが作成できない場合、テンポラリディレクトリが代わりに使われます。デフォルト値は <span class="monospaced">"build"</span> です。</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">resources_dir</span></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">リソースファイルを置くディレクトリのパス (<span class="monospaced">String</span>)。プロジェクトディレクトリからの相対パスを指定する必要があります。デフォルト値は <span class="monospaced">"resources"</span> です。</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">resources_dirs</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">リソースファイルを置くディレクトリのパス (<span class="monospaced">Array</span>)。プロジェクトディレクトリからの相対パスを指定する必要があります。デフォルト値は <span class="monospaced">["resources"]</span> です。</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">specs_dir</span></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">spec ファイルを置くディレクトリのパス (<span class="monospaced">String</span>)。プロジェクトディレクトリからの相対パスを指定する必要があります。デフォルト値は <span class="monospaced">"spec"</span> です。</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spec ファイルを置くディレクトリのパス (<span class="monospaced">String</span>)。デフォルト値は <span class="monospaced">"spec"</span> です。</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">icons</span></p></td>
@@ -1648,7 +1648,7 @@ iOS デバイスが USB 接続されていない。
 <div id="footnotes"><hr></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2013-02-28 23:26:28 JST
+Last updated 2013-03-14 15:32:34 JST
 </div>
 </div>
 <script>/*! jQuery v1.7.1 jquery.com | jquery.org/license */
