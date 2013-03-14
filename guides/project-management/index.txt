@@ -56,7 +56,7 @@ Configuration
 |+weak_frameworks+ | +frameworks+ と同様のものですが、+deployment_target+ で指定したバージョンのデバイスで利用可能な場合にのみリンクされます。これは XCode の +Optional+ 設定に関連しており、 +deployment_target+ で使用できないフレームワークを使用するプロジェクトで役立ちます。 http://developer.apple.com/library/ios/#documentation/miscellaneous/conceptual/iphoneostechoverview/iPhoneOSFrameworks/iPhoneOSFrameworks.html[iOS Frameworks] でフレームワークを確認できます。 デフォルト値は空の配列 +[]+ です。
 | +libs+ | リンクするライブラリのパス (+Array+)。システムライブラリの +"/usr/lib/libz.dylib"+ のような、public なライブラリのパスを指定します。デフォルト値は空の配列 +[]+ です。
 |+build_dir+ | アプリをビルドする際に使用するディレクトリのパス (+String+)。プロジェクトディレクトリからの相対パスを指定します。指定されたディレクトリが存在しない場合には、ビルドシステムによって作成されます。もしディレクトリが作成できない場合、テンポラリディレクトリが代わりに使われます。デフォルト値は +"build"+ です。
-|+resources_dirs+ | リソースファイルを置くディレクトリのパス (+Array+)。プロジェクトディレクトリからの相対パスを指定する必要があります。デフォルト値は +["resources"]+ です。
+|+resources_dirs+ | リソースファイルを置くディレクトリのパス (+Array+)。デフォルト値は +["resources"]+ です。
 |+specs_dir+ | spec ファイルを置くディレクトリのパス (+String+)。デフォルト値は +"spec"+ です。
 |+icons+ | アイコンに使用するリソースファイル名のリスト (+Array+)。例 : +["Icon.png", "Icon-72.png", "Icon@2x.png"]+. アイコンファイルについては http://developer.apple.com/library/ios/#documentation/userexperience/conceptual/mobilehig/IconsImages/IconsImages.html[HIG guidelines] を確認してください。デフォルト値は空の配列 +[]+ です。
 |+fonts+ | リソースディレクトリ内のフォントファイル名のリスト (+Array+)。例 : +["Inconsolata.otf"]+. アプリケーションを生成する際に、フォントが適切に適用されます。デフォルト値は、リソースディレクトリ内のすべての '.ttf' と '.otf' のリストです。デフォルト値を使うことを推奨します。
