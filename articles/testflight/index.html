@@ -795,11 +795,13 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install(3);
+asciidoc.install();
 /*]]>*/
 </script><style type="text/css">
 body {
-	margin: 1em 10% 1em 10%;
+	margin: 1em auto 1em auto;
+	padding: 0 1em 0 1em;
+	max-width: 800px;
 }
 
 a.image {
@@ -876,6 +878,10 @@ a.image {
 
 #comments_lightbox_contents > .shell {
 	margin: 2em;
+}
+
+pre {
+	overflow: auto;
 }
 
 @media print {
@@ -1038,6 +1044,15 @@ a.image {
 	border-bottom-right-radius: 0;
 }
 
+/* http://nicolasgallagher.com/jump-links-and-viewport-positioning/ */
+.anchor_helper {
+	position: relative;
+	display: block;
+	top: -50px;
+	width: 1px;
+	height: 1px;
+}
+
 </style>
 </head>
 <body class="article" style="max-width:55em">
@@ -1049,27 +1064,31 @@ a.image {
 </div>
 <div id="header">
 <h1>Submit RubyMotion Apps to TestFlight</h1>
-<div id="preamble">
+<span id="author">Laurent Sansonetti</span><br><span id="email" class="monospaced">&lt;<a href="mailto:lrz@hipbyte.com">lrz@hipbyte.com</a>&gt;</span><br><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph"><p>この記事では、RubyMotion アプリの開発ビルドを <a href="http://testflightapp.com">TestFlight</a> に提出する方法について説明します。</p></div>
 </div>
 </div>
-<span id="author">Laurent Sansonetti</span><br><span id="email" class="monospaced">&lt;<a href="mailto:lrz@hipbyte.com">lrz@hipbyte.com</a>&gt;</span><br><div id="toc">
-  <div id="toctitle">Table of Contents</div>
-  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+<div id="toc">
+<div id="toctitle">Table of Contents</div>
+<div class="foo toclevel2"><a href="#_synopsis">1. Synopsis</a></div>
+<div class="foo toclevel2"><a href="#_installation">2. Installation</a></div>
+<div class="foo toclevel2"><a href="#_unpack_the_sdk">3. Unpack the SDK</a></div>
+<div class="foo toclevel2"><a href="#_change_your_project_configuration">4. Change your project configuration</a></div>
+<div class="foo toclevel2"><a href="#_usage">5. Usage</a></div>
 </div>
 </div>
 <div id="content">
 
 <div class="sect1">
-<h2 id="_synopsis">1. Synopsis</h2>
+<span class="anchor_helper" id="_synopsis"></span><h2 data-anchor="_synopsis">1. Synopsis</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>TestFlight は開発用にビルドしたアプリを配布するために利用できるプラットフォームです。あなたは、フィードバックやコンソールログ、クラッシュレポートを自動的に受信できます。それはアプリの開発サイクルにおいて非常に有用でしょう。</p></div>
 <div class="paragraph"><p><a href="http://testflightapp.com">http://testflightapp.com</a> で、無料でアカウントを作成することができます。</p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_installation">2. Installation</h2>
+<span class="anchor_helper" id="_installation"></span><h2 data-anchor="_installation">2. Installation</h2>
 <div class="sectionbody">
 <div class="paragraph"><p><span class="monospaced">motion-testflight</span> gem の使用をお勧めします。</p></div>
 <div class="listingblock">
@@ -1081,7 +1100,7 @@ a.image {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_unpack_the_sdk">3. Unpack the SDK</h2>
+<span class="anchor_helper" id="_unpack_the_sdk"></span><h2 data-anchor="_unpack_the_sdk">3. Unpack the SDK</h2>
 <div class="sectionbody">
 <div class="paragraph"><p><a href="http://testflightapp.com/sdk/download">http://testflightapp.com/sdk/download</a> から TestFlight SDK パッケージをダウンロードし、RubyMotion プロジェクトの <em>vendor</em> ディレクトリに解凍する必要があります。</p></div>
 <div class="paragraph"><p><em>vendor</em> ディレクトリがなければ作成します。</p></div>
@@ -1096,7 +1115,7 @@ TestFlight.h                    release_notes.txt</pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_change_your_project_configuration">4. Change your project configuration</h2>
+<span class="anchor_helper" id="_change_your_project_configuration"></span><h2 data-anchor="_change_your_project_configuration">4. Change your project configuration</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>gem をセットアップするため、プロジェクトの <em>Rakefile</em> を変更します。</p></div>
 <div class="paragraph"><p>はじめに、gem を require します。<em>Rakefile</em> の先頭で、ほかの require 文の後に次の行を追加します。</p></div>
@@ -1111,10 +1130,11 @@ require 'motion-testflight'</pre>
 <div class="content monospaced">
 <pre>app.testflight.sdk = 'vendor/TestFlight'
 app.testflight.api_token = '&lt;insert your API token here&gt;'
-app.testflight.team_token = '&lt;insert your team token here&gt;'</pre>
+app.testflight.team_token = '&lt;insert your team token here&gt;'
+app.testflight.app_token = '&lt;insert your app token here&gt;' *(TestFlight SDK 1.2 and greater)*</pre>
 </div>
 </div>
-<div class="paragraph"><p><span class="monospaced">api_token</span> と <span class="monospaced">team_token</span> の値は TestFlight アカウントページから取得することができます。</p></div>
+<div class="paragraph"><p><span class="monospaced">api_token</span> と <span class="monospaced">team_token</span> の値は TestFlight アカウントページから、<span class="monospaced">app_token</span> は アプリのページから取得することができます。</p></div>
 <div class="paragraph"><p>オプションとして、アプリを提出する配布リストをセットアップする場合には、<span class="monospaced">distribution_lists</span> を使用することができます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
@@ -1124,7 +1144,7 @@ app.testflight.team_token = '&lt;insert your team token here&gt;'</pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_usage">5. Usage</h2>
+<span class="anchor_helper" id="_usage"></span><h2 data-anchor="_usage">5. Usage</h2>
 <div class="sectionbody">
 <div class="paragraph"><p><span class="monospaced">rake testflight</span> が、新しい rake タスクとして利用できるようになります。このタスクは、TestFlight へアプリの開発ビルドを自動的に提出します。</p></div>
 <div class="paragraph"><p><span class="monospaced">notes</span> 引数の内容は提出したアプリの実際のリリースノートなり、この引数は必須となります。</p></div>
@@ -1139,7 +1159,7 @@ app.testflight.team_token = '&lt;insert your team token here&gt;'</pre>
 <div id="footnotes"><hr></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2013-01-18 02:07:42 JST
+Last updated 2013-06-03 09:17:52 JST
 </div>
 </div>
 <script>/*! jQuery v1.7.1 jquery.com | jquery.org/license */
@@ -1477,6 +1497,7 @@ Mizuho.initializeTopBar = $.proxy(function() {
 	var isMobileDevice = this.isMobileDevice();
 	var timerId;
 	
+	// Create the floating table of contents used in the top bar.
 	var $floattoc = $('<div id="floattoc"></div>').html($('#toc').html());
 	$floattoc.find('#toctitle').remove();
 	$floattoc.find('.comments').remove();
@@ -1495,6 +1516,8 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		self.internalLinkClicked(this, event);
 	});
 	
+	// Callback for when the user clicks on the Table of Contents
+	// button on the top bar.
 	function showFloatingToc() {
 		var scrollUpdateTimerId;
 		
@@ -1587,6 +1610,9 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		$window.bind('scroll', onScroll);
 	}
 	
+	// Called whenever the user scrolls. Updates the title of the
+	// Table of Contents button in the top bar to the section that
+	// the user is currently reading.
 	function update() {
 		if ($title.offset().top + $title.height() < $document.scrollTop()) {
 			if (!$topbar.is(':visible')) {
@@ -1629,6 +1655,7 @@ Mizuho.initializeTopBar = $.proxy(function() {
 			update();
 		}, 100);
 	}
+	
 	
 	if (isMobileDevice) {
 		// Mobile devices don't support position fixed.

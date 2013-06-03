@@ -795,11 +795,13 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install(3);
+asciidoc.install();
 /*]]>*/
 </script><style type="text/css">
 body {
-	margin: 1em 10% 1em 10%;
+	margin: 1em auto 1em auto;
+	padding: 0 1em 0 1em;
+	max-width: 800px;
 }
 
 a.image {
@@ -876,6 +878,10 @@ a.image {
 
 #comments_lightbox_contents > .shell {
 	margin: 2em;
+}
+
+pre {
+	overflow: auto;
 }
 
 @media print {
@@ -1038,6 +1044,15 @@ a.image {
 	border-bottom-right-radius: 0;
 }
 
+/* http://nicolasgallagher.com/jump-links-and-viewport-positioning/ */
+.anchor_helper {
+	position: relative;
+	display: block;
+	top: -50px;
+	width: 1px;
+	height: 1px;
+}
+
 </style>
 </head>
 <body class="article" style="max-width:55em">
@@ -1049,42 +1064,46 @@ a.image {
 </div>
 <div id="header">
 <h1>Setting up your editor to work with RubyMotion</h1>
-<div id="preamble">
+<span id="author">Laurent Sansonetti</span><br><span id="email" class="monospaced">&lt;<a href="mailto:lrz@hipbyte.com">lrz@hipbyte.com</a>&gt;</span><br><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph"><p>RubyMotion は、開発者が RubyMotion を利用するために特定のエディタや IDE に切り替える必要がないように、そしてお気に入りのエディタを使用し続けることができるように設計されています。</p></div>
 <div class="paragraph"><p>この記事では RubyMotion をサポートしているテキストエディタを説明します。この記事は、コミュニティーからの貢献によってアップデートされます。</p></div>
 </div>
 </div>
-<span id="author">Laurent Sansonetti</span><br><span id="email" class="monospaced">&lt;<a href="mailto:lrz@hipbyte.com">lrz@hipbyte.com</a>&gt;</span><br><div id="toc">
-  <div id="toctitle">Table of Contents</div>
-  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+<div id="toc">
+<div id="toctitle">Table of Contents</div>
+<div class="foo toclevel2"><a href="#_textmate">1. TextMate</a></div>
+<div class="foo toclevel2"><a href="#_sublime_text">2. Sublime Text</a></div>
+<div class="foo toclevel2"><a href="#_redcar">3. Redcar</a></div>
+<div class="foo toclevel2"><a href="#_vim">4. Vim</a></div>
+<div class="foo toclevel2"><a href="#_emacs">5. Emacs</a></div>
 </div>
 </div>
 <div id="content">
 
 <div class="sect1">
-<h2 id="_textmate">1. TextMate</h2>
+<span class="anchor_helper" id="_textmate"></span><h2 data-anchor="_textmate">1. TextMate</h2>
 <div class="sectionbody">
 <div class="paragraph"><p><a href="http://macromates.com/">TextMate</a> は OS X をサポートする有名なエディタです。</p></div>
 <div class="paragraph"><p><a href="https://github.com/libin/RubyMotion.tmbundle">RubyMotion.tmbundle</a> プラグインが利用できます。このプラグインはコード補完やビルドシステムとの統合した機能を提供します。<a href="https://github.com/libin">Libin Pan</a> と <a href="https://github.com/berklee">Berklee</a> によって開発されています。</p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_sublime_text">2. Sublime Text</h2>
+<span class="anchor_helper" id="_sublime_text"></span><h2 data-anchor="_sublime_text">2. Sublime Text</h2>
 <div class="sectionbody">
 <div class="paragraph"><p><a href="http://www.sublimetext.com/">Sublime Text</a> は多くの注目を集めている、OS X、Windows、そして Linux をサポートする比較的新しいエディタです。</p></div>
 <div class="paragraph"><p><a href="https://github.com/haraken3/SublimeRubyMotionBuilder">SublimeRubyMotionBuilder</a> のプラグインは、コード補完やビルドシステムとの統合した機能を提供します。<a href="https://github.com/haraken3">Kentaro Hara</a> によって開発されています。</p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_redcar">3. Redcar</h2>
+<span class="anchor_helper" id="_redcar"></span><h2 data-anchor="_redcar">3. Redcar</h2>
 <div class="sectionbody">
 <div class="paragraph"><p><a href="http://redcareditor.com/">Redcar</a> は Ruby で記述されているオープンソースなエディタです。</p></div>
 <div class="paragraph"><p><a href="https://github.com/kattrali/redcar-rubymotion">redcar-rubymotion</a> のプラグインは、Redcar において RubyMotion のワークフローを統合されており、RubyMotion のすべての機能が統合されています。<a href="https://github.com/kattrali">Delisa Mason</a> によって開発されています。</p></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_vim">4. Vim</h2>
+<span class="anchor_helper" id="_vim"></span><h2 data-anchor="_vim">4. Vim</h2>
 <div class="sectionbody">
 <div class="paragraph"><p><a href="http://www.vim.org/">Vim</a> は <a href="http://en.wikipedia.org/wiki/Vi">vi</a> の最も有名なクローンです。Vim は OS X に付属しています。<a href="http://code.google.com/p/macvim/">MacVim</a> は OS X をサポートする Terminal 外で動作するエディタです。</p></div>
 <div class="paragraph"><p>RubyMotion に組み込まれている、<span class="monospaced">rake ctags</span> タスクはプロジェクトで呼び出せるすべての API を含んだ <span class="monospaced">tags</span> ファイルを生成するために使用することができます。このファイルはエディタで API の自動補完に使用することができます。RubyMotion では <a href="http://ctags.sourceforge.net/">Exuberant Ctags</a> を使用しています。Ctags はさまざまなエディタで利用できるフォーマットで、Vim がそれに含まれています。</p></div>
@@ -1092,17 +1111,17 @@ a.image {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_emacs">5. Emacs</h2>
+<span class="anchor_helper" id="_emacs"></span><h2 data-anchor="_emacs">5. Emacs</h2>
 <div class="sectionbody">
 <div class="paragraph"><p><a href="http://www.gnu.org/software/emacs/">Emacs</a> は有名なテキストエディタで、OS X に付属しています。</p></div>
-<div class="paragraph"><p><a href="http://stirredbits.com/blog/2012/05/06/rubymotion-completion-with-emacs/">this article</a> の指示に従って、Emacs で読むことができる <span class="monospaced">tags</span> ファイルを生成するための RubyMotion を構成できます。</p></div>
+<div class="paragraph"><p><a href="https://github.com/ainame/motion-mode">motion-mode</a> のプラグインは、コード補完やビルドシステムとの統合した機能を提供します。<a href="https://github.com/ainame">Satoshi Namai</a> によって開発されています。</p></div>
 </div>
 </div>
 </div>
 <div id="footnotes"><hr></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2012-08-01 01:20:53 JST
+Last updated 2013-06-03 09:17:52 JST
 </div>
 </div>
 <script>/*! jQuery v1.7.1 jquery.com | jquery.org/license */
@@ -1440,6 +1459,7 @@ Mizuho.initializeTopBar = $.proxy(function() {
 	var isMobileDevice = this.isMobileDevice();
 	var timerId;
 	
+	// Create the floating table of contents used in the top bar.
 	var $floattoc = $('<div id="floattoc"></div>').html($('#toc').html());
 	$floattoc.find('#toctitle').remove();
 	$floattoc.find('.comments').remove();
@@ -1458,6 +1478,8 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		self.internalLinkClicked(this, event);
 	});
 	
+	// Callback for when the user clicks on the Table of Contents
+	// button on the top bar.
 	function showFloatingToc() {
 		var scrollUpdateTimerId;
 		
@@ -1550,6 +1572,9 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		$window.bind('scroll', onScroll);
 	}
 	
+	// Called whenever the user scrolls. Updates the title of the
+	// Table of Contents button in the top bar to the section that
+	// the user is currently reading.
 	function update() {
 		if ($title.offset().top + $title.height() < $document.scrollTop()) {
 			if (!$topbar.is(':visible')) {
@@ -1592,6 +1617,7 @@ Mizuho.initializeTopBar = $.proxy(function() {
 			update();
 		}, 100);
 	}
+	
 	
 	if (isMobileDevice) {
 		// Mobile devices don't support position fixed.

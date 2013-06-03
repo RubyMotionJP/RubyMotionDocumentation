@@ -1072,17 +1072,22 @@ pre {
 <div id="toc">
 <div id="toctitle">Table of Contents</div>
 <div class="foo toclevel2"><a href="#_creation">1. Creation</a></div>
-<div class="foo toclevel3"><a href="#_project_anatomy">1.1. Project Anatomy</a></div>
+<div class="foo toclevel3"><a href="#_project_templates">1.1. Project Templates</a></div>
+<div class="foo toclevel3"><a href="#_project_anatomy">1.2. Project Anatomy</a></div>
 <div class="foo toclevel2"><a href="#_configuration">2. Configuration</a></div>
-<div class="foo toclevel3"><a href="#_files_dependencies">2.1. Files Dependencies</a></div>
-<div class="foo toclevel3"><a href="#_using_3rd_party_libraries">2.2. Using 3rd-Party Libraries</a></div>
-<div class="foo toclevel3"><a href="#_entitlements">2.3. Entitlements</a></div>
-<div class="foo toclevel3"><a href="#_advanced_info_plist_settings">2.4. Advanced Info.plist Settings</a></div>
+<div class="foo toclevel3"><a href="#_common_options">2.1. Common Options</a></div>
+<div class="foo toclevel3"><a href="#_ios_options">2.2. iOS Options</a></div>
+<div class="foo toclevel3"><a href="#_os_x_options">2.3. OS X Options</a></div>
+<div class="foo toclevel3"><a href="#_providing_custom_values">2.4. Providing Custom Values</a></div>
+<div class="foo toclevel3"><a href="#_files_dependencies">2.5. Files Dependencies</a></div>
+<div class="foo toclevel3"><a href="#_using_3rd_party_libraries">2.6. Using 3rd-Party Libraries</a></div>
+<div class="foo toclevel3"><a href="#_entitlements">2.7. Entitlements</a></div>
+<div class="foo toclevel3"><a href="#_advanced_info_plist_settings">2.8. Advanced Info.plist Settings</a></div>
 <div class="foo toclevel2"><a href="#_build">3. Build</a></div>
 <div class="foo toclevel3"><a href="#_xcode_resource_files">3.1. Xcode Resource Files</a></div>
 <div class="foo toclevel3"><a href="#_parallel_compilation">3.2. Parallel Compilation</a></div>
 <div class="foo toclevel3"><a href="#_cleaning">3.3. Cleaning</a></div>
-<div class="foo toclevel2"><a href="#_simulation">4. Simulation</a></div>
+<div class="foo toclevel2"><a href="#_running">4. Running</a></div>
 <div class="foo toclevel3"><a href="#_interactive_console">4.1. Interactive Console</a></div>
 <div class="foo toclevel3"><a href="#_universal_applications">4.2. Universal Applications</a></div>
 <div class="foo toclevel3"><a href="#_retina_mode">4.3. Retina Mode</a></div>
@@ -1109,7 +1114,38 @@ Rakefile app resources spec</pre>
 </div>
 </div>
 <div class="sect2">
-<span class="anchor_helper" id="_project_anatomy"></span><h3 data-anchor="_project_anatomy">1.1. Project Anatomy</h3>
+<span class="anchor_helper" id="_project_templates"></span><h3 data-anchor="_project_templates">1.1. Project Templates</h3>
+<div class="paragraph"><p>デフォルトでは、<span class="monospaced">motion create</span> は iOS 用のプロジェクトを作成します。<span class="monospaced">motion</span> コマンドは、異なるプロジェクトを作成するために <span class="monospaced">--template=</span> 引数を受け付けます。</p></div>
+<div class="paragraph"><p>現在、RubyMotion には 3 種類の組み込みのテンプレートが同梱しています。</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<span class="monospaced">ios</span>: RubyMotion iOS プロジェクトを作成します。デフォルトで使用されるテンプレートです。
+</p>
+</li>
+<li>
+<p>
+<span class="monospaced">osx</span>: RubyMotion OS X プロジェクトを作成します。
+</p>
+</li>
+<li>
+<p>
+<span class="monospaced">gem</span>: RubyMotion Gem プロジェクトを作成します。
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>たとえば、OS X プロジェクトを作成するには、</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ motion create --template=osx Hello
+$ cd Hello</pre>
+</div>
+</div>
+<div class="paragraph"><p><span class="monospaced">~/Library/RubyMotion/template</span> ディレクトリに 3rd-party のテンプレートを追加できます。RubyMotion プロジェクトのテンプレートは <span class="monospaced">files</span> というサブディレクトリを含み、<span class="monospaced">motion create</span> で作成されるファイルによって構成されます。</p></div>
+<div class="paragraph"><p><span class="monospaced">/Library/RubyMotion/lib/motion/project/template</span> にある組み込みのテンプレートを参照ください。</p></div>
+</div>
+<div class="sect2">
+<span class="anchor_helper" id="_project_anatomy"></span><h3 data-anchor="_project_anatomy">1.2. Project Anatomy</h3>
 <div class="paragraph"><p>下の表は、プロジェクトのディレクトリ構成について示したものです。</p></div>
 <table class="tableblock frame-all grid-all" style="
 ">
@@ -1163,6 +1199,8 @@ Rakefile app resources spec</pre>
 <span class="anchor_helper" id="_configuration"></span><h2 data-anchor="_configuration">2. Configuration</h2>
 <div class="sectionbody">
 <div class="paragraph"><p><span class="monospaced">rake config</span> タスクは、プロジェクトの設定をダンプします。各設定値には適切なデフォルト値が設定されており、<em>Rakefile</em> を編集することで設定を変更できます。</p></div>
+<div class="sect2">
+<span class="anchor_helper" id="_common_options"></span><h3 data-anchor="_common_options">2.1. Common Options</h3>
 <table class="tableblock frame-all grid-all" style="
 ">
 <col>
@@ -1221,6 +1259,37 @@ Rakefile app resources spec</pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">spec ファイルを置くディレクトリのパス (<span class="monospaced">String</span>)。デフォルト値は <span class="monospaced">"spec"</span> です。</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">xcode_dir</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Xcode がインストールされているディレクトリを指定します (<span class="monospaced">String</span>)。デフォルト値は <em>/usr/bin/xcode-select -printPath</em> が返す値によって決まり、もし正しい値でなければ  <em>/Applications/Xcode.app/Contents/Developer</em> の値が使われます。この設定値を変更する場合には、他の設定を変更する前に行う必要があります。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">sdk_version</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">使用する SDK のバージョン番号 (<span class="monospaced">String</span>)。デフォルト値は <span class="monospaced">xcode_dir</span> 内の最新 SDK のバージョン番号です (例 : <span class="monospaced">"5.0"</span>)。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">deployment_target</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ターゲットとする SDK のバージョン番号 (<span class="monospaced">String</span>)。デフォルト値は <span class="monospaced">sdk_version</span> の値です。古いバージョンの iOS をターゲットするために値を下げることができます (例 : <span class="monospaced">"4.3"</span>)。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">codesign_certificate</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CodeSign に使用する証明書の名前を指定します (<span class="monospaced">String</span>)。デフォルト値は keychain で最初に見つかる iPhone Developer 証明書です (例 : <span class="monospaced">"iPhone Developer: Darth Vader (A3LKZY369Q)"</span>)。</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph"><p>Configuration の各項目でカスタマイズする値は、<span class="monospaced">Rakefile</span> の <span class="monospaced">Motion::App.setup</span> ブロックに追加します。</p></div>
+</div>
+<div class="sect2">
+<span class="anchor_helper" id="_ios_options"></span><h3 data-anchor="_ios_options">2.2. iOS Options</h3>
+<table class="tableblock frame-all grid-all" style="
+">
+<col>
+<col>
+<thead><tr>
+<th class="tableblock halign-left valign-top"> Variable </th>
+<th class="tableblock halign-left valign-top"> Discussion</th>
+</tr></thead>
+<tbody>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">icons</span></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">アイコンに使用するリソースファイル名のリスト (<span class="monospaced">Array</span>)。例 : <span class="monospaced">["Icon.png", "Icon-72.png", "Icon@2x.png"]</span>. アイコンファイルについては <a href="http://developer.apple.com/library/ios/#documentation/userexperience/conceptual/mobilehig/IconsImages/IconsImages.html">HIG guidelines</a> を確認してください。デフォルト値は空の配列 <span class="monospaced">[]</span> です。</p></td>
 </tr>
@@ -1241,22 +1310,6 @@ Rakefile app resources spec</pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">サポートするデバイスのインタフェースの向きを指定します。値は <span class="monospaced">Array</span> で、次のシンボルを 1 つ以上含める必要があります。<span class="monospaced">:portrait</span> 、 <span class="monospaced">:landscape_left</span> 、 <span class="monospaced">:landscape_right</span> と <span class="monospaced">:portrait_upside_down</span> のシンボルが利用できます。デフォルトの値は <span class="monospaced">[:portrait, :landscape_left, :landscape_right]</span> です。</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">xcode_dir</span></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Xcode がインストールされているディレクトリを指定します (<span class="monospaced">String</span>)。デフォルト値は <em>/usr/bin/xcode-select -printPath</em> が返す値によって決まり、もし正しい値でなければ  <em>/Applications/Xcode.app/Contents/Developer</em> の値が使われます。この設定値を変更する場合には、他の設定を変更する前に行う必要があります。</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">sdk_version</span></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">使用する SDK のバージョン番号 (<span class="monospaced">String</span>)。デフォルト値は <span class="monospaced">xcode_dir</span> 内の最新 SDK のバージョン番号です (例 : <span class="monospaced">"5.0"</span>)。</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">deployment_target</span></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ターゲットとする SDK のバージョン番号 (<span class="monospaced">String</span>)。デフォルト値は <span class="monospaced">sdk_version</span> の値です。古いバージョンの iOS をターゲットするために値を下げることができます (例 : <span class="monospaced">"4.3"</span>)。</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">codesign_certificate</span></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CodeSign に使用する証明書の名前を指定します (<span class="monospaced">String</span>)。デフォルト値は keychain で最初に見つかる iPhone Developer 証明書です (例 : <span class="monospaced">"iPhone Developer: Darth Vader (A3LKZY369Q)"</span>)。</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">provisioning_profile</span></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">deployment に使用するプロビジョニングプロファイルのパスを指定します (<span class="monospaced">String</span>)。デフォルト値は <em>~/Library/MobileDevice/Provisioning Profiles</em> で最初に見つかる <em>.mobileprovision</em> ファイルです。</p></td>
 </tr>
@@ -1266,7 +1319,31 @@ Rakefile app resources spec</pre>
 </tr>
 </tbody>
 </table>
-<div class="paragraph"><p>Configuration の各項目でカスタマイズする値は、<span class="monospaced">Rakefile</span> の <span class="monospaced">Motion::App.setup</span> ブロックに追加します。</p></div>
+</div>
+<div class="sect2">
+<span class="anchor_helper" id="_os_x_options"></span><h3 data-anchor="_os_x_options">2.3. OS X Options</h3>
+<table class="tableblock frame-all grid-all" style="
+">
+<col>
+<col>
+<thead><tr>
+<th class="tableblock halign-left valign-top"> Variable </th>
+<th class="tableblock halign-left valign-top"> Discussion</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">icon</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">アプリケーションのアイコンとして使用するアイコンのリソースファイル名 (<span class="monospaced">String</span>)。 例 : <span class="monospaced">"Icon.png"</span> 。デフォルト値は空の文字列 <span class="monospaced">''</span> です。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">copyright</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">アプリケーションのプロパティファイルで使用される、誰でも読むことができる Copyright を指定します (<span class="monospaced">String</span>)。デフォルト値は <span class="monospaced">"Copyright (c) CURRENT_DATE CURRENT_USER. All Right Reserved."</span> です。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<span class="anchor_helper" id="_providing_custom_values"></span><h3 data-anchor="_providing_custom_values">2.4. Providing Custom Values</h3>
 <div class="paragraph"><p>例として、iPad 用の架空のビデオプレーヤーの設定を取り上げましょう。サポートするデバイスは iPhone から iPad に変更します。オーディオ機能のために、AVFoundation フレームワークをアプリケーションに追加します。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
@@ -1277,8 +1354,9 @@ Rakefile app resources spec</pre>
 end</pre>
 </div>
 </div>
+</div>
 <div class="sect2">
-<span class="anchor_helper" id="_files_dependencies"></span><h3 data-anchor="_files_dependencies">2.1. Files Dependencies</h3>
+<span class="anchor_helper" id="_files_dependencies"></span><h3 data-anchor="_files_dependencies">2.5. Files Dependencies</h3>
 <div class="paragraph"><p>デフォルトでは、RubyMotion はファイルシステムによって決定されるソート順でファイルをコンパイルします。RubyMotion アプリケーションが起動したあとで、各ファイルのメインスコープは特定の順序で実行されます。</p></div>
 <div class="paragraph"><p>たとえば、あるファイルで使用する定数が他のファイルで定義しているという依存関係がある場合に、実行順序のカスタマイズが必要となるでしょう。</p></div>
 <div class="listingblock">
@@ -1304,8 +1382,8 @@ end</pre>
 <div class="paragraph"><p>この変更の後は、ビルドシステムは <em>bar.rb</em> の前に <em>foo.rb</em> をコンパイルします。</p></div>
 </div>
 <div class="sect2">
-<span class="anchor_helper" id="_using_3rd_party_libraries"></span><h3 data-anchor="_using_3rd_party_libraries">2.2. Using 3rd-Party Libraries</h3>
-<div class="paragraph"><p>iOS SDK には非常に多くの機能が組み込まれていて、それらを RubyMotion から使用することができます。しかし、時には iOS に不足している機能を提供するサードパーティライブラリを使用しなければならないかもしれません。</p></div>
+<span class="anchor_helper" id="_using_3rd_party_libraries"></span><h3 data-anchor="_using_3rd_party_libraries">2.6. Using 3rd-Party Libraries</h3>
+<div class="paragraph"><p>iOS と OS X SDK には非常に多くの機能が組み込まれていて、それらを RubyMotion から使用することができます。しかし、時にはシステムに不足している機能を提供するサードパーティライブラリを使用しなければならないかもしれません。</p></div>
 <div class="paragraph"><p>RubyMotion でサードパーティライブラリを利用するには、ソースコードがファイルシステム上の存在し利用可能でなければなりません。サードパーティライブラリは、プロジェクトのディレクトリ内 (たとえば、<em>vendor</em> ディレクトリの配下) に置くことをおすすめします。</p></div>
 <div class="paragraph"><p><em>Rakefile</em> で <span class="monospaced">vendor_project</span> メソッドを使用しサードパーティライブラリを設定します。第一引数にはサードパーティライブラリへのパスを必ず指定します (例 : <span class="monospaced">"vendor/OAuth2Client"</span>)。第二引数にはサードパーティライブラリのプロジェクトの種類を示す symbol を必ず指定します (例 : <span class="monospaced">:xcode</span>)。そのほかの引数は key/value のリストとして指定できます。</p></div>
 <div class="paragraph"><p>以下は、プロジェクトの種類と key/value をまとめた表です。</p></div>
@@ -1378,7 +1456,15 @@ end</pre>
 </div>
 </div>
 <div class="sect2">
-<span class="anchor_helper" id="_entitlements"></span><h3 data-anchor="_entitlements">2.3. Entitlements</h3>
+<span class="anchor_helper" id="_entitlements"></span><h3 data-anchor="_entitlements">2.7. Entitlements</h3>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="../../icons/note.png" alt="Note">
+</td>
+<td class="content">iOS only.</td>
+</tr></table>
+</div>
 <div class="paragraph"><p>エンタイトルメント (Entitlements)  はアプリケーションに特定の機能やセキュリティ許可を与えます。システムの特定の機能にアクセスしようとすると、Apple によってエンタイトルメントのリクエストが必要とされるでしょう。</p></div>
 <div class="paragraph"><p>iOS デバイス上で動作するアプリケーションがそのような機能を使用するとき、エンタイトルメントがなければ動作時にエラーとなります。App Store へ登録することもできないでしょう。</p></div>
 <div class="paragraph"><p>エンタイトルメントはビルドの CodeSign 処理中に使用されます。</p></div>
@@ -1396,7 +1482,7 @@ end</pre>
 </div>
 </div>
 <div class="sect2">
-<span class="anchor_helper" id="_advanced_info_plist_settings"></span><h3 data-anchor="_advanced_info_plist_settings">2.4. Advanced Info.plist Settings</h3>
+<span class="anchor_helper" id="_advanced_info_plist_settings"></span><h3 data-anchor="_advanced_info_plist_settings">2.8. Advanced Info.plist Settings</h3>
 <div class="paragraph"><p>iOS アプリはアプリケーション内にバンドルされた、<em>Info.plist</em>  で設定を記述します。このファイルには key と value の組み合わせを記述します。それらについては  <a href="http://developer.apple.com/library/ios/#documentation/General/Reference/InfoPlistKeyReference/Introduction/Introduction.html">Info.plist reference</a> ガイドで詳細に説明されています。</p></div>
 <div class="paragraph"><p>RubyMotion プロジェクトでは、<em>Info.plist</em> は <em>Rakefile</em>  で設定されたオブジェクトを元にします。たとえば、<em>Info.plist</em> の <span class="monospaced">CFBundleName</span> は <em>Rakefile</em> の <span class="monospaced">name</span> を元にします。Configuration の各オブジェクトは、ほとんどプロジェクトで必要となる設定をします。</p></div>
 <div class="paragraph"><p>しかし、より高度なプロジェクトの設定が必要なケースがあるかもしれません。
@@ -1420,12 +1506,13 @@ end</pre>
 <div class="sect1">
 <span class="anchor_helper" id="_build"></span><h2 data-anchor="_build">3. Build</h2>
 <div class="sectionbody">
-<div class="paragraph"><p><span class="monospaced">rake build</span> タスクは、テンポラリーな <em>build</em> ディレクトリにプロジェクトをビルドします。ビルドには 2 種類あり、一つは (Mac 上で動作する) iOS シミュレータ向け、もう一つは iOS デバイス向けのビルドです。</p></div>
+<div class="paragraph"><p><span class="monospaced">rake build</span> タスクは、テンポラリーな <em>build</em> ディレクトリにプロジェクトをビルドします。
+iOS プロジェクトでは、一つは (Mac 上で動作する) iOS シミュレータ向け、もう一つは iOS デバイス向けの 2 種類がビルドされます。OS X プロジェクトでは、1 種類のビルドが行われます。</p></div>
 <div class="paragraph"><p>以下は、ビルド処理中で行われる行程です。</p></div>
 <div class="olist arabic"><ol class="arabic">
 <li>
 <p>
-各 Ruby のソースコードファイルは、Ruby の構文木から <a href="http://llvm.org">LLVM</a> を用いて中間言語に、そしてアセンブリに変換し、最適化された機械語へコンパイルされます。コンパイラは Intel 32-bit (<span class="monospaced">i386</span>) または ARM (<span class="monospaced">armv6</span>, <span class="monospaced">armv7</span>) の命令語とターゲットに依存した ABI のコードを生成します。
+各 Ruby のソースコードファイルは、Ruby の構文木から <a href="http://llvm.org">LLVM</a> を用いて中間言語に、そしてアセンブリに変換し、最適化された機械語へコンパイルされます。iOS 向けに、コンパイラは Intel 32-bit (<span class="monospaced">i386</span>) または ARM (<span class="monospaced">armv6</span>, <span class="monospaced">armv7</span>) の命令語とターゲットに依存した ABI のコードを生成します。OS X 向けには、コンパイラーはIntel 32-bit (<span class="monospaced">i386</span>) と 64-bit (<span class="monospaced">x86_64</span>) の両方をターゲットとします。
 </p>
 </li>
 <li>
@@ -1502,26 +1589,33 @@ end</pre>
 </div>
 </div>
 <div class="sect1">
-<span class="anchor_helper" id="_simulation"></span><h2 data-anchor="_simulation">4. Simulation</h2>
+<span class="anchor_helper" id="_running"></span><h2 data-anchor="_running">4. Running</h2>
 <div class="sectionbody">
-<div class="paragraph"><p><span class="monospaced">rake simulator</span> タスクは iOS シミュレータ向けにプロジェクトをビルドし、シミュレータ上でアプリを実行します。</p></div>
-<div class="paragraph"><p><span class="monospaced">rake</span> のデフォルトタスクは <span class="monospaced">rake simulator</span> のショートカットとなっています。</p></div>
+<div class="paragraph"><p>デフォルトの <span class="monospaced">rake</span> タスクはプロジェクトをビルドし、アプリを手元の Mac 上で実行します。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>$ rake simulator
-$ rake</pre>
+<pre>$ rake</pre>
 </div>
 </div>
+<div class="paragraph"><p>iOS プロジェクトでは、アプリケーションが iOS シミュレータ上で実行されます。デフォルトの <span class="monospaced">rake</span> タスクは <span class="monospaced">rake simulator</span> のショートカットとなっています。</p></div>
 <div class="sect2">
 <span class="anchor_helper" id="_interactive_console"></span><h3 data-anchor="_interactive_console">4.1. Interactive Console</h3>
-<div class="paragraph"><p>iOS シミュレータ上でアプリを実行するときに、Ruby の <span class="monospaced">irb</span>  と類似した、interactive shell が利用できます。</p></div>
+<div class="paragraph"><p>アプリを実行するときに、Ruby の <span class="monospaced">irb</span>  と類似した、interactive shell が利用できます。</p></div>
 <div class="paragraph"><p>interactive shell で式を評価できます。interactive shell は実行中のアプリをブロックしません。入力された式は、アプリを実行するメインスレッドに送られます。
-NOTE: REPL (read-eval-print-loop) のサポートはアプリの必要に応じてロードされます。デフォルトでは、シミュレータ向けにビルドされたアプリは、iOS デバイス向けにビルドされたアプリよりもコードが含まれません。</p></div>
+NOTE: REPL (read-eval-print-loop) のサポートはアプリの必要に応じて、共有ライブラリを通じてロードされます。デフォルトでは、シミュレータ向けにビルドされたアプリは、iOS デバイス向けにビルドされたアプリよりもコードが含まれません。</p></div>
 <div class="paragraph"><p><span class="monospaced">help</span> を実行すると、ビルトインの式について情報を得ることができます。</p></div>
-<div class="paragraph"><p>interactive shell にはシミュレータ上で、view を選択する機能もあります。<span class="monospaced">command</span> キーを押しながらマウスをシミュレータのウィンドウ上を移動します。view の周りには赤い枠が表示され、interactive shell 上に選択されているオブジェクトが表示されます。クリックすると、interactive shell は選択した view のコンテキスト (<span class="monospaced">self</span> オブジェクト) で新しい session を開きます。</p></div>
+<div class="paragraph"><p>interactive shell にはアプリ上で、view を選択する機能もあります。<span class="monospaced">command</span> キーを押しながらマウスをアプリのウィンドウ上を移動します。view の周りには赤い枠が表示され、interactive shell 上に選択されているオブジェクトが表示されます。クリックすると、interactive shell は選択した view のコンテキスト (<span class="monospaced">self</span> オブジェクト) で新しい session を開きます。</p></div>
 </div>
 <div class="sect2">
 <span class="anchor_helper" id="_universal_applications"></span><h3 data-anchor="_universal_applications">4.2. Universal Applications</h3>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="../../icons/note.png" alt="Note">
+</td>
+<td class="content">iOS-only.</td>
+</tr></table>
+</div>
 <div class="paragraph"><p>ユニバーサルアプリケーションは iPhone と iPad デバイスの両方をターゲットとします (詳細はプロジェクトの Configuration の <span class="monospaced">device_family</span> 設定を確認してください)。</p></div>
 <div class="paragraph"><p>このようなケースでは、シミュレータで使用するデバイスの種類を指定できると便利です。シミュレータにはプロジェクトの Configuration 設定で最初に指定されたデバイスを使用します。</p></div>
 <div class="paragraph"><p>デフォルトで起動するシミュレータの種類を、環境変数 <span class="monospaced">device_family</span> で <span class="monospaced">iphone</span> か <span class="monospaced">ipad</span> を指定し変更できます。たとえば、ユニバーサルアプリを iPad シミュレータで起動するには以下のように実行します。</p></div>
@@ -1533,6 +1627,14 @@ NOTE: REPL (read-eval-print-loop) のサポートはアプリの必要に応じ�
 </div>
 <div class="sect2">
 <span class="anchor_helper" id="_retina_mode"></span><h3 data-anchor="_retina_mode">4.3. Retina Mode</h3>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="../../icons/note.png" alt="Note">
+</td>
+<td class="content">iOS-only.</td>
+</tr></table>
+</div>
 <div class="paragraph"><p>環境変数 <span class="monospaced">retina</span> を <span class="monospaced">true</span> と設定することにより、シミュレータを Retina モードで起動することができます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
@@ -1542,6 +1644,14 @@ NOTE: REPL (read-eval-print-loop) のサポートはアプリの必要に応じ�
 </div>
 <div class="sect2">
 <span class="anchor_helper" id="_cleaning_the_sandbox"></span><h3 data-anchor="_cleaning_the_sandbox">4.4. Cleaning the Sandbox</h3>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="../../icons/note.png" alt="Note">
+</td>
+<td class="content">iOS-only.</td>
+</tr></table>
+</div>
 <div class="paragraph"><p>各アプリケーションは、iOS シミュレータのサンドボックス内のディレクトリにあります。このディレクトリはアプリケーションバンドルや、<em>Documents</em> 、<em>Library</em> フォルダを含み、ファイルシステムの状態を保持します。シミュレータ上でアプリケーションを実行する際に、サンドボックスがなければ作成され、あるいは既存のサンドボックスにアプリケーションがコピーされます。</p></div>
 <div class="paragraph"><p>シミュレータを実行する前に、アプリケーションのサンドボックスをきれいにしたいと望むかもれません。たとえば、プロジェクトからリソースファイルが削除された場合や、アプリケーションの状態のデータをクリーンアップする必要があるときなどがあげられます。</p></div>
 <div class="paragraph"><p>サンドボックスのクリーンアップは、環境変数 <span class="monospaced">clean</span> に何か値を設定すると、シミュレータを実行する前に、アプリケーションのサンドボックスを掃除します。</p></div>
@@ -1556,11 +1666,11 @@ NOTE: REPL (read-eval-print-loop) のサポートはアプリの必要に応じ�
 <div class="sect1">
 <span class="anchor_helper" id="_testing"></span><h2 data-anchor="_testing">5. Testing</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>RubyMotion は、アプリケーションの spec を取り扱う、ビルトインの <a href="http://en.wikipedia.org/wiki/Behavior_Driven_Development">Behavior-Driven Development</a> 機能を持っています。RubyMotion は iOS システムと統合するために若干修正した <a href="http://github.com/alloy/MacBacon">Bacon</a> フレームワークを使用します。</p></div>
+<div class="paragraph"><p>RubyMotion は、アプリケーションの spec を取り扱う、ビルトインの <a href="http://en.wikipedia.org/wiki/Behavior_Driven_Development">Behavior-Driven Development</a> 機能を持っています。RubyMotion はシステムと統合するために若干修正した <a href="http://github.com/alloy/MacBacon">Bacon</a> フレームワークを使用します。</p></div>
 <div class="paragraph"><p>spec ファイルは、<em>spec</em> ディレクトリに置かれます。</p></div>
 <div class="paragraph"><p><span class="monospaced">rake spec</span> タスクはプロジェクトを spec 用に特別なバージョンでビルドし、アプリケーションの起動後に spec ファイルが実行されます。そして、Terminal の標準出力に spec の概要が出力され、アプリケーションが終了します。</p></div>
 <div class="paragraph"><p>Note: <span class="monospaced">rake spec</span> は、現在シミュレータ上でのみ動作します。</p></div>
-<div class="paragraph"><p>spec ファイルは、アプリケーションのクラスと同様に iOS SDK にフルアクセスできます。例として、以下のテストはアプリケーションが 1 つのアクティブウィンドウを持つかというものです。</p></div>
+<div class="paragraph"><p>spec ファイルは、アプリケーションのクラスと同様に iOS と  OS X SDK にフルアクセスできます。例として、以下のテストはアプリケーションが 1 つのアクティブウィンドウを持つかというものです。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>$ cat spec/main_spec.rb
@@ -1593,6 +1703,7 @@ My Awesome App
 <span class="anchor_helper" id="_development_vs_release"></span><h3 data-anchor="_development_vs_release">6.1. Development vs Release</h3>
 <div class="paragraph"><p>RubyMotion プロジェクトは、開発向けあるいはリリース向けにビルドできます。シミュレータ上での実行や開発用の iOS デバイスで実行するために、開発向けにビルドされます。App Store へ提出するためにアーカイブを作成する際にはリリース向けにプロジェクトはビルドされます。</p></div>
 <div class="paragraph"><p>現在、RubyMotion アプリの開発向けとリリース向けのビルドは、実行可能なファイルからすべてのシンボルが取り除かれるかとういう違いだけです。この処理によって、アプリケーションバンドルから、およそ 1 MB のデータを取り除きます。しかしこれはデバッグを困難に、開発には適しません。</p></div>
+<div class="paragraph"><p>OS X プロジェクトでは、アプリはリリース向けに 32/64-bit のバイナリを含むようにビルドされます。開発向けのビルドでは、ビルド時間の短縮のために、ネイティブな CPU アーキテクチャのみがビルドされます。</p></div>
 <div class="paragraph"><p>プロジェクトをリリース向けにビルドする場合に、<em>Rakefile</em> で異なる設定を行うこともできます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
@@ -1608,6 +1719,14 @@ end</pre>
 </div>
 <div class="sect2">
 <span class="anchor_helper" id="_install_on_device"></span><h3 data-anchor="_install_on_device">6.2. Install on Device</h3>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="../../icons/note.png" alt="Note">
+</td>
+<td class="content">iOS-only.</td>
+</tr></table>
+</div>
 <div class="paragraph"><p><span class="monospaced">rake device</span> は iOS デバイス向けに開発用のアーカイブをビルドしアップロードします。</p></div>
 <div class="paragraph"><p>1 つの iOS デバイスが Mac と USB 接続していなければいけません。
 この処理では、USB 接続されている最初に見つかった iOS デバイスにアプリケーションがアップロードします。</p></div>
@@ -1638,8 +1757,9 @@ iOS デバイスが USB 接続されていない。
 </div>
 <div class="sect2">
 <span class="anchor_helper" id="_distribution"></span><h3 data-anchor="_distribution">6.3. Distribution</h3>
-<div class="paragraph"><p><span class="monospaced">rake archive</span>  タスクは開発向け・リリース向けの両方で <em>.ipa</em>  のアーカイブを生成するのに利用できます。<em>.ipa</em> アーカイブは ad-hoc な配信や App Store への提出に適しています。</p></div>
-<div class="paragraph"><p>App Store 用に <em>.ipa</em> アーカイブを作る際には、<span class="monospaced">rake archive:distribution</span> コマンドを使用します。</p></div>
+<div class="paragraph"><p><span class="monospaced">rake archive</span>  タスクは開発向け・リリース向けの両方でアーカイブを生成するのに利用できます。アーカイブは ad-hoc な配信や App Store への提出に適しています。</p></div>
+<div class="paragraph"><p>iOS プロジェクト上では、アーカイブファイルは <em>.ipa</em> という拡張子になります。OS X プロジェクト上では、<em>.pkg</em> という拡張子になります。</p></div>
+<div class="paragraph"><p>App Store 用にアーカイブを作る際には、<span class="monospaced">rake archive:distribution</span> コマンドを使用します。</p></div>
 <div class="paragraph"><p>このタスクは、アプリケーションバンドルを CodeSign するために適切な証明書とプロビジョニングプロファイルが必要となります。</p></div>
 </div>
 </div>
@@ -1648,7 +1768,7 @@ iOS デバイスが USB 接続されていない。
 <div id="footnotes"><hr></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2013-03-14 15:36:06 JST
+Last updated 2013-06-03 09:17:52 JST
 </div>
 </div>
 <script>/*! jQuery v1.7.1 jquery.com | jquery.org/license */

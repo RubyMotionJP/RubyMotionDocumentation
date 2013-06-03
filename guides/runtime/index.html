@@ -795,11 +795,13 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install(3);
+asciidoc.install();
 /*]]>*/
 </script><style type="text/css">
 body {
-	margin: 1em 10% 1em 10%;
+	margin: 1em auto 1em auto;
+	padding: 0 1em 0 1em;
+	max-width: 800px;
 }
 
 a.image {
@@ -876,6 +878,10 @@ a.image {
 
 #comments_lightbox_contents > .shell {
 	margin: 2em;
+}
+
+pre {
+	overflow: auto;
 }
 
 @media print {
@@ -1038,6 +1044,15 @@ a.image {
 	border-bottom-right-radius: 0;
 }
 
+/* http://nicolasgallagher.com/jump-links-and-viewport-positioning/ */
+.anchor_helper {
+	position: relative;
+	display: block;
+	top: -50px;
+	width: 1px;
+	height: 1px;
+}
+
 </style>
 </head>
 <body class="article" style="max-width:55em">
@@ -1049,31 +1064,51 @@ a.image {
 </div>
 <div id="header">
 <h1>RubyMotion Runtime Guide</h1>
-<div id="preamble">
+<span id="author">Laurent Sansonetti</span><br><span id="email" class="monospaced">&lt;<a href="mailto:lrz@hipbyte.com">lrz@hipbyte.com</a>&gt;</span><br><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph"><p>RubyMotion ランタイムは、アプリケーションの実行時に必要な Ruby の言語機能を実装しています。ランタイムの一部には、オブジェクトモデル、組み込みクラスとメモリ管理システムがあります。</p></div>
 <div class="paragraph"><p>外観上、RubyMotion ランタイムは <a href="http://www.ruby-lang.org/en/">CRuby</a> (MRI や、単に Ruby とも呼ばれます) と似ていますが完全に異なる実装があります。以下のセクションでは、CRuby との主な違いについて取り上げます。</p></div>
-<div class="paragraph"><p>RubyMotion ランタイムの重要な特徴として、iOS との密接な統合があります。これは、アプリケーションの効率的な動作を意味します。</p></div>
+<div class="paragraph"><p>RubyMotion ランタイムの重要な特徴として、iOS と OS X との密接な統合があります。これは、アプリケーションの効率的な動作を意味します。</p></div>
 <div class="paragraph"><p>RubyMotion は Ruby 1.9 の言語仕様に準拠します。</p></div>
 </div>
 </div>
-<span id="author">Laurent Sansonetti</span><br><span id="email" class="monospaced">&lt;<a href="mailto:lrz@hipbyte.com">lrz@hipbyte.com</a>&gt;</span><br><div id="toc">
-  <div id="toctitle">Table of Contents</div>
-  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+<div id="toc">
+<div id="toctitle">Table of Contents</div>
+<div class="foo toclevel2"><a href="#_object_model">1. Object Model</a></div>
+<div class="foo toclevel3"><a href="#_objective_c_messages">1.1. Objective-C Messages</a></div>
+<div class="foo toclevel3"><a href="#_objective_c_interfaces">1.2. Objective-C Interfaces</a></div>
+<div class="foo toclevel3"><a href="#_selector_shortcuts">1.3. Selector Shortcuts</a></div>
+<div class="foo toclevel3"><a href="#_super">1.4. Super</a></div>
+<div class="foo toclevel2"><a href="#_builtin_classes">2. Builtin Classes</a></div>
+<div class="foo toclevel3"><a href="#_mutability">2.1. Mutability</a></div>
+<div class="foo toclevel2"><a href="#_interfacing_with_c">3. Interfacing with C</a></div>
+<div class="foo toclevel3"><a href="#_basic_types">3.1. Basic Types</a></div>
+<div class="foo toclevel3"><a href="#_structures">3.2. Structures</a></div>
+<div class="foo toclevel3"><a href="#_enumerations_and_constants">3.3. Enumerations and Constants</a></div>
+<div class="foo toclevel3"><a href="#_functions">3.4. Functions</a></div>
+<div class="foo toclevel3"><a href="#_pointers">3.5. Pointers</a></div>
+<div class="foo toclevel3"><a href="#_function_pointers_and_blocks">3.6. Function Pointers and Blocks</a></div>
+<div class="foo toclevel2"><a href="#_memory_management">4. Memory Management</a></div>
+<div class="foo toclevel3"><a href="#_weak_references">4.1. Weak References</a></div>
+<div class="foo toclevel3"><a href="#_objective_c_and_corefoundation_objects">4.2. Objective-C  and CoreFoundation Objects</a></div>
+<div class="foo toclevel3"><a href="#_immediate_types">4.3. Immediate Types</a></div>
+<div class="foo toclevel2"><a href="#_concurrency">5. Concurrency</a></div>
+<div class="foo toclevel3"><a href="#_threads_and_mutexes">5.1. Threads and Mutexes</a></div>
+<div class="foo toclevel3"><a href="#_grand_central_dispatch">5.2. Grand Central Dispatch</a></div>
 </div>
 </div>
 <div id="content">
 
 <div class="sect1">
-<h2 id="_object_model">1. Object Model</h2>
+<span class="anchor_helper" id="_object_model"></span><h2 data-anchor="_object_model">1. Object Model</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>RubyMotion のオブジェクトモデルは <a href="http://en.wikipedia.org/wiki/Objective-C">Objective-C</a> をベースとし、iOS SDK の基本的な言語ランタイムに基づいています。Objective-C は C 言語にオブジェクト指向を取り入れ、Ruby と同じく、<a href="http://en.wikipedia.org/wiki/Smalltalk">Smalltalk</a> から強く影響を受けています。</p></div>
+<div class="paragraph"><p>RubyMotion のオブジェクトモデルは <a href="http://en.wikipedia.org/wiki/Objective-C">Objective-C</a> をベースとし、iOS と OS X SDK の基本的な言語ランタイムに基づいています。Objective-C は C 言語にオブジェクト指向を取り入れ、Ruby と同じく、<a href="http://en.wikipedia.org/wiki/Smalltalk">Smalltalk</a> から強く影響を受けています。</p></div>
 <div class="paragraph"><p>Smalltalk という祖先を共有することで、Ruby と Objective-C のオブジェクトモデルは概念が似ています。たとえば、両方の言語にオープンクラス、単一継承、単一の動的なメッセージ送信があります。</p></div>
 <div class="paragraph"><p>RubyMotion では Ruby のオブジェクトモデルを <a href="http://developer.apple.com/library/ios/#documentation/Cocoa/Reference/ObjCRuntimeRef/Reference/reference.html">Objective-C runtime</a> や iOS SDK の API を使用し実装しています。 Objective-C runtime は Objective-C 言語と iOS SDK API に間接的に力を与えているライブラリです。</p></div>
 <div class="paragraph"><p>RubyMotion では、Ruby クラスのメソッドやオブジェクトは、Objective-C クラスのメソッドやオブジェクトでもあります。逆のこともまた真実と言えます。Objective-C クラスのメソッドやオブジェクトは Ruby ネイティブのように利用できます。</p></div>
 <div class="paragraph"><p>同じオブジェクトモデル構成を共有することで、Objective-C と RubyMotion の API はパフォーマンスの犠牲なしで相互に乗り入れできます。</p></div>
 <div class="sect2">
-<h3 id="_objective_c_messages">1.1. Objective-C Messages</h3>
+<span class="anchor_helper" id="_objective_c_messages"></span><h3 data-anchor="_objective_c_messages">1.1. Objective-C Messages</h3>
 <div class="paragraph"><p>RubyMotion では Objective-C のメッセージ定義やメッセージ送信ができます。</p></div>
 <div class="paragraph"><p>セレクタとも呼ばれる Objective-C のメッセージは、複数の引数をとる場合において一般的な Ruby とは異ります。</p></div>
 <div class="paragraph"><p>Objective-C のメッセージには、Ruby のメッセージと異なり、キーワードがあります。各引数は関連づけられているキーワードを持ち、最終的に Objective-Cのメッセージは、すべてのキーワードの組み合わせとなります。</p></div>
@@ -1117,7 +1152,7 @@ end</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_objective_c_interfaces">1.2. Objective-C Interfaces</h3>
+<span class="anchor_helper" id="_objective_c_interfaces"></span><h3 data-anchor="_objective_c_interfaces">1.2. Objective-C Interfaces</h3>
 <div class="paragraph"><p>Objective-C は iOS SDK を記述するメイン言語として使われ、Objective-C インタフェースの読み方や Ruby から使う方法について学ぶ必要があります。</p></div>
 <div class="paragraph"><p>Objective-C インタフェースは Apple の iOS API リファレンスや、iOS framework のヘッダファイル (<span class="monospaced">.h</span>) で見ることができます。</p></div>
 <div class="paragraph"><p>Objective-C インタフェースは、クラスメソッドを宣言する場合は +、インスタンスメソッドを宣言する場合は - の文字から始まります。</p></div>
@@ -1164,7 +1199,7 @@ instance = Test.sharedInstanceWithObject(obj1, andObject:obj2)</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_selector_shortcuts">1.3. Selector Shortcuts</h3>
+<span class="anchor_helper" id="_selector_shortcuts"></span><h3 data-anchor="_selector_shortcuts">1.3. Selector Shortcuts</h3>
 <div class="paragraph"><p>RubyMotion ランタイムは特定の Objective-C セレクタに対して、便利なショートカットを用意しています。</p></div>
 <table class="tableblock frame-all grid-all" style="
 ">
@@ -1200,12 +1235,88 @@ instance = Test.sharedInstanceWithObject(obj1, andObject:obj2)</pre>
 </div>
 </div>
 </div>
+<div class="sect2">
+<span class="anchor_helper" id="_super"></span><h3 data-anchor="_super">1.4. Super</h3>
+<div class="paragraph"><p>Objective-C では、<span class="monospaced">super</span> は現在のクラスのスーパークラスへメソッドを送信し、メソッドを実行します。以下の例では、<span class="monospaced">super</span> は <span class="monospaced">MediaController</span> へ <span class="monospaced">song</span> という引数と一緒に <span class="monospaced">play</span> メッセージを送信します。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>@interface VideoController : MediaController
+@end
+
+@implementation VideoController
+- (void)play:(NSString *)song {
+  [super play:song];
+  // Customize here...
+}
+@end</pre>
+</div>
+</div>
+<div class="paragraph"><p>RubyMotion では、<span class="monospaced">super</span> は現在のクラスのスーパークラスへメソッドを送信し、 <a href="http://stackoverflow.com/questions/4632224/super-keyword-in-ruby#answer-4632229">super を使用しているメソッドと同じ引数</a> で、<a href="http://stackoverflow.com/questions/4632224/super-keyword-in-ruby#answer-4632270">同じ名前のメソッドを実行</a> します。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>class VideoController &lt; MediaController
+  def play(song)
+    super
+    # Customize here...
+  end
+end</pre>
+</div>
+</div>
+<div class="paragraph"><p>Objective-C では、スーパークラスのメソッドを呼び出し現在のメソッドへバイパスすることができます。これは特に <span class="monospaced">init</span> メソッドを定義するときに便利です。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>@interface CustomView : UIView
+@property (copy) NSString *text;
+@end
+
+@implementation CustomView
+- (id) initWithFrame:(CGRect)frame {
+  [super initWithFrame:frame];
+  self.text = @"";
+  return self;
+}
+- (id) initWithText:(NSString*)text {
+  UIFont *font = [UIFont systemFontOfSize:12];
+  CGRect size = [text sizeWithFont:font];
+  // skip local initializer
+  [super initWithFrame:{{0, 0}, size}];
+  self.text = text;
+  return self;
+}</pre>
+</div>
+</div>
+<div class="paragraph"><p>スーパークラスの <span class="monospaced">initWithFrame</span> を呼び出すわざとらしい例です。定義したメソッドを呼ばずに、スーパークラスのメソッドを呼び出す必要があるケースがあるでしょう。</p></div>
+<div class="paragraph"><p>これは Ruby では簡単に実現できません (see <a href="http://stackoverflow.com/questions/2564391/how-do-i-call-a-super-class-method">How do I call a super class method</a> on stack overflow)。Ruby では、<span class="monospaced">alias</span> で別名のメソッドを用意し、それを代わりに呼び出す必要があります。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>class CustomView &lt; UIView
+  alias :'super_initWithFrame:' :'initWithFrame:'
+  # if your method takes multiple arguments, you can alias that as well
+  # alias :'renameWithArg1:arg2' :'methodWithArg1:arg2'
+
+  def initWithFrame(frame)
+    super.tap do
+      @text = ''
+    end
+  end
+
+  def initWithText(text)
+    font = UIFont.systemFontOfSize(12)
+    size = text.sizeWithFont(font)
+    super_initWithFrame([[0, 0], size]).tap do
+      @text = text
+    end
+  end
+end</pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_builtin_classes">2. Builtin Classes</h2>
+<span class="anchor_helper" id="_builtin_classes"></span><h2 data-anchor="_builtin_classes">2. Builtin Classes</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>いくつかの RubyMotion の組み込みクラスは、iOS のベースレイアである <a href="http://developer.apple.com/library/ios/#documentation/Cocoa/Reference/Foundation/ObjC_classic/%5C_index.html">Foundation framework</a> をベースとしています。</p></div>
+<div class="paragraph"><p>いくつかの RubyMotion の組み込みクラスは、iOS と OS X のベースレイアである <a href="http://developer.apple.com/library/ios/#documentation/Cocoa/Reference/Foundation/ObjC_classic/%5C_index.html">Foundation framework</a> をベースとしています。</p></div>
 <div class="paragraph"><p>Foundation framework は Objective-C のフレームワークですが、RubyMotion が Objective-C runtime をベースとしてあるおかげで、組み込みクラスの定義で自然に Foundation framework が利用されています。</p></div>
 <div class="paragraph"><p>Foundation クラスは一般的に <span class="monospaced">NS</span> というプレフィックスから始まります。これはフレームワークが構築された当初のシステムである NeXTSTEP を表します。</p></div>
 <div class="paragraph"><p>Foundation ではプリミティブなオブジェクトクラスと同様に <span class="monospaced">NSObject</span> がルートクラスとしてあります。RubyMotion では、<span class="monospaced">Object</span> は <span class="monospaced">NSObject</span> の別名で、<span class="monospaced">NSObject</span> はすべての Ruby クラスのルートクラスとなっています。また、いくつかの組み込みクラスは Foundation から継承しています。</p></div>
@@ -1265,7 +1376,7 @@ iterate NSArray.arrayWithObject(42)</pre>
 </div>
 <div class="paragraph"><p>しかし、この設計の主な目的は Objective-C と Ruby との間でデータ変換が不要なため、パフォーマンスの犠牲なしにプリミティブな型の変換を行えることにあります。典型的なアプリケーションで変換される型の多くは組み込み型なので、このことは重要です。Ruby で作成した <span class="monospaced">String</span> オブジェクトは、<span class="monospaced">NSString</span> を期待する Objective-C メソッドの引数にできるメモリアドレスを持っています。</p></div>
 <div class="sect2">
-<h3 id="_mutability">2.1. Mutability</h3>
+<span class="anchor_helper" id="_mutability"></span><h3 data-anchor="_mutability">2.1. Mutability</h3>
 <div class="paragraph"><p>Foundation framework は mutable と immutable の両方をセットとして持っています。mutable オブジェクトは変更することができます。一方、immutable オブジェクトは変更できません。</p></div>
 <div class="paragraph"><p>RubyMotion では、immutable は凍結されたオブジェクトのように振る舞います (<span class="monospaced">freeze</span> メッセージを受信したオブジェクトのような振る舞いです)。</p></div>
 <div class="paragraph"><p>例として、<span class="monospaced">NSString</span> の内容を変更することは禁止され、変更しようとすると例外が発生します。しかし、mutable である <span class="monospaced">NSMutableString</span> インスタンスの内容は変更できます。</p></div>
@@ -1281,14 +1392,14 @@ NSMutableString.new.strip!    # works</pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_interfacing_with_c">3. Interfacing with C</h2>
+<span class="anchor_helper" id="_interfacing_with_c"></span><h2 data-anchor="_interfacing_with_c">3. Interfacing with C</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>RubyMotion を使用する際には、あなたが C プログラマである必要はありませんが、このセクションで説明されるいくつかの基本概念が必要となります。
 Objective-C は C 言語のスーパーセットです。そのため、Objective-C メソッドは C 言語の型を受け付けたり、返したりします。</p></div>
 <div class="paragraph"><p>また、iOS SDK で使用されるメインのプログラミング言語は Objective-C ですが、いくつか C API でのみ使用できるものがあります。</p></div>
 <div class="paragraph"><p>RubyMotion は Ruby で C API を利用する対応するためのインタフェースがあります。</p></div>
 <div class="sect2">
-<h3 id="_basic_types">3.1. Basic Types</h3>
+<span class="anchor_helper" id="_basic_types"></span><h3 data-anchor="_basic_types">3.1. Basic Types</h3>
 <div class="paragraph"><p>C 言語や間接的に Objective-C は変数に型があります。iOS SDK API では、型がついた変数を受け付けたり返したりするのが一般的です。</p></div>
 <div class="paragraph"><p>以下に例として <span class="monospaced">NSFileHandle</span> のメソッドを示します。このメソッドは、C 言語の整数型 <span class="monospaced">int</span> を受け付けて返します。</p></div>
 <div class="listingblock">
@@ -1355,7 +1466,7 @@ handle.fileDescriptor # =&gt; 2</pre>
 <div class="paragraph"><p>C 言語の <span class="monospaced">void</span> 型を返す API を使用するとき、RubyMotion は <span class="monospaced">nil</span> を返します。</p></div>
 </div>
 <div class="sect2">
-<h3 id="_structures">3.2. Structures</h3>
+<span class="anchor_helper" id="_structures"></span><h3 data-anchor="_structures">3.2. Structures</h3>
 <div class="paragraph"><p>C 言語の構造体は RubyMotion ではクラスとしてマッピングされています。Ruby で生成した構造体のインスタンスは、C 言語の構造体を期待する API で使用できます。同様に、C 言語の構造体を返す API は、適切な構造体クラスのインスタンスを返します。</p></div>
 <div class="paragraph"><p>構造体クラスは C 言語の構造体の各フィールドをラップしたアクセサメソッドを持っています。</p></div>
 <div class="paragraph"><p>例として、以下に <span class="monospaced">CGPoint</span> 構造体のインスタンスを生成するコードを示します。インスタンスの <span class="monospaced">x</span> と <span class="monospaced">y</span> フィールドを設定し、<span class="monospaced">drawAtPoint:withFont:</span> メソッドへ渡すコードとなっています。</p></div>
@@ -1382,7 +1493,7 @@ pt.y = 200
 </div>
 </div>
 <div class="sect2">
-<h3 id="_enumerations_and_constants">3.3. Enumerations and Constants</h3>
+<span class="anchor_helper" id="_enumerations_and_constants"></span><h3 data-anchor="_enumerations_and_constants">3.3. Enumerations and Constants</h3>
 <div class="paragraph"><p>C 言語の列挙子や定数は <span class="monospaced">Object</span> クラスの定数としてマッピングされます。</p></div>
 <div class="paragraph"><p>たとえば、<span class="monospaced">NSNotFound</span> と <span class="monospaced">CGRectNull</span> (それぞれ Foundation フレームワークで列挙子と定数が定義されています) は直接使用することができます。</p></div>
 <div class="listingblock">
@@ -1399,7 +1510,7 @@ view = UIView.alloc.initWithFrame(CGRectNull)</pre>
 <td class="icon">
 <img src="../../icons/important.png" alt="Important">
 </td>
-<td class="content">iOS SDK でいくつか英小文字から始まるの列挙子や定数が定義されています。たとえば、<span class="monospaced">kCLLocationAccuracyBest</span> (小文字の <span class="monospaced">k</span> で始まる)。Ruby では定数は英大文字から始まらなければいけません。RubyMotion では <span class="monospaced">KCLLocationAccuracyBest</span> (大文字の <span class="monospaced">K</span> で始まる) と定数は英大文字から始まるように変換されます。</td>
+<td class="content">iOS と OS X SDK でいくつか英小文字から始まるの列挙子や定数が定義されています。たとえば、<span class="monospaced">kCLLocationAccuracyBest</span> (小文字の <span class="monospaced">k</span> で始まる)。Ruby では定数は英大文字から始まらなければいけません。RubyMotion では <span class="monospaced">KCLLocationAccuracyBest</span> (大文字の <span class="monospaced">K</span> で始まる) と定数は英大文字から始まるように変換されます。</td>
 </tr></table>
 </div>
 <div class="listingblock">
@@ -1410,7 +1521,7 @@ locationManager.desiredAccuracy = KCLLocationAccuracyBest # works</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_functions">3.4. Functions</h3>
+<span class="anchor_helper" id="_functions"></span><h3 data-anchor="_functions">3.4. Functions</h3>
 <div class="paragraph"><p>C 言語の関数は、<span class="monospaced">Object</span> クラスのメソッドとして使用できます。フレームワークのヘッダファイルで実装されているインライン関数もサポートしてます。</p></div>
 <div class="paragraph"><p>例として、<span class="monospaced">CGPointMake</span> 関数は Ruby で <span class="monospaced">CGRect</span> 構造体を生成するのに使用できます。</p></div>
 <div class="listingblock">
@@ -1424,7 +1535,7 @@ locationManager.desiredAccuracy = KCLLocationAccuracyBest # works</pre>
 <td class="icon">
 <img src="../../icons/important.png" alt="Important">
 </td>
-<td class="content">iOS SDK のほとんどの関数は、英大文字から始まります。引数を取らない関数の場合には、定数として評価されないようにするため、明示的に括弧を使用することが重要です。</td>
+<td class="content">iOS と OS X SDK の多くの関数は、英大文字から始まります。引数を取らない関数の場合には、定数として評価されないようにするため、明示的に括弧を使用することが重要です。</td>
 </tr></table>
 </div>
 <div class="listingblock">
@@ -1435,9 +1546,9 @@ NSHomeDirectory() # works</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_pointers">3.5. Pointers</h3>
+<span class="anchor_helper" id="_pointers"></span><h3 data-anchor="_pointers">3.5. Pointers</h3>
 <div class="paragraph"><p>ポインターは C 言語において非常に基本的なデータタイプです。概念的に、ポインターはオブジェクトを指し示すメモリアドレスです。</p></div>
-<div class="paragraph"><p>iOS SDKでは、ポインターは引数や戻り値のオブジェクトを参照する際に一般的に使われています。例として、以下の <span class="monospaced">NSData</span> のメソッドで <span class="monospaced">error</span> 引数は、エラーが発生した際にポインターが設定されることが期待されます。</p></div>
+<div class="paragraph"><p>iOS と OS X SDKでは、ポインターは引数や戻り値のオブジェクトを参照する際に一般的に使われています。例として、以下の <span class="monospaced">NSData</span> のメソッドで <span class="monospaced">error</span> 引数は、エラーが発生した際にポインターが設定されることが期待されます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>- (BOOL)writeToFile:(NSString *)path options:(NSDataWritingOptions)mask error:(NSError **)errorPtr</pre>
@@ -1550,9 +1661,9 @@ end</pre>
 <div class="paragraph"><p>C 言語の文字列へのポインタは、RubyMotion によって <span class="monospaced">String</span> と自動的に相互変換されます。</p></div>
 </div>
 <div class="sect2">
-<h3 id="_function_pointers_and_blocks">3.6. Function Pointers and Blocks</h3>
+<span class="anchor_helper" id="_function_pointers_and_blocks"></span><h3 data-anchor="_function_pointers_and_blocks">3.6. Function Pointers and Blocks</h3>
 <div class="paragraph"><p>RubyMotion では、C の関数ポインタや C Blocks を受け付ける C や Objective-C API は、引数に <span class="monospaced">Proc</span> オブジェクトを渡すことで呼び出すことができます。</p></div>
-<div class="paragraph"><p>iOS SDKにおいて、関数ポインタはレアな存在ですが、C Blocks は一般的に使われています。
+<div class="paragraph"><p>iOS と OS X SDKにおいて、関数ポインタはレアな存在ですが、C Blocks は一般的に使われています。
 C Blocks は Apple によって定義された C 言語の拡張機能です。C Blocks の定義にキャレット (<span class="monospaced">^</span>) 文字が使われます。</p></div>
 <div class="paragraph"><p>例として、<span class="monospaced">addObserverForName:object:queue:usingBlock:</span> メソッドの <span class="monospaced">NSNotificationCenter</span> に注目してみましょう。それは最後の引数として C Blocks を受け付けます。</p></div>
 <div class="listingblock">
@@ -1609,20 +1720,12 @@ end)</pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_memory_management">4. Memory Management</h2>
+<span class="anchor_helper" id="_memory_management"></span><h2 data-anchor="_memory_management">4. Memory Management</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>RubyMotion は自動的なメモリ管理を提供します。みなさんは、使わなくなったオブジェクトを解放したりする必要がありません。</p></div>
 <div class="paragraph"><p>iOS デバイスは Mac などと比べるとメモリは制限されているので、みなさんは巨大なオブジェクトを生成しないよう慎重になる必要があります。</p></div>
 <div class="paragraph"><p>RubyMotion は参照カウントと呼ばれるガベージコレクションの形式を実装しています。オブジェクトは初期値として参照カウント 0 を持ちます。オブジェクトが生成されると参照カウントが加算され、破棄されると減算されます。参照カウントが 0 になると、ガベージコレクタによってオブジェクトのメモリ領域が解放されます。</p></div>
 <div class="paragraph"><p>RubyMotion のメモリ管理しシステムは開発プロセスを単純かするように設計されています。伝統的な Objective-C プログラミングとは異なり、オブジェクトの参照は自動的にシステムによって生成・破棄されます。これは Objective-C の ARC の設計と非常に類似していますが、実装は異なっています。</p></div>
-<div class="admonitionblock">
-<table><tr>
-<td class="icon">
-<img src="../../icons/caution.png" alt="Caution">
-</td>
-<td class="content">二つ以上のオブジェクトが互いを参照するような、循環参照は現在 RubyMotion ランタイムで処理されません。しかし、今後のリリースで対応する予定です。</td>
-</tr></table>
-</div>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
@@ -1632,7 +1735,46 @@ end)</pre>
 </tr></table>
 </div>
 <div class="sect2">
-<h3 id="_objective_c_and_corefoundation_objects">4.1. Objective-C  and CoreFoundation Objects</h3>
+<span class="anchor_helper" id="_weak_references"></span><h3 data-anchor="_weak_references">4.1. Weak References</h3>
+<div class="paragraph"><p>2 つ以上のオブジェクトが相互参照するときに生じる、オブジェクトの循環は現在ランタイムによって処理されません。そのため、オブジェクトのメモリリークを避けるために弱参照を作成することが重要です。</p></div>
+<div class="paragraph"><p>RubyMotion では、Ruby の標準ライブラリ <span class="monospaced">weak_ref</span> と同じような <span class="monospaced">WeakRef</span> クラスを実装されています。<span class="monospaced">WeakRef.new(obj)</span> を使用して弱参照を作成でき、渡されたオブジェクトは保持されません。<span class="monospaced">WeakRef</span> オブジェクトに送られた全てのメッセージは、メソッド呼び出しを行う dispatcher の層で WeakRef.new(obj) で渡されたオブジェクトへ転送されます。</p></div>
+<div class="paragraph"><p>弱参照を使用して delegate パターンを実装した例です。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>class MyView
+  def initialize(delegate)
+    @delegate = WeakRef.new(delegate)
+  end
+
+  def do_something
+    # ...
+    @delegate.did_something
+  end
+end
+
+class MyController
+  def initialize
+    @view = MyView.new(self)
+  end
+
+  def did_something
+    # ...
+  end
+end</pre>
+</div>
+</div>
+<div class="paragraph"><p>弱参照を使用しない場合には、<span class="monospaced">MyView</span> と <span class="monospaced">MyController</span> はメモリリークを起こします。</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="../../icons/note.png" alt="Note">
+</td>
+<td class="content">将来、RubyMotion のランタイムは循環参照を解決できることでしょう。その際には <span class="monospaced">WeakRef</span> は使用しても機能しないものに置き換えられることでしょう。</td>
+</tr></table>
+</div>
+</div>
+<div class="sect2">
+<span class="anchor_helper" id="_objective_c_and_corefoundation_objects"></span><h3 data-anchor="_objective_c_and_corefoundation_objects">4.2. Objective-C  and CoreFoundation Objects</h3>
 <div class="paragraph"><p>Objective-C や CoreFoundation-style API によって生成されるオブジェクトは、RubyMotion によって自動的に管理されます。<span class="monospaced">retain</span> や <span class="monospaced">release</span> 、<span class="monospaced">autorelease</span> メッセージをオブジェクトに送信したり、<span class="monospaced">CFRetain</span> や <span class="monospaced">CFRelease</span> 関数を使う必要はありません。</p></div>
 <div class="paragraph"><p>つぎに二つの <span class="monospaced">NSDate</span> オブジェクトを異なるコンストラクタを使って allocate するものです。典型的な Objective-C では、返された二つのオブジェクトは異なるメモリ管理が必要となります (<span class="monospaced">data1</span> は <span class="monospaced">release</span> などでプログラマが解放する必要があります) 。RubyMotion では、両方のオブジェクトはガベージコレクションの対象となります。</p></div>
 <div class="listingblock">
@@ -1650,14 +1792,15 @@ date2 = NSDate.date</pre>
 <div class="paragraph"><p>オブジェクトの参照を生成する方法は他にもいくつかあります。定数の定義、クラス変数を使用、オブジェクトのコンテナに追加する (たとえば、<span class="monospaced">Array</span> や <span class="monospaced">Hash</span> など) などがあります。RubyMotion で生成されたオブジェクトで Objective-C API に渡されるものも、必要に応じて参照が生成されます。</p></div>
 </div>
 <div class="sect2">
-<h3 id="_immediate_types">4.2. Immediate Types</h3>
+<span class="anchor_helper" id="_immediate_types"></span><h3 data-anchor="_immediate_types">4.3. Immediate Types</h3>
 <div class="paragraph"><p>RubyMotion では、<span class="monospaced">Fixnum</span> と <span class="monospaced">Float</span> 型は即値で、これらはオブジェクト用のメモリ領域を使用しません。RubyMotion ランタイムでは、<a href="http://en.wikipedia.org/wiki/Tagged_pointer">tagged pointers</a> と呼ばれるテクニックを使用してこれを実装しています。</p></div>
 <div class="paragraph"><p>メモリ使用無しでこれらの型が使えることは、アプリのかなりの部分が描画制御(算術アルゴリズムを大量に使用します) に費やされるので重要です。</p></div>
+<div class="paragraph"><p>INFO: Since iOS is using a 32-bit architecture, immediate types are encoded on a 30-bit pointer (we need 2 bits for type information). On OS X, immediate types will be encoded on a 62-bit pointer when the program runs on recent Mac computers, which are powered by a 64-bit architecture.</p></div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_concurrency">5. Concurrency</h2>
+<span class="anchor_helper" id="_concurrency"></span><h2 data-anchor="_concurrency">5. Concurrency</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>iOS デバイスにマルチコアプロセッサが登場したので、コードを平行して実行させる能力は重要になりました。RubyMotion はこの目的に沿って設計されています。</p></div>
 <div class="paragraph"><p>RubyMotion は、スレッドの実行状態をラップした virtual machine の概念を持ちます。コード片は virtual machine を介して実行されます。</p></div>
@@ -1672,11 +1815,11 @@ date2 = NSDate.date</pre>
 </div>
 <div class="paragraph"><p>RubyMotion では平行動作するコードを記述する際に、次の異なる選択肢を利用できます。</p></div>
 <div class="sect2">
-<h3 id="_threads_and_mutexes">5.1. Threads and Mutexes</h3>
+<span class="anchor_helper" id="_threads_and_mutexes"></span><h3 data-anchor="_threads_and_mutexes">5.1. Threads and Mutexes</h3>
 <div class="paragraph"><p><span class="monospaced">Thread</span> クラスは POSIX スレッドを生成します。生成されたスレッドは他のスレッドと平行して動作します。<span class="monospaced">Mutex</span> クラスは POSIX ミューテックスをラップしたもので、共有リソースへの同時アクセスを防止するのに使うことができます。</p></div>
 </div>
 <div class="sect2">
-<h3 id="_grand_central_dispatch">5.2. Grand Central Dispatch</h3>
+<span class="anchor_helper" id="_grand_central_dispatch"></span><h3 data-anchor="_grand_central_dispatch">5.2. Grand Central Dispatch</h3>
 <div class="paragraph"><p>RubyMotion は <a href="http://developer.apple.com/library/ios/#documentation/Performance/Reference/GCD_libdispatch_Ref/Reference/reference.html">Grand Central Dispatch</a> (GCD) ライブラリを <span class="monospaced">Dispatch</span> モジュールとしてラップしています。concurrent queue や serial queue のもとで同期・非同期 Blocks を実行することができます。</p></div>
 <div class="paragraph"><p>普通のスレッドに比べて理解することが難しくなりますが、GCD は平行動作するエレガントなコードを提供してくれます。GCD はスレッドのプールを保持し、ミューテックスの使用しないで済むように API が構成されています。</p></div>
 </div>
@@ -1686,7 +1829,7 @@ date2 = NSDate.date</pre>
 <div id="footnotes"><hr></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2012-09-30 19:02:17 JST
+Last updated 2013-06-03 09:17:52 JST
 </div>
 </div>
 <script>/*! jQuery v1.7.1 jquery.com | jquery.org/license */
@@ -2024,6 +2167,7 @@ Mizuho.initializeTopBar = $.proxy(function() {
 	var isMobileDevice = this.isMobileDevice();
 	var timerId;
 	
+	// Create the floating table of contents used in the top bar.
 	var $floattoc = $('<div id="floattoc"></div>').html($('#toc').html());
 	$floattoc.find('#toctitle').remove();
 	$floattoc.find('.comments').remove();
@@ -2042,6 +2186,8 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		self.internalLinkClicked(this, event);
 	});
 	
+	// Callback for when the user clicks on the Table of Contents
+	// button on the top bar.
 	function showFloatingToc() {
 		var scrollUpdateTimerId;
 		
@@ -2134,6 +2280,9 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		$window.bind('scroll', onScroll);
 	}
 	
+	// Called whenever the user scrolls. Updates the title of the
+	// Table of Contents button in the top bar to the section that
+	// the user is currently reading.
 	function update() {
 		if ($title.offset().top + $title.height() < $document.scrollTop()) {
 			if (!$topbar.is(':visible')) {
@@ -2176,6 +2325,7 @@ Mizuho.initializeTopBar = $.proxy(function() {
 			update();
 		}, 100);
 	}
+	
 	
 	if (isMobileDevice) {
 		// Mobile devices don't support position fixed.

@@ -795,11 +795,13 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install(3);
+asciidoc.install();
 /*]]>*/
 </script><style type="text/css">
 body {
-	margin: 1em 10% 1em 10%;
+	margin: 1em auto 1em auto;
+	padding: 0 1em 0 1em;
+	max-width: 800px;
 }
 
 a.image {
@@ -876,6 +878,10 @@ a.image {
 
 #comments_lightbox_contents > .shell {
 	margin: 2em;
+}
+
+pre {
+	overflow: auto;
 }
 
 @media print {
@@ -1038,6 +1044,15 @@ a.image {
 	border-bottom-right-radius: 0;
 }
 
+/* http://nicolasgallagher.com/jump-links-and-viewport-positioning/ */
+.anchor_helper {
+	position: relative;
+	display: block;
+	top: -50px;
+	width: 1px;
+	height: 1px;
+}
+
 </style>
 </head>
 <body class="article" style="max-width:55em">
@@ -1049,21 +1064,33 @@ a.image {
 </div>
 <div id="header">
 <h1>Debugging RubyMotion applications</h1>
-<div id="preamble">
+<span id="author">Laurent Sansonetti</span><br><span id="email" class="monospaced">&lt;<a href="mailto:lrz@hipbyte.com">lrz@hipbyte.com</a>&gt;</span><br><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph"><p>この記事は、ビルトインのデバッギング機能を用いて RubyMotion プロジェクトをデバッグする方法について説明します。シミュレータやデバイス上で RubyMotion アプリをデバッグすることができます。</p></div>
 <div class="paragraph"><p>この記事の執筆時では、RubyMotion でのデバッギングについてまだ作業中なので、このドキュメントは作業の進捗に合わせて随時変更される可能性があります。</p></div>
 </div>
 </div>
-<span id="author">Laurent Sansonetti</span><br><span id="email" class="monospaced">&lt;<a href="mailto:lrz@hipbyte.com">lrz@hipbyte.com</a>&gt;</span><br><div id="toc">
-  <div id="toctitle">Table of Contents</div>
-  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+<div id="toc">
+<div id="toctitle">Table of Contents</div>
+<div class="foo toclevel2"><a href="#_synopsis">1. Synopsis</a></div>
+<div class="foo toclevel2"><a href="#_debugging_symbols">2. Debugging symbols</a></div>
+<div class="foo toclevel2"><a href="#_starting_the_debugger">3. Starting the debugger</a></div>
+<div class="foo toclevel3"><a href="#_entering_commands_before_starting">3.1. Entering commands before starting</a></div>
+<div class="foo toclevel3"><a href="#_saving_commands">3.2. Saving commands</a></div>
+<div class="foo toclevel2"><a href="#_managing_breakpoints">4. Managing breakpoints</a></div>
+<div class="foo toclevel2"><a href="#_getting_the_backtrace">5. Getting the backtrace</a></div>
+<div class="foo toclevel3"><a href="#_frames">5.1. Frames</a></div>
+<div class="foo toclevel3"><a href="#_threads">5.2. Threads</a></div>
+<div class="foo toclevel2"><a href="#_inspecting_objects">6. Inspecting objects</a></div>
+<div class="foo toclevel3"><a href="#_local_variables">6.1. Local variables</a></div>
+<div class="foo toclevel3"><a href="#_instance_variables">6.2. Instance variables</a></div>
+<div class="foo toclevel2"><a href="#_control_flow">7. Control flow</a></div>
 </div>
 </div>
 <div id="content">
 
 <div class="sect1">
-<h2 id="_synopsis">1. Synopsis</h2>
+<span class="anchor_helper" id="_synopsis"></span><h2 data-anchor="_synopsis">1. Synopsis</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>RubyMotion のデバッガは GNU Project のデバッガ <a href="http://www.gnu.org/software/gdb/">GDB</a> をベースとしています。</p></div>
 <div class="paragraph"><p>GDB は伝統的に C 言語ベースで書かれたプログラムをデバッグするために用いられてきました。RubyMotion は GDB に Ruby のサポートをもたらし、RubyMotion アプリのプロセスへの接続と内部の調査ができるようにします。</p></div>
@@ -1087,7 +1114,7 @@ a.image {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_debugging_symbols">2. Debugging symbols</h2>
+<span class="anchor_helper" id="_debugging_symbols"></span><h2 data-anchor="_debugging_symbols">2. Debugging symbols</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>RubyMotion コンパイラは Ruby 言語向けに <a href="http://www.dwarfstd.org">DWARF</a> と呼ばれるデバッグ用のデータフォーマットを実装しています。これはデバッガやプロファイラといった外部プログラムが、RubyMotion アプリケーションについてソースレベルの情報を取得するためのものです。</p></div>
 <div class="paragraph"><p>メタデータは <em>.dSYM</em> バンドルファイルへ保存されます。このファイルはみなさんのプロジェクトの <em>build</em> ディレクトリの <em>.app</em> バンドルと同じ階層にあります。</p></div>
@@ -1095,7 +1122,7 @@ a.image {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_starting_the_debugger">3. Starting the debugger</h2>
+<span class="anchor_helper" id="_starting_the_debugger"></span><h2 data-anchor="_starting_the_debugger">3. Starting the debugger</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>デバッガを起動するために、<span class="monospaced">debug</span> オプションを用います。適切な rake タスクと一緒に、<span class="monospaced">debug</span> オプションに任意の値を設定します。</p></div>
 <div class="paragraph"><p>rake の <span class="monospaced">simulator</span> タスクで作業する場合、インタラクティブシェル (REPL) は置き換えられ、デバッガはアプリに直接付属するようになります。</p></div>
@@ -1111,7 +1138,7 @@ a.image {
 </div>
 </div>
 <div class="sect2">
-<h3 id="_entering_commands_before_starting">3.1. Entering commands before starting</h3>
+<span class="anchor_helper" id="_entering_commands_before_starting"></span><h3 data-anchor="_entering_commands_before_starting">3.1. Entering commands before starting</h3>
 <div class="paragraph"><p>デフォルトでは、デバッガが起動したあとにアプリケーションが実行されます。アプリケションが実行される前に GDB コマンドを実行したいケースがあります。</p></div>
 <div class="paragraph"><p><span class="monospaced">no_continue</span> オプションに任意の値を設定することで、それができるようになります。オプションが設定された場合、デバッガはアプリケーションに対して continue を行わないようになります。これにより、デバッギングの設定などを変更するチャンスがもたらされます(たとえば、ブレークポイントの設定など)。アプリケーションの実行を再開する準備ができたら、<span class="monospaced">continue</span> コマンドを実行しましょう。</p></div>
 <div class="listingblock">
@@ -1126,9 +1153,10 @@ Continuing.</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_saving_commands">3.2. Saving commands</h3>
+<span class="anchor_helper" id="_saving_commands"></span><h3 data-anchor="_saving_commands">3.2. Saving commands</h3>
 <div class="paragraph"><p>アプリケーションを実行したときに自動的に実行されたいコマンドをファイルに保存しておくこともできます。</p></div>
 <div class="paragraph"><p>デバッガはプロジェクトのルートディレクトリ内の <em>debugger_cmds</em> というファイルを参照します。もしこのファイルが存在すれば、ファイルの内容は改行文字で区切られたデバッグコマンドのリストとして解釈されます。</p></div>
+<div class="paragraph"><p>app/hello_view.rb:10 のようにフルパスではなく、hello_view.rb:10 のようにファイル名だけを使います。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>$ echo "break hello_view.rb:10" &gt; debugger_cmds
@@ -1140,7 +1168,7 @@ $ rake debug=1
 </div>
 </div>
 <div class="sect1">
-<h2 id="_managing_breakpoints">4. Managing breakpoints</h2>
+<span class="anchor_helper" id="_managing_breakpoints"></span><h2 data-anchor="_managing_breakpoints">4. Managing breakpoints</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>ブレークポイントを設定するには、<span class="monospaced">break</span> コマンドを用いてソースコードの場所を指定します。デバッガは指定された場所で実行を停止します。停止する場所は <span class="monospaced">file:line</span> という表記を用いて指定します。</p></div>
 <div class="paragraph"><p>例として、次のコマンドは <em>hello_view.rb</em> ファイルの 10 行目にブレークポイントを設定します。</p></div>
@@ -1171,7 +1199,7 @@ Num Type           Disp Enb Address    What
 </div>
 </div>
 <div class="sect1">
-<h2 id="_getting_the_backtrace">5. Getting the backtrace</h2>
+<span class="anchor_helper" id="_getting_the_backtrace"></span><h2 data-anchor="_getting_the_backtrace">5. Getting the backtrace</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>ブレークポイントにヒットし実行が停止すると、そのメソッドがどこから呼び出されたのかを教えてくれる、バックトレースを確認することは興味深いことでしょう。</p></div>
 <div class="paragraph"><p><span class="monospaced">backtrace</span> コマンドを用いることで、それを行うことができます。</p></div>
@@ -1195,7 +1223,7 @@ Num Type           Disp Enb Address    What
 </div>
 <div class="paragraph"><p>みなさんのコードのバックトレース・フレームは <span class="monospaced">rb_scope__</span> というプレフィックスと、ファイル名と行番号の情報で確認することができます。</p></div>
 <div class="sect2">
-<h3 id="_frames">5.1. Frames</h3>
+<span class="anchor_helper" id="_frames"></span><h3 data-anchor="_frames">5.1. Frames</h3>
 <div class="paragraph"><p>バックトレースの一番最初のフレームは、ブレークポイントが設定されている <span class="monospaced">drawRect:</span> というメソッドです。ブレークポイントより下の他のフレームはネイティブの iOS から呼び出されたものです。<span class="monospaced">drawRect:</span> は <span class="monospaced">UIView</span> クラスから正しく呼び出されていることが確認できます。</p></div>
 <div class="paragraph"><p><span class="monospaced">frame</span> コマンドを使用すると、バックトレースの特定フレームに切り替えることができます。デフォルトでは、トップフレーム (#0) ですが、状況を確認するためにフレーム #4 へ移動したいと仮定しましょう。次のコマンドを実行することでフレームを切り替えることができます。</p></div>
 <div class="listingblock">
@@ -1207,7 +1235,7 @@ Num Type           Disp Enb Address    What
 <div class="paragraph"><p>言うまでもありませんが、バックトレースの特定の Ruby で定義されたメソッドへ移動したいときに主に重要となります。</p></div>
 </div>
 <div class="sect2">
-<h3 id="_threads">5.2. Threads</h3>
+<span class="anchor_helper" id="_threads"></span><h3 data-anchor="_threads">5.2. Threads</h3>
 <div class="paragraph"><p><span class="monospaced">backtrace</span> コマンドは現在実行しているスレッドのバックトレースのみを表示します。マルチスレッドプログラムを扱う際に、たとえば競合状態をデバッグするときに、実行中のすべてのスレッドのバックトレースを表示したいことがあるでしょう。</p></div>
 <div class="paragraph"><p>次のコマンドを実行すると、Terminal に実行中のすべてのスレッドのバックトレースが表示されます。</p></div>
 <div class="listingblock">
@@ -1227,11 +1255,11 @@ Num Type           Disp Enb Address    What
 </div>
 </div>
 <div class="sect1">
-<h2 id="_inspecting_objects">6. Inspecting objects</h2>
+<span class="anchor_helper" id="_inspecting_objects"></span><h2 data-anchor="_inspecting_objects">6. Inspecting objects</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>バックトレースを確認したあと、オブジェクトについて調査したいことがあるでしょう。デバッガは特別なコマンドを用いることでそれらを表示します。</p></div>
 <div class="sect2">
-<h3 id="_local_variables">6.1. Local variables</h3>
+<span class="anchor_helper" id="_local_variables"></span><h3 data-anchor="_local_variables">6.1. Local variables</h3>
 <div class="paragraph"><p><span class="monospaced">drawRect:(rect)</span> メソッドで設定されているブレークポイントにヒットして停止しています。ブレークポイントの内容から、<span class="monospaced">self</span> と <span class="monospaced">rect</span> という二つの引数を受け付けるメソッドの内部にいることが分かります。<span class="monospaced">rect</span> は間違いなく <span class="monospaced">CGRect</span> 引数です。<span class="monospaced">self</span> は何でしょうか？</p></div>
 <div class="paragraph"><p>RubyMotion では、<span class="monospaced">self</span> 引数は Ruby で公開されている <span class="monospaced">self</span> オブジェクトへのポインターで、メソッドのレシーバを表しています。デバッガでは、<span class="monospaced">self</span> はメソッドの第一引数として表示されます。</p></div>
 <div class="paragraph"><p><span class="monospaced">print-ruby-object</span> コマンドを使用することで、<span class="monospaced">self</span> と <span class="monospaced">rect</span> の両方の値を調査することができます。 RubyMotion で定義されているこのコマンドは、指定されたオブジェクトに <span class="monospaced">inspect</span> メッセージを送信しその値を返します。このコマンドは利用しやすいように <span class="monospaced">pro</span> というショートカットで呼び出すこともできます。</p></div>
@@ -1270,7 +1298,7 @@ nil</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_instance_variables">6.2. Instance variables</h3>
+<span class="anchor_helper" id="_instance_variables"></span><h3 data-anchor="_instance_variables">6.2. Instance variables</h3>
 <div class="paragraph"><p><span class="monospaced">print-ruby-ivar</span> コマンドまたはショートカットの <span class="monospaced">pri</span> を使用することで、オブジェクトのインスタンス変数を表示することができます。</p></div>
 <div class="paragraph"><p>コマンドに二つの引数を与えた場合には、一つ目はインスタンス変数を取得する対象のオブジェクトとなります。二つ目はインスタンス変数を表す文字列でなければなりません。インスタンス変数名には <span class="monospaced">@</span> を必ず含めてください。</p></div>
 <div class="listingblock">
@@ -1290,7 +1318,7 @@ nil</pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_control_flow">7. Control flow</h2>
+<span class="anchor_helper" id="_control_flow"></span><h2 data-anchor="_control_flow">7. Control flow</h2>
 <div class="sectionbody">
 <div class="paragraph"><p><span class="monospaced">next</span> コマンドはソースコードレベルで次の行まで実行を継続します。たいていの場合、Ruby ソースコードの次の行までとなります。Terminal には、ソースコードの行が表示されます。</p></div>
 <div class="listingblock">
@@ -1336,7 +1364,7 @@ $</pre>
 <div id="footnotes"><hr></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2012-09-21 22:12:47 JST
+Last updated 2013-06-03 09:17:52 JST
 </div>
 </div>
 <script>/*! jQuery v1.7.1 jquery.com | jquery.org/license */
@@ -1674,6 +1702,7 @@ Mizuho.initializeTopBar = $.proxy(function() {
 	var isMobileDevice = this.isMobileDevice();
 	var timerId;
 	
+	// Create the floating table of contents used in the top bar.
 	var $floattoc = $('<div id="floattoc"></div>').html($('#toc').html());
 	$floattoc.find('#toctitle').remove();
 	$floattoc.find('.comments').remove();
@@ -1692,6 +1721,8 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		self.internalLinkClicked(this, event);
 	});
 	
+	// Callback for when the user clicks on the Table of Contents
+	// button on the top bar.
 	function showFloatingToc() {
 		var scrollUpdateTimerId;
 		
@@ -1784,6 +1815,9 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		$window.bind('scroll', onScroll);
 	}
 	
+	// Called whenever the user scrolls. Updates the title of the
+	// Table of Contents button in the top bar to the section that
+	// the user is currently reading.
 	function update() {
 		if ($title.offset().top + $title.height() < $document.scrollTop()) {
 			if (!$topbar.is(':visible')) {
@@ -1826,6 +1860,7 @@ Mizuho.initializeTopBar = $.proxy(function() {
 			update();
 		}, 100);
 	}
+	
 	
 	if (isMobileDevice) {
 		// Mobile devices don't support position fixed.
