@@ -8,7 +8,6 @@ Thank you for purchasing RubyMotion. This guide will help you get started with t
 Overview
 --------
 
-<<<<<<< HEAD
 http://www.rubymotion.com[RubyMotion] はプログラミング言語 Ruby を用いて iOS と OS X アプリケーションを開発するためのツールチェインです。
 
 http://www.apple.com/ios[iOS] は Apple のモバイルオペレーティングシステムで、iPhone や iPod、iPad などさまざまなデバイスを制御しています。http://www.apple.com/osx[OS X] は Apple のデスクトップ OS で、iMac や MacBook Air といった Mac コンピュータを動かしています。
@@ -224,7 +223,7 @@ end
 
 Terminal で再び +rake+ コマンドを実行すると、シミュレータ上にアラートが表示されます。
 
-image:/developer-center/guides/getting-started/images/hello-osx.png["Hello World"]
+image:http://www.rubymotion.com/developer-center/guides/getting-started/images/hello-osx.png["Hello World"]
 
 おめでとうございます、みなさんは最初の RubyMotion iOS, OS X プログラムを作ることに成功しました。それほど難しくなかったでしょう？
 
