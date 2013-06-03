@@ -68,6 +68,8 @@ Saving commands
 
 デバッガはプロジェクトのルートディレクトリ内の 'debugger_cmds' というファイルを参照します。もしこのファイルが存在すれば、ファイルの内容は改行文字で区切られたデバッグコマンドのリストとして解釈されます。
 
+app/hello_view.rb:10 のようにフルパスではなく、hello_view.rb:10 のようにファイル名だけを使います。
+
 ----
 $ echo "break hello_view.rb:10" > debugger_cmds
 $ rake debug=1

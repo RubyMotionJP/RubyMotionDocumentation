@@ -6,14 +6,14 @@ RubyMotion ランタイムは、アプリケーションの実行時に必要な
 
 外観上、RubyMotion ランタイムは http://www.ruby-lang.org/en/[CRuby] (MRI や、単に Ruby とも呼ばれます) と似ていますが完全に異なる実装があります。以下のセクションでは、CRuby との主な違いについて取り上げます。
 
-RubyMotion ランタイムの重要な特徴として、iOS との密接な統合があります。これは、アプリケーションの効率的な動作を意味します。
+RubyMotion ランタイムの重要な特徴として、iOS と OS X との密接な統合があります。これは、アプリケーションの効率的な動作を意味します。
 
 RubyMotion は Ruby 1.9 の言語仕様に準拠します。
 
 Object Model
 ------------
 
-RubyMotion のオブジェクトモデルは http://en.wikipedia.org/wiki/Objective-C[Objective-C] をベースとし、iOS SDK の基本的な言語ランタイムに基づいています。Objective-C は C 言語にオブジェクト指向を取り入れ、Ruby と同じく、http://en.wikipedia.org/wiki/Smalltalk[Smalltalk] から強く影響を受けています。
+RubyMotion のオブジェクトモデルは http://en.wikipedia.org/wiki/Objective-C[Objective-C] をベースとし、iOS と OS X SDK の基本的な言語ランタイムに基づいています。Objective-C は C 言語にオブジェクト指向を取り入れ、Ruby と同じく、http://en.wikipedia.org/wiki/Smalltalk[Smalltalk] から強く影響を受けています。
 
 Smalltalk という祖先を共有することで、Ruby と Objective-C のオブジェクトモデルは概念が似ています。たとえば、両方の言語にオープンクラス、単一継承、単一の動的なメッセージ送信があります。
 
@@ -129,10 +129,87 @@ RubyMotion ランタイムは特定の Objective-C セレクタに対して、�
 view.hidden = true unless view.hidden?
 ----
 
+Super
+~~~~~
+
+Objective-C では、+super+ は現在のクラスのスーパークラスへメソッドを送信し、メソッドを実行します。以下の例では、+super+ は +MediaController+ へ +song+ という引数と一緒に +play+ メッセージを送信します。
+
+----
+@interface VideoController : MediaController
+@end
+
+@implementation VideoController
+- (void)play:(NSString *)song {
+  [super play:song];
+  // Customize here...
+}
+@end
+----
+
+RubyMotion では、+super+ は現在のクラスのスーパークラスへメソッドを送信し、 http://stackoverflow.com/questions/4632224/super-keyword-in-ruby#answer-4632229[super を使用しているメソッドと同じ引数] で、http://stackoverflow.com/questions/4632224/super-keyword-in-ruby#answer-4632270[同じ名前のメソッドを実行] します。
+
+----
+class VideoController < MediaController
+  def play(song)
+    super
+    # Customize here...
+  end
+end
+----
+
+Objective-C では、スーパークラスのメソッドを呼び出し現在のメソッドへバイパスすることができます。これは特に +init+ メソッドを定義するときに便利です。
+
+----
+@interface CustomView : UIView
+@property (copy) NSString *text;
+@end
+
+@implementation CustomView
+- (id) initWithFrame:(CGRect)frame {
+  [super initWithFrame:frame];
+  self.text = @"";
+  return self;
+}
+- (id) initWithText:(NSString*)text {
+  UIFont *font = [UIFont systemFontOfSize:12];
+  CGRect size = [text sizeWithFont:font];
+  // skip local initializer
+  [super initWithFrame:{{0, 0}, size}];
+  self.text = text;
+  return self;
+}
+----
+
+スーパークラスの `initWithFrame` を呼び出すわざとらしい例です。定義したメソッドを呼ばずに、スーパークラスのメソッドを呼び出す必要があるケースがあるでしょう。
+
+これは Ruby では簡単に実現できません (see http://stackoverflow.com/questions/2564391/how-do-i-call-a-super-class-method[How do I call a super class method] on stack overflow)。Ruby では、+alias+ で別名のメソッドを用意し、それを代わりに呼び出す必要があります。
+
+----
+class CustomView < UIView
+  alias :'super_initWithFrame:' :'initWithFrame:'
+  # if your method takes multiple arguments, you can alias that as well
+  # alias :'renameWithArg1:arg2' :'methodWithArg1:arg2'
+
+  def initWithFrame(frame)
+    super.tap do
+      @text = ''
+    end
+  end
+
+  def initWithText(text)
+    font = UIFont.systemFontOfSize(12)
+    size = text.sizeWithFont(font)
+    super_initWithFrame([[0, 0], size]).tap do
+      @text = text
+    end
+  end
+end
+----
+
 Builtin Classes
 ---------------
 
-いくつかの RubyMotion の組み込みクラスは、iOS のベースレイアである http://developer.apple.com/library/ios/#documentation/Cocoa/Reference/Foundation/ObjC_classic/\_index.html[Foundation framework] をベースとしています。
+いくつかの RubyMotion の組み込みクラスは、iOS と OS X のベースレイアである http://developer.apple.com/library/ios/#documentation/Cocoa/Reference/Foundation/ObjC_classic/\_index.html[Foundation framework] をベースとしています。
 
 Foundation framework は Objective-C のフレームワークですが、RubyMotion が Objective-C runtime をベースとしてあるおかげで、組み込みクラスの定義で自然に Foundation framework が利用されています。
 
@@ -284,7 +361,7 @@ end
 view = UIView.alloc.initWithFrame(CGRectNull)
 ----
 
-IMPORTANT: iOS SDK でいくつか英小文字から始まるの列挙子や定数が定義されています。たとえば、+kCLLocationAccuracyBest+ (小文字の +k+ で始まる)。Ruby では定数は英大文字から始まらなければいけません。RubyMotion では +KCLLocationAccuracyBest+ (大文字の +K+ で始まる) と定数は英大文字から始まるように変換されます。
+IMPORTANT: iOS と OS X SDK でいくつか英小文字から始まるの列挙子や定数が定義されています。たとえば、+kCLLocationAccuracyBest+ (小文字の +k+ で始まる)。Ruby では定数は英大文字から始まらなければいけません。RubyMotion では +KCLLocationAccuracyBest+ (大文字の +K+ で始まる) と定数は英大文字から始まるように変換されます。
 
 ----
 locationManager.desiredAccuracy = kCLLocationAccuracyBest # NameError: undefined local variable or method
@@ -303,7 +380,7 @@ pt = CGPointMake(100, 200)
 'Hello'.drawAtPoint(pt, withFont: font)
 ----
 
-IMPORTANT: iOS SDK のほとんどの関数は、英大文字から始まります。引数を取らない関数の場合には、定数として評価されないようにするため、明示的に括弧を使用することが重要です。
+IMPORTANT: iOS と OS X SDK の多くの関数は、英大文字から始まります。引数を取らない関数の場合には、定数として評価されないようにするため、明示的に括弧を使用することが重要です。
 
 ----
 NSHomeDirectory   # NameError: uninitialized constant NSHomeDirectory
@@ -315,7 +392,7 @@ Pointers
 
 ポインターは C 言語において非常に基本的なデータタイプです。概念的に、ポインターはオブジェクトを指し示すメモリアドレスです。
 
-iOS SDKでは、ポインターは引数や戻り値のオブジェクトを参照する際に一般的に使われています。例として、以下の +NSData+ のメソッドで +error+ 引数は、エラーが発生した際にポインターが設定されることが期待されます。
+iOS と OS X SDKでは、ポインターは引数や戻り値のオブジェクトを参照する際に一般的に使われています。例として、以下の +NSData+ のメソッドで +error+ 引数は、エラーが発生した際にポインターが設定されることが期待されます。
 
 ----
 - (BOOL)writeToFile:(NSString *)path options:(NSDataWritingOptions)mask error:(NSError **)errorPtr
@@ -376,7 +453,7 @@ Function Pointers and Blocks
 
 RubyMotion では、C の関数ポインタや C Blocks を受け付ける C や Objective-C API は、引数に +Proc+ オブジェクトを渡すことで呼び出すことができます。
 
-iOS SDKにおいて、関数ポインタはレアな存在ですが、C Blocks は一般的に使われています。
+iOS と OS X SDKにおいて、関数ポインタはレアな存在ですが、C Blocks は一般的に使われています。
 C Blocks は Apple によって定義された C 言語の拡張機能です。C Blocks の定義にキャレット (+^+) 文字が使われます。
 
 例として、+addObserverForName:object:queue:usingBlock:+ メソッドの +NSNotificationCenter+ に注目してみましょう。それは最後の引数として C Blocks を受け付けます。
@@ -430,9 +507,43 @@ RubyMotion は参照カウントと呼ばれるガベージコレクションの
 
 RubyMotion のメモリ管理しシステムは開発プロセスを単純かするように設計されています。伝統的な Objective-C プログラミングとは異なり、オブジェクトの参照は自動的にシステムによって生成・破棄されます。これは Objective-C の ARC の設計と非常に類似していますが、実装は異なっています。
 
-CAUTION: 二つ以上のオブジェクトが互いを参照するような、循環参照は現在 RubyMotion ランタイムで処理されません。しかし、今後のリリースで対応する予定です。
-
 NOTE: オブジェクトの回収はシステムにより引き起こされますが、いつ回収されるかは決定的ではありません。RubyMotion は既存の autorelease pool 構造をベースとしています。この autorelease pool は iOS が event run loop などで生成・破棄します。
+
+Weak References
+~~~~~~~~~~~~~~~
+
+2 つ以上のオブジェクトが相互参照するときに生じる、オブジェクトの循環は現在ランタイムによって処理されません。そのため、オブジェクトのメモリリークを避けるために弱参照を作成することが重要です。
+
+RubyMotion では、Ruby の標準ライブラリ +weak_ref+ と同じような +WeakRef+ クラスを実装されています。+WeakRef.new(obj)+ を使用して弱参照を作成でき、渡されたオブジェクトは保持されません。+WeakRef+ オブジェクトに送られた全てのメッセージは、メソッド呼び出しを行う dispatcher の層で WeakRef.new(obj) で渡されたオブジェクトへ転送されます。
+
+弱参照を使用して delegate パターンを実装した例です。
+
+----
+class MyView
+  def initialize(delegate)
+    @delegate = WeakRef.new(delegate)
+  end
+
+  def do_something
+    # ...
+    @delegate.did_something
+  end
+end
+
+class MyController
+  def initialize
+    @view = MyView.new(self)
+  end
+
+  def did_something
+    # ...
+  end
+end
+----
+
+弱参照を使用しない場合には、+MyView+ と +MyController+ はメモリリークを起こします。
+
+NOTE: 将来、RubyMotion のランタイムは循環参照を解決できることでしょう。その際には +WeakRef+ は使用しても機能しないものに置き換えられることでしょう。
 
 Objective-C  and CoreFoundation Objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -460,6 +571,8 @@ Immediate Types
 RubyMotion では、+Fixnum+ と +Float+ 型は即値で、これらはオブジェクト用のメモリ領域を使用しません。RubyMotion ランタイムでは、http://en.wikipedia.org/wiki/Tagged_pointer[tagged pointers] と呼ばれるテクニックを使用してこれを実装しています。
 
 メモリ使用無しでこれらの型が使えることは、アプリのかなりの部分が描画制御(算術アルゴリズムを大量に使用します) に費やされるので重要です。
+
+INFO: Since iOS is using a 32-bit architecture, immediate types are encoded on a 30-bit pointer (we need 2 bits for type information). On OS X, immediate types will be encoded on a 62-bit pointer when the program runs on recent Mac computers, which are powered by a 64-bit architecture.
 
 Concurrency
 -----------

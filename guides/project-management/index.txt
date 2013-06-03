@@ -15,6 +15,28 @@ $ ls
 Rakefile app resources spec
 ----
 
+Project Templates
+~~~~~~~~~~~~~~~~~
+
+デフォルトでは、+motion create+ は iOS 用のプロジェクトを作成します。+motion+ コマンドは、異なるプロジェクトを作成するために +--template=+ 引数を受け付けます。
+
+現在、RubyMotion には 3 種類の組み込みのテンプレートが同梱しています。
+
+* +ios+: RubyMotion iOS プロジェクトを作成します。デフォルトで使用されるテンプレートです。
+* +osx+: RubyMotion OS X プロジェクトを作成します。
+* +gem+: RubyMotion Gem プロジェクトを作成します。
+
+たとえば、OS X プロジェクトを作成するには、
+
+----
+$ motion create --template=osx Hello
+$ cd Hello
+----
+
++~/Library/RubyMotion/template+ ディレクトリに 3rd-party のテンプレートを追加できます。RubyMotion プロジェクトのテンプレートは +files+ というサブディレクトリを含み、+motion create+ で作成されるファイルによって構成されます。
+
++/Library/RubyMotion/lib/motion/project/template+ にある組み込みのテンプレートを参照ください。
+
 Project Anatomy
 ~~~~~~~~~~~~~~~
 
@@ -43,6 +65,9 @@ Configuration
 
 +rake config+ タスクは、プロジェクトの設定をダンプします。各設定値には適切なデフォルト値が設定されており、'Rakefile' を編集することで設定を変更できます。
 
+Common Options
+~~~~~~~~~~~~~~
+
 [options="header,autowidth"]
 |====
 | Variable | Discussion
@@ -58,20 +83,41 @@ Configuration
 |+build_dir+ | アプリをビルドする際に使用するディレクトリのパス (+String+)。プロジェクトディレクトリからの相対パスを指定します。指定されたディレクトリが存在しない場合には、ビルドシステムによって作成されます。もしディレクトリが作成できない場合、テンポラリディレクトリが代わりに使われます。デフォルト値は +"build"+ です。
 |+resources_dirs+ | リソースファイルを置くディレクトリのパス (+Array+)。デフォルト値は +["resources"]+ です。
 |+specs_dir+ | spec ファイルを置くディレクトリのパス (+String+)。デフォルト値は +"spec"+ です。
+|+xcode_dir+ | Xcode がインストールされているディレクトリを指定します (+String+)。デフォルト値は '/usr/bin/xcode-select -printPath' が返す値によって決まり、もし正しい値でなければ  '/Applications/Xcode.app/Contents/Developer' の値が使われます。この設定値を変更する場合には、他の設定を変更する前に行う必要があります。
+|+sdk_version+ | 使用する SDK のバージョン番号 (+String+)。デフォルト値は +xcode_dir+ 内の最新 SDK のバージョン番号です (例 : +"5.0"+)。
+|+deployment_target+ | ターゲットとする SDK のバージョン番号 (+String+)。デフォルト値は +sdk_version+ の値です。古いバージョンの iOS をターゲットするために値を下げることができます (例 : +"4.3"+)。
+|+codesign_certificate+ | CodeSign に使用する証明書の名前を指定します (+String+)。デフォルト値は keychain で最初に見つかる iPhone Developer 証明書です (例 : +"iPhone Developer: Darth Vader (A3LKZY369Q)"+)。
+|====
+
+Configuration の各項目でカスタマイズする値は、+Rakefile+ の +Motion::App.setup+ ブロックに追加します。
+
+iOS Options
+~~~~~~~~~~~
+
+[options="header,autowidth"]
+|====
+| Variable | Discussion
 |+icons+ | アイコンに使用するリソースファイル名のリスト (+Array+)。例 : +["Icon.png", "Icon-72.png", "Icon@2x.png"]+. アイコンファイルについては http://developer.apple.com/library/ios/#documentation/userexperience/conceptual/mobilehig/IconsImages/IconsImages.html[HIG guidelines] を確認してください。デフォルト値は空の配列 +[]+ です。
 |+fonts+ | リソースディレクトリ内のフォントファイル名のリスト (+Array+)。例 : +["Inconsolata.otf"]+. アプリケーションを生成する際に、フォントが適切に適用されます。デフォルト値は、リソースディレクトリ内のすべての '.ttf' と '.otf' のリストです。デフォルト値を使うことを推奨します。
 |+prerendered_icon+ | +icons+ のアイコンファイルが、HIG guidelines に従ってあらかじめ描画されているかを指定します。+false+ を指定すると、iOS がアイコンにリフレクション効果を適用します。デフォルト値は +false+ です。
 |+device_family+ | サポートするデバイスを指定。+iphone+ と +ipad+ 、+[:iphone, :ipad]+ (ユニバーサルアプリ) を指定できます。デフォルトの値は +iphone+ です。
 |+interface_orientations+ | サポートするデバイスのインタフェースの向きを指定します。値は +Array+ で、次のシンボルを 1 つ以上含める必要があります。+:portrait+ 、 +:landscape_left+ 、 +:landscape_right+ と +:portrait_upside_down+ のシンボルが利用できます。デフォルトの値は +[:portrait, :landscape_left, :landscape_right]+ です。
-|+xcode_dir+ | Xcode がインストールされているディレクトリを指定します (+String+)。デフォルト値は '/usr/bin/xcode-select -printPath' が返す値によって決まり、もし正しい値でなければ  '/Applications/Xcode.app/Contents/Developer' の値が使われます。この設定値を変更する場合には、他の設定を変更する前に行う必要があります。
-|+sdk_version+ | 使用する SDK のバージョン番号 (+String+)。デフォルト値は +xcode_dir+ 内の最新 SDK のバージョン番号です (例 : +"5.0"+)。
-|+deployment_target+ | ターゲットとする SDK のバージョン番号 (+String+)。デフォルト値は +sdk_version+ の値です。古いバージョンの iOS をターゲットするために値を下げることができます (例 : +"4.3"+)。
-|+codesign_certificate+ | CodeSign に使用する証明書の名前を指定します (+String+)。デフォルト値は keychain で最初に見つかる iPhone Developer 証明書です (例 : +"iPhone Developer: Darth Vader (A3LKZY369Q)"+)。
 |+provisioning_profile+ | deployment に使用するプロビジョニングプロファイルのパスを指定します (+String+)。デフォルト値は '~/Library/MobileDevice/Provisioning Profiles' で最初に見つかる '.mobileprovision' ファイルです。
 |+seed_id+ | アプリケーションのプロビジョニング識別子 (+String+)。iOSプロビジョニングポータル (iOS Provisioning Portal) によって生成された 10 文字の (App Store内で) ユニークな識別子です。デフォルト値は +provisioning_profile+ で最初に見つかるアプリケーション識別子です。
 |====
 
-Configuration の各項目でカスタマイズする値は、+Rakefile+ の +Motion::App.setup+ ブロックに追加します。
+OS X Options
+~~~~~~~~~~~
+
+[options="header,autowidth"]
+|====
+| Variable | Discussion
+|+icon+ | アプリケーションのアイコンとして使用するアイコンのリソースファイル名 (+String+)。 例 : +"Icon.png"+ 。デフォルト値は空の文字列 +''+ です。
+|+copyright+| アプリケーションのプロパティファイルで使用される、誰でも読むことができる Copyright を指定します (+String+)。デフォルト値は +"Copyright (c) CURRENT_DATE CURRENT_USER. All Right Reserved."+ です。
+|====
+
+Providing Custom Values
+~~~~~~~~~~~~~~~~~~~~~~~
 
 例として、iPad 用の架空のビデオプレーヤーの設定を取り上げましょう。サポートするデバイスは iPhone から iPad に変更します。オーディオ機能のために、AVFoundation フレームワークをアプリケーションに追加します。
 
@@ -115,7 +161,7 @@ end
 Using 3rd-Party Libraries
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-iOS SDK には非常に多くの機能が組み込まれていて、それらを RubyMotion から使用することができます。しかし、時には iOS に不足している機能を提供するサードパーティライブラリを使用しなければならないかもしれません。
+iOS と OS X SDK には非常に多くの機能が組み込まれていて、それらを RubyMotion から使用することができます。しかし、時にはシステムに不足している機能を提供するサードパーティライブラリを使用しなければならないかもしれません。
 
 RubyMotion でサードパーティライブラリを利用するには、ソースコードがファイルシステム上の存在し利用可能でなければなりません。サードパーティライブラリは、プロジェクトのディレクトリ内 (たとえば、'vendor' ディレクトリの配下) に置くことをおすすめします。
 
@@ -158,6 +204,8 @@ end
 
 Entitlements
 ~~~~~~~~~~~~
+
+NOTE: iOS only.
 
 エンタイトルメント (Entitlements)  はアプリケーションに特定の機能やセキュリティ許可を与えます。システムの特定の機能にアクセスしようとすると、Apple によってエンタイトルメントのリクエストが必要とされるでしょう。
 
@@ -205,11 +253,12 @@ end
 Build
 -----
 
-+rake build+ タスクは、テンポラリーな 'build' ディレクトリにプロジェクトをビルドします。ビルドには 2 種類あり、一つは (Mac 上で動作する) iOS シミュレータ向け、もう一つは iOS デバイス向けのビルドです。
++rake build+ タスクは、テンポラリーな 'build' ディレクトリにプロジェクトをビルドします。
+iOS プロジェクトでは、一つは (Mac 上で動作する) iOS シミュレータ向け、もう一つは iOS デバイス向けの 2 種類がビルドされます。OS X プロジェクトでは、1 種類のビルドが行われます。
 
 以下は、ビルド処理中で行われる行程です。
 
-. 各 Ruby のソースコードファイルは、Ruby の構文木から http://llvm.org[LLVM] を用いて中間言語に、そしてアセンブリに変換し、最適化された機械語へコンパイルされます。コンパイラは Intel 32-bit (+i386+) または ARM (+armv6+, +armv7+) の命令語とターゲットに依存した ABI のコードを生成します。
+. 各 Ruby のソースコードファイルは、Ruby の構文木から http://llvm.org[LLVM] を用いて中間言語に、そしてアセンブリに変換し、最適化された機械語へコンパイルされます。iOS 向けに、コンパイラは Intel 32-bit (+i386+) または ARM (+armv6+, +armv7+) の命令語とターゲットに依存した ABI のコードを生成します。OS X 向けには、コンパイラーはIntel 32-bit (+i386+) と 64-bit (+x86_64+) の両方をターゲットとします。
 . 実行可能なファイルを作成するために機械語と RubyMotion ランタイムが静的にリンクされます。リンカーはプロジェクトで使用する Configuration で指定されたサードパーティライブラリ や C API のメタデータも含めます。
 . '.app' 形式のバンドルを作成し、そこへ実行ファイルをコピーします。プロジェクトの Configuration をベースとした 'Info.plist' を作成します。'resources' ディレクトリの各リソースファイルをバンドル内にコピーします。プロジェクトから削除された古いリソースファイルは、アプリケーションのバンドルから取り除かれます。
 . プロジェクトの Configuration で指定されたエンタイトルメント、プロビジョニングプロファイルと証明書に基づきバンドルを CodeSign します。
@@ -255,32 +304,33 @@ Cleaning
 $ rake clean
 ----
 
-Simulation
-----------
+Running
+-------
 
-+rake simulator+ タスクは iOS シミュレータ向けにプロジェクトをビルドし、シミュレータ上でアプリを実行します。
-
-+rake+ のデフォルトタスクは +rake simulator+ のショートカットとなっています。
+デフォルトの +rake+ タスクはプロジェクトをビルドし、アプリを手元の Mac 上で実行します。
 
 ----
-$ rake simulator
 $ rake
 ----
+
+iOS プロジェクトでは、アプリケーションが iOS シミュレータ上で実行されます。デフォルトの +rake+ タスクは +rake simulator+ のショートカットとなっています。
 
 Interactive Console
 ~~~~~~~~~~~~~~~~~~~
 
-iOS シミュレータ上でアプリを実行するときに、Ruby の +irb+  と類似した、interactive shell が利用できます。
+アプリを実行するときに、Ruby の +irb+  と類似した、interactive shell が利用できます。
 
 interactive shell で式を評価できます。interactive shell は実行中のアプリをブロックしません。入力された式は、アプリを実行するメインスレッドに送られます。
-NOTE: REPL (read-eval-print-loop) のサポートはアプリの必要に応じてロードされます。デフォルトでは、シミュレータ向けにビルドされたアプリは、iOS デバイス向けにビルドされたアプリよりもコードが含まれません。
+NOTE: REPL (read-eval-print-loop) のサポートはアプリの必要に応じて、共有ライブラリを通じてロードされます。デフォルトでは、シミュレータ向けにビルドされたアプリは、iOS デバイス向けにビルドされたアプリよりもコードが含まれません。
 
 +help+ を実行すると、ビルトインの式について情報を得ることができます。
 
-interactive shell にはシミュレータ上で、view を選択する機能もあります。+command+ キーを押しながらマウスをシミュレータのウィンドウ上を移動します。view の周りには赤い枠が表示され、interactive shell 上に選択されているオブジェクトが表示されます。クリックすると、interactive shell は選択した view のコンテキスト (+self+ オブジェクト) で新しい session を開きます。
+interactive shell にはアプリ上で、view を選択する機能もあります。+command+ キーを押しながらマウスをアプリのウィンドウ上を移動します。view の周りには赤い枠が表示され、interactive shell 上に選択されているオブジェクトが表示されます。クリックすると、interactive shell は選択した view のコンテキスト (+self+ オブジェクト) で新しい session を開きます。
 
 Universal Applications
 ~~~~~~~~~~~~~~~~~~~~~~
+
+NOTE: iOS-only.
 
 ユニバーサルアプリケーションは iPhone と iPad デバイスの両方をターゲットとします (詳細はプロジェクトの Configuration の +device_family+ 設定を確認してください)。
 
@@ -295,6 +345,8 @@ $ rake simulator device_family=ipad
 Retina Mode
 ~~~~~~~~~~~
 
+NOTE: iOS-only.
+
 環境変数 +retina+ を +true+ と設定することにより、シミュレータを Retina モードで起動することができます。
 
 ----
@@ -303,6 +355,8 @@ $ rake simulator retina=true
 
 Cleaning the Sandbox
 ~~~~~~~~~~~~~~~~~~~~
+
+NOTE: iOS-only.
 
 各アプリケーションは、iOS シミュレータのサンドボックス内のディレクトリにあります。このディレクトリはアプリケーションバンドルや、'Documents' 、'Library' フォルダを含み、ファイルシステムの状態を保持します。シミュレータ上でアプリケーションを実行する際に、サンドボックスがなければ作成され、あるいは既存のサンドボックスにアプリケーションがコピーされます。
 
@@ -316,7 +370,7 @@ $ rake simulator clean=1
 Testing
 -------
 
-RubyMotion は、アプリケーションの spec を取り扱う、ビルトインの http://en.wikipedia.org/wiki/Behavior_Driven_Development[Behavior-Driven Development] 機能を持っています。RubyMotion は iOS システムと統合するために若干修正した http://github.com/alloy/MacBacon[Bacon] フレームワークを使用します。
+RubyMotion は、アプリケーションの spec を取り扱う、ビルトインの http://en.wikipedia.org/wiki/Behavior_Driven_Development[Behavior-Driven Development] 機能を持っています。RubyMotion はシステムと統合するために若干修正した http://github.com/alloy/MacBacon[Bacon] フレームワークを使用します。
 
 spec ファイルは、'spec' ディレクトリに置かれます。
 
@@ -324,7 +378,7 @@ spec ファイルは、'spec' ディレクトリに置かれます。
 
 Note: +rake spec+ は、現在シミュレータ上でのみ動作します。
 
-spec ファイルは、アプリケーションのクラスと同様に iOS SDK にフルアクセスできます。例として、以下のテストはアプリケーションが 1 つのアクティブウィンドウを持つかというものです。
+spec ファイルは、アプリケーションのクラスと同様に iOS と  OS X SDK にフルアクセスできます。例として、以下のテストはアプリケーションが 1 つのアクティブウィンドウを持つかというものです。
 
 ----
 $ cat spec/main_spec.rb
@@ -359,6 +413,8 @@ RubyMotion プロジェクトは、開発向けあるいはリリース向けに
 
 現在、RubyMotion アプリの開発向けとリリース向けのビルドは、実行可能なファイルからすべてのシンボルが取り除かれるかとういう違いだけです。この処理によって、アプリケーションバンドルから、およそ 1 MB のデータを取り除きます。しかしこれはデバッグを困難に、開発には適しません。
 
+OS X プロジェクトでは、アプリはリリース向けに 32/64-bit のバイナリを含むようにビルドされます。開発向けのビルドでは、ビルド時間の短縮のために、ネイティブな CPU アーキテクチャのみがビルドされます。
+
 プロジェクトをリリース向けにビルドする場合に、'Rakefile' で異なる設定を行うこともできます。
 
 ----
@@ -373,6 +429,8 @@ end
 
 Install on Device
 ~~~~~~~~~~~~~~~~~
+
+NOTE: iOS-only.
 
 +rake device+ は iOS デバイス向けに開発用のアーカイブをビルドしアップロードします。
 
@@ -391,8 +449,10 @@ Install on Device
 Distribution
 ~~~~~~~~~~~~
 
-+rake archive+  タスクは開発向け・リリース向けの両方で '.ipa'  のアーカイブを生成するのに利用できます。'.ipa' アーカイブは ad-hoc な配信や App Store への提出に適しています。
++rake archive+  タスクは開発向け・リリース向けの両方でアーカイブを生成するのに利用できます。アーカイブは ad-hoc な配信や App Store への提出に適しています。
 
-App Store 用に '.ipa' アーカイブを作る際には、+rake archive:distribution+ コマンドを使用します。
+iOS プロジェクト上では、アーカイブファイルは '.ipa' という拡張子になります。OS X プロジェクト上では、'.pkg' という拡張子になります。
+
+App Store 用にアーカイブを作る際には、+rake archive:distribution+ コマンドを使用します。
 
 このタスクは、アプリケーションバンドルを CodeSign するために適切な証明書とプロビジョニングプロファイルが必要となります。

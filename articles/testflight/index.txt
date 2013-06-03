@@ -55,9 +55,10 @@ require 'motion-testflight'
 app.testflight.sdk = 'vendor/TestFlight'
 app.testflight.api_token = '<insert your API token here>'
 app.testflight.team_token = '<insert your team token here>'
+app.testflight.app_token = '<insert your app token here>' *(TestFlight SDK 1.2 and greater)*
 ----
 
-+api_token+ と +team_token+ の値は TestFlight アカウントページから取得することができます。
++api_token+ と +team_token+ の値は TestFlight アカウントページから、+app_token+ は アプリのページから取得することができます。
 
 オプションとして、アプリを提出する配布リストをセットアップする場合には、+distribution_lists+ を使用することができます。
 

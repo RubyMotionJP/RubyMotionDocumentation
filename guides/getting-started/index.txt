@@ -8,13 +8,16 @@ Thank you for purchasing RubyMotion. This guide will help you get started with t
 Overview
 --------
 
-http://www.rubymotion.com[RubyMotion] はプログラミング言語 Ruby を用いて iOS アプリケーションを開発するためのツールチェインです。
+<<<<<<< HEAD
+http://www.rubymotion.com[RubyMotion] はプログラミング言語 Ruby を用いて iOS と OS X アプリケーションを開発するためのツールチェインです。
 
-http://www.apple.com/ios[iOS] は Apple のモバイルオペレーティングシステムで、iPhone や iPod、iPad などさまざまなデバイスを制御しています。開発者は iOS 向けのアプリケーションを作成し、そして Apple のアプリケーション配信システムである App Store にアプリケーションを登録できます。
+http://www.apple.com/ios[iOS] は Apple のモバイルオペレーティングシステムで、iPhone や iPod、iPad などさまざまなデバイスを制御しています。http://www.apple.com/osx[OS X] は Apple のデスクトップ OS で、iMac や MacBook Air といった Mac コンピュータを動かしています。
+
+開発者は iOS や OS X 向けのアプリケーションを作成し、そして Apple のアプリケーション配信システムである App Store にアプリケーションを登録できます。
 
 RubyMotion は、主に二つの構成要素から成ります。
 
-* *Runtime*: 新規の Ruby 言語の実装で、ネイティブの iOS と密接に統合され iOS デバイスに最適化されています。
+* *Runtime*: 新規の Ruby 言語の実装で、ネイティブの Apple のランタイムと密接に統合され iOS デバイスに最適化されています。
 * *Project Management*: RubyMotion のプロジェクトを作成・管理、また対話的に開発するためのコマンドラインインタフェースです。他にも、Ruby コードを最適化された機械語にコンパイルする静的なコンパイラと、その場でリアルタイムに式を評価しアプリケーションの動作を変更できるインタラクティブなコンソールがあります。
 
 RubyMotion は '/Library/RubyMotion' にインストールされ、コマンドラインインタフェースのシンボリックリンクが '/usr/bin/motion' に作成されます。
@@ -24,7 +27,7 @@ Prerequisites
 
 RubyMotion の利用には、OSX 10.6 以上がインストールされている Mac が必要です。OSX 10.7 Lion 以上を強くおすすめします。
 
-あらかじめ iOS SDK を Mac にインストールする必要があります。iOS SDK は Xcode に付属おり、Xcode は App Store アプリケーションを使用して、無料でダウンロード・インストールできます。
+あらかじめ iOS SDK と OS X SDK を Mac にインストールする必要があります。iOS SDK は Xcode に付属おり、Xcode は App Store アプリケーションを使用して、無料でダウンロード・インストールできます。
 
 NOTE: Xcode は Apple 製の IDE です。RubyMotion でプログラミングするときには Xcode を使う必要はなく、お気に入りのエディタを使い続けることができます。
 
@@ -70,7 +73,9 @@ $ motion -v
 1.0
 ----
 
-一日に一度、RubyMotion のビルドシステムは新しい RubyMotion がインストールできないか Software アップデートサーバに問い合わせします。新しい RubyMotion があれば Terminal にメッセージを表示しアップデートを通知します。
+一日に一度、RubyMotion のビルドシステムは新しい RubyMotion がインストールできないか Software アップデートサーバに問い合わせします。
+
+新しい RubyMotion があれば Terminal にメッセージを表示しアップデートを通知します。もしライセンスの有効期限が切れるような場合にも、ビルドシステムはメッセージを表示します。
 
 Support
 -------
@@ -86,7 +91,10 @@ $ motion support
 Hello World
 -----------
 
-最初の RubyMotion プログラム "Hello World" を記述する準備が整いました。
+iOS
+~~~
+
+最初の RubyMotion iOS プログラム "Hello World" を記述する準備が整いました。
 
 Terminal を起動し、プロジェクトを作成する場所へ移動します。そして、以下のようにコマンドを実行してください。
 
@@ -141,7 +149,7 @@ end
 
 Terminal で再び +rake+ コマンドを実行すると、シミュレータ上にアラートが表示されます。
 
-image:http://www.rubymotion.com/developer-center/guides/getting-started/images/hello.png["Hello World"]
+image:http://www.rubymotion.com/developer-center/guides/getting-started/images/hello-ios.png["Hello World"]
 
 今度は、iOS デバイスで試してみましょう。開発用に設定された iOS デバイスと USB で接続した状態で、次のコマンドを実行します。
 
@@ -153,9 +161,76 @@ $ rake device
 
 これで、はじめての RubyMotion プログラムの作成が終わりです。どうでしょう、難しかったですか？
 
+OS X
+~~~
+
+さぁ、最初の RubyMotion OS X プログラム "Hello World" を記述してみましょう。
+
+Terminal を起動し、プロジェクトを作成する場所へ移動します。そして、以下のようにコマンドを実行してください。
+
+----
+$ motion create --template=osx Hello
+----
+
+NOTE: +motion+ コマンドに +--template=osx+ というオプションを指定することに注意してください。デフォルトでは、+motion create+ は iOS 用のプロジェクトを作成します。ここでは、OS X プロジェクトを作成したいので、OS X プロジェクトのテンプレートを指定する必要があります。
+
+このコマンドによって、RubyMotion のプロジェクトが "Hello" という新しいディレクトリに作られます。もしすでに同じディレクトリが存在するなどしディレクトリが作成できない場合には、コマンドの実行は失敗します。
+
+ディレクトリの中身をのぞいてみましょう。
+
+----  
+$ cd Hello
+$ ls
+Rakefile app resources spec
+----
+
+RubyMotion のプロジェクトは +Rakefile+ をベースとしています。+rake+ は Ruby での標準的なビルドプログラムです。 同様のものとして、Mac OS X では標準で +make+ が付属しています。
+
+'app' ディレクトリにはアプリケーションのコードが含まれます。'resources' ディレクトリには、アイコンや画像、サウンドファイルなど、プロジェクトで使用するリソースが最終的に含まれるでしょう。'spec' ディレクトリには spec やテスト用のファイルが含まれます。
+
+rake のデフォルトタスクを実行してみましょう。
+
+----
+$ rake
+----
+
+プロジェクトをビルドし、シミュレータが起動します。まだコードを何も書いていないので、空のウィンドウが表示されます。
+
+'app' ディレクトリの中にはデフォルトで作成される 'app_delegate.rb' というファイルがあります。このファイルには、アプリケーションの制御という役割をする AppDelegate が実装されています。
+
+----
+class AppDelegate
+  def applicationDidFinishLaunching(notification)
+    buildMenu
+    buildWindow
+  end
+end
+----
+
+'app/app_delegate.rb' ファイルをお気に入りのエディタで開きます。そして、アラートを表示するといった、なにかおもしろいコードに変更しましょう。
+
+----
+class AppDelegate
+  def applicationDidFinishLaunching(notification)
+    buildMenu
+    buildWindow
+
+    alert = NSAlert.new
+    alert.messageText = "Hello World!"
+    alert.runModal
+  end
+end
+----
+
+Terminal で再び +rake+ コマンドを実行すると、シミュレータ上にアラートが表示されます。
+
+image:/developer-center/guides/getting-started/images/hello-osx.png["Hello World"]
+
+おめでとうございます、みなさんは最初の RubyMotion iOS, OS X プログラムを作ることに成功しました。それほど難しくなかったでしょう？
+
 And Now?
 --------
 
-いくつかサンプルコードが GitHub の https://github.com/HipByte/RubyMotionSamples[Sample Code Repository] にあります。サブフォルダは、上記のように作成した RubyMotion プロジェクトです。 サブフォルダで +rake+ コマンドを実行しアプリを試すことや、'app' ディレクトリ内のソースコードを確認することができます。
+いくつか iOS と OS X のサンプルコードが GitHub の https://github.com/HipByte/RubyMotionSamples[Sample Code Repository] にあります。サブフォルダは、上記のように作成した RubyMotion プロジェクトです。 サブフォルダで +rake+ コマンドを実行しアプリを試すことや、'app' ディレクトリ内のソースコードを確認することができます。
 
 そのほかのガイドや RubyMotion に関する記事、screencast などは http://www.rubymotion.com/developer-center[Developer Center] で確認してください。
