@@ -114,6 +114,7 @@ OS X Options
 | Variable | Discussion
 |+icon+ | アプリケーションのアイコンとして使用するアイコンのリソースファイル名 (+String+)。 例 : +"Icon.png"+ 。デフォルト値は空の文字列 +''+ です。
 |+copyright+| アプリケーションのプロパティファイルで使用される、誰でも読むことができる Copyright を指定します (+String+)。デフォルト値は +"Copyright (c) CURRENT_DATE CURRENT_USER. All Right Reserved."+ です。
+|+embedded_frameworks+| アプリケーションバンドルに埋め込む 3rd-party frameworks のリストで、ファイルパス文字列の +Array+ にしたものです。例 : +["../MyFramework/framework"]+ 。 デフォルトの値は空の配列です。
 |====
 
 Providing Custom Values
@@ -158,8 +159,8 @@ end
 
 この変更の後は、ビルドシステムは 'bar.rb' の前に 'foo.rb' をコンパイルします。
 
-Using 3rd-Party Libraries
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Vendoring 3rd-Party Libraries
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 iOS と OS X SDK には非常に多くの機能が組み込まれていて、それらを RubyMotion から使用することができます。しかし、時にはシステムに不足している機能を提供するサードパーティライブラリを使用しなければならないかもしれません。
 
@@ -201,6 +202,24 @@ Motion::Project::App.setup do |app|
   app.frameworks << 'Security' # OAuth2Client depends on Security.framework
 end
 ----
+
+Embedded Frameworks
+^^^^^^^^^^^^^^^^^^^
+
+NOTE: OS X only.
+
+OS X アプリケーションは 3rd-party frameworks をバンドルディレクトリ内に埋め込むことができます。上で記述した、vendor_project を利用したスタティックライブラリの組み込み方の代わりとして使用できます。
+
+アプリに 3rd-party framework を埋め込む際には、'Rakefile' で +app.embedded_frameworks+ を使用します。
+
+----
+Motion::Project::App.setup do |app|
+  # ...
+  app.embedded_frameworks << '../MyFramework.framework'
+end
+----
+
+埋め込まれた frameworks はアプリケーションバンドルの 'Contents/Frameworks' というディレクトリ内にコピーされます。アプリケーションのバイナリの実行ファイルは framework への相対パスを参照するように再構成されます。
 
 Entitlements
 ~~~~~~~~~~~~
@@ -314,6 +333,19 @@ $ rake
 ----
 
 iOS プロジェクトでは、アプリケーションが iOS シミュレータ上で実行されます。デフォルトの +rake+ タスクは +rake simulator+ のショートカットとなっています。
+
+OS X プロジェクトでは、アプリケーションは直接 Mac 上で実行されます。デフォルトの +rake+ タスクは +rake run+ のショートカットとなっています。
+
+Passing Arguments
+~~~~~~~~~~~~~~~~~
+
+開発している際に、アプリケーション起動時にコマンドライン引数を渡したいというケースがあるかもしれません。
+
++rake+ タスクは環境変数 +args+ の値を引数として与えることができます。例えば、次のように CoreData SQL をデバッグすることができます。
+
+----
+$ rake args="-com.apple.CoreData.SQLDebug 1"
+----
 
 Interactive Console
 ~~~~~~~~~~~~~~~~~~~
@@ -456,3 +488,25 @@ iOS プロジェクト上では、アーカイブファイルは '.ipa' とい�
 App Store 用にアーカイブを作る際には、+rake archive:distribution+ コマンドを使用します。
 
 このタスクは、アプリケーションバンドルを CodeSign するために適切な証明書とプロビジョニングプロファイルが必要となります。
+
+Manifest File
+^^^^^^^^^^^^^
+
+iOS プロジェクトは +rake archive+ 実行時に 'manifest.plist' を生成することができます。このファイルは over-the-air ad-hoc distribution を実装するために利用できます。
+
+このファイルの生成を有効にするには、+app.manifest_assets+ を用います。デフォルト値は空の配列で、アセットを記述した +Hash+ オブジェクトを少なくとも 1 つ含める必要があります。
+それぞれの +Hash+ では +kind+ と +url+ をキーとして値を与えます。+kind+ キーの値として、+"software-package"+, +"display-image"+ と +"full-size-image"+ が利用できます。
+
+次のコード片は 2 つのマニフェストアセットを記述したもので、アプリケーションのアーカイブの配布先とアプリケーションのアイコン画像の配布先を示します。
+
+----
+Motion::Project::App.setup do |app|
+  # ...
+  app.manifest_assets << { :kind => 'software-package',
+                           :url => 'http://mycompany.com/files/myapp.ipa' }
+  app.manifest_assets << { :kind => 'display-image',
+                           :url => 'http://mycompany.com/files/myapp.jpg' }
+end
+----
+
+このドキュメントの執筆時点では、Apple が適切なプロパティリストを公開していないため、ネットを検索する必要があるかもしれません。
