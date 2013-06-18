@@ -795,13 +795,11 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install();
+asciidoc.install(3);
 /*]]>*/
 </script><style type="text/css">
 body {
-	margin: 1em auto 1em auto;
-	padding: 0 1em 0 1em;
-	max-width: 800px;
+	margin: 1em 10% 1em 10%;
 }
 
 a.image {
@@ -878,10 +876,6 @@ a.image {
 
 #comments_lightbox_contents > .shell {
 	margin: 2em;
-}
-
-pre {
-	overflow: auto;
 }
 
 @media print {
@@ -1044,15 +1038,6 @@ pre {
 	border-bottom-right-radius: 0;
 }
 
-/* http://nicolasgallagher.com/jump-links-and-viewport-positioning/ */
-.anchor_helper {
-	position: relative;
-	display: block;
-	top: -50px;
-	width: 1px;
-	height: 1px;
-}
-
 </style>
 </head>
 <body class="article" style="max-width:55em">
@@ -1064,24 +1049,21 @@ pre {
 </div>
 <div id="header">
 <h1>Writing Ruby gems for RubyMotion</h1>
-<span id="author">Laurent Sansonetti</span><br><span id="email" class="monospaced">&lt;<a href="mailto:lrz@hipbyte.com">lrz@hipbyte.com</a>&gt;</span><br><div id="preamble">
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph"><p>Ruby の標準的なパッケージングシステムである RubyGems を使用し、RubyMotion プロジェクトを拡張することができます。この記事では、RubyMotion 固有の gems の記述方法について説明します。</p></div>
 <div class="paragraph"><p>この記事は、Francis Chong による <a href="http://reality.hk/posts/2012/05/22/create-gems-for-rubymotion">Create gems for RubyMotion</a> にインスパイアされました。</p></div>
 </div>
 </div>
-<div id="toc">
-<div id="toctitle">Table of Contents</div>
-<div class="foo toclevel2"><a href="#_getting_started">1. Getting started</a></div>
-<div class="foo toclevel2"><a href="#_adding_source_files">2. Adding source files</a></div>
-<div class="foo toclevel2"><a href="#_adding_dependencies">3. Adding dependencies</a></div>
-<div class="foo toclevel2"><a href="#_adding_span_class_monospaced_rake_span_tasks">4. Adding rake tasks</a></div>
+<span id="author">Laurent Sansonetti</span><br><span id="email" class="monospaced">&lt;<a href="mailto:lrz@hipbyte.com">lrz@hipbyte.com</a>&gt;</span><br><div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
 </div>
 </div>
 <div id="content">
 
 <div class="sect1">
-<span class="anchor_helper" id="_getting_started"></span><h2 data-anchor="_getting_started">1. Getting started</h2>
+<h2 id="_getting_started">1. Getting started</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>RubyMotion は静的にビルドする Ruby 言語ですが、RubyMotion では既存の Ruby 用に作られた gems は動作しません。RubyMotion の gems は、RubyMotion 向けに特別に構成する必要があります。</p></div>
 <div class="paragraph"><p>RubyMotion では、gems はプロジェクトの <em>Rakefile</em> で require され、プロジェクトの設定を拡張します。たとえば、プロジェクトにファイルの追加や、新しい設定や、<span class="monospaced">rake</span> タスクを導入します。</p></div>
@@ -1124,7 +1106,7 @@ end</pre>
 </div>
 </div>
 <div class="sect1">
-<span class="anchor_helper" id="_adding_source_files"></span><h2 data-anchor="_adding_source_files">2. Adding source files</h2>
+<h2 id="_adding_source_files">2. Adding source files</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>gem は、<span class="monospaced">Motion::Project::App</span> ブロックを用い <span class="monospaced">app.files</span> 変数へパスを追加することで、RubyMotion プロジェクトにファイルを追加することができます。</p></div>
 <div class="paragraph"><p>例として、<em>lib/foo</em> 内にいくつかファイルを保有する <span class="monospaced">foo</span> gem を仮定しましょう。<em>lib/foo</em> 内のファイルは RubyMotion プロジェクトへミックスされることを意図しています。</p></div>
@@ -1157,7 +1139,7 @@ end</pre>
 </div>
 </div>
 <div class="sect1">
-<span class="anchor_helper" id="_adding_dependencies"></span><h2 data-anchor="_adding_dependencies">3. Adding dependencies</h2>
+<h2 id="_adding_dependencies">3. Adding dependencies</h2>
 <div class="sectionbody">
 <div class="paragraph"><p><span class="monospaced">foo</span> gem はソースファイル追加に制限がされていません。そのため、<span class="monospaced">Motion::Project::Config</span> や、RubyMotion プロジェクトで行う同じ設定にアクセスできます。</p></div>
 <div class="paragraph"><p>たとえば、<span class="monospaced">foo</span> gem が Objective-C のソースコードを持っているものと仮定しましょう。</p></div>
@@ -1194,7 +1176,7 @@ end</pre>
 </div>
 </div>
 <div class="sect1">
-<span class="anchor_helper" id="_adding_span_class_monospaced_rake_span_tasks"></span><h2 data-anchor="_adding_span_class_monospaced_rake_span_tasks">4. Adding <span class="monospaced">rake</span> tasks</h2>
+<h2 id="_adding_span_class_monospaced_rake_span_tasks">4. Adding <span class="monospaced">rake</span> tasks</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>RubyMotion gem は新しい <span class="monospaced">rake</span> タスクを導入するためにビルドシステムを拡張することが非常に簡単にできます。</p></div>
 <div class="paragraph"><p><em>foo.rb</em> は RubyMotion プロジェクトの <em>Rakefile</em> ファイル内で require されるので、タスクをそこで定義するだけです。</p></div>
@@ -1221,7 +1203,7 @@ end</pre>
 <div id="footnotes"><hr></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2013-06-03 09:19:49 JST
+Last updated 2013-06-18 19:35:57 JST
 </div>
 </div>
 <script>/*! jQuery v1.7.1 jquery.com | jquery.org/license */
@@ -1559,7 +1541,6 @@ Mizuho.initializeTopBar = $.proxy(function() {
 	var isMobileDevice = this.isMobileDevice();
 	var timerId;
 	
-	// Create the floating table of contents used in the top bar.
 	var $floattoc = $('<div id="floattoc"></div>').html($('#toc').html());
 	$floattoc.find('#toctitle').remove();
 	$floattoc.find('.comments').remove();
@@ -1578,8 +1559,6 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		self.internalLinkClicked(this, event);
 	});
 	
-	// Callback for when the user clicks on the Table of Contents
-	// button on the top bar.
 	function showFloatingToc() {
 		var scrollUpdateTimerId;
 		
@@ -1672,9 +1651,6 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		$window.bind('scroll', onScroll);
 	}
 	
-	// Called whenever the user scrolls. Updates the title of the
-	// Table of Contents button in the top bar to the section that
-	// the user is currently reading.
 	function update() {
 		if ($title.offset().top + $title.height() < $document.scrollTop()) {
 			if (!$topbar.is(':visible')) {
@@ -1717,7 +1693,6 @@ Mizuho.initializeTopBar = $.proxy(function() {
 			update();
 		}, 100);
 	}
-	
 	
 	if (isMobileDevice) {
 		// Mobile devices don't support position fixed.

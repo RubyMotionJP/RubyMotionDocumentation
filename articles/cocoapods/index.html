@@ -795,13 +795,11 @@ install: function(toclevels) {
 }
 
 }
-asciidoc.install();
+asciidoc.install(3);
 /*]]>*/
 </script><style type="text/css">
 body {
-	margin: 1em auto 1em auto;
-	padding: 0 1em 0 1em;
-	max-width: 800px;
+	margin: 1em 10% 1em 10%;
 }
 
 a.image {
@@ -878,10 +876,6 @@ a.image {
 
 #comments_lightbox_contents > .shell {
 	margin: 2em;
-}
-
-pre {
-	overflow: auto;
 }
 
 @media print {
@@ -1044,15 +1038,6 @@ pre {
 	border-bottom-right-radius: 0;
 }
 
-/* http://nicolasgallagher.com/jump-links-and-viewport-positioning/ */
-.anchor_helper {
-	position: relative;
-	display: block;
-	top: -50px;
-	width: 1px;
-	height: 1px;
-}
-
 </style>
 </head>
 <body class="article" style="max-width:55em">
@@ -1064,22 +1049,20 @@ pre {
 </div>
 <div id="header">
 <h1>Use CocoaPods Dependencies in RubyMotion Apps</h1>
-<span id="author">Laurent Sansonetti</span><br><span id="email" class="monospaced">&lt;<a href="mailto:lrz@hipbyte.com">lrz@hipbyte.com</a>&gt;</span><br><div id="preamble">
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph"><p>この記事は、ライブラリの依存関係を管理する <a href="http://cocoapods.org">CocoaPods</a> をみなさんの RubyMotion プロジェクトに統合する方法について説明します。</p></div>
 </div>
 </div>
-<div id="toc">
-<div id="toctitle">Table of Contents</div>
-<div class="foo toclevel2"><a href="#_synopsis">1. Synopsis</a></div>
-<div class="foo toclevel2"><a href="#_installation">2. Installation</a></div>
-<div class="foo toclevel2"><a href="#_usage">3. Usage</a></div>
+<span id="author">Laurent Sansonetti</span><br><span id="email" class="monospaced">&lt;<a href="mailto:lrz@hipbyte.com">lrz@hipbyte.com</a>&gt;</span><br><div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
 </div>
 </div>
 <div id="content">
 
 <div class="sect1">
-<span class="anchor_helper" id="_synopsis"></span><h2 data-anchor="_synopsis">1. Synopsis</h2>
+<h2 id="_synopsis">1. Synopsis</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>CocoaPods は、Objective-C プロジェクトに不足している、ライブラリの依存関係を管理するためのものです。CocoaPods は RubyGems と似ており、Objective-C の依存関係を扱います。</p></div>
 <div class="paragraph"><p>CocoaPods では、依存関係は Pods で扱われます。GitHub レポジトリの <a href="http://github.com/CocoaPods/Specs">CocoaPods/Specs</a> から利用可能な Pods のリストを取得できます。</p></div>
@@ -1088,7 +1071,7 @@ pre {
 </div>
 </div>
 <div class="sect1">
-<span class="anchor_helper" id="_installation"></span><h2 data-anchor="_installation">2. Installation</h2>
+<h2 id="_installation">2. Installation</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>はじめに、CocoaPods のインストールとセットアップが必要となります。すでにセットアップ済みであれば、この作業は不要です。</p></div>
 <div class="listingblock">
@@ -1107,7 +1090,7 @@ $ pod setup</pre>
 </div>
 </div>
 <div class="sect1">
-<span class="anchor_helper" id="_usage"></span><h2 data-anchor="_usage">3. Usage</h2>
+<h2 id="_usage">3. Usage</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>プロジェクトの <em>Rakefile</em> で、さきほどの gem を require する必要があります。</p></div>
 <div class="listingblock">
@@ -1136,7 +1119,7 @@ end</pre>
 <div id="footnotes"><hr></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2013-06-03 09:19:49 JST
+Last updated 2013-06-18 19:35:57 JST
 </div>
 </div>
 <script>/*! jQuery v1.7.1 jquery.com | jquery.org/license */
@@ -1474,7 +1457,6 @@ Mizuho.initializeTopBar = $.proxy(function() {
 	var isMobileDevice = this.isMobileDevice();
 	var timerId;
 	
-	// Create the floating table of contents used in the top bar.
 	var $floattoc = $('<div id="floattoc"></div>').html($('#toc').html());
 	$floattoc.find('#toctitle').remove();
 	$floattoc.find('.comments').remove();
@@ -1493,8 +1475,6 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		self.internalLinkClicked(this, event);
 	});
 	
-	// Callback for when the user clicks on the Table of Contents
-	// button on the top bar.
 	function showFloatingToc() {
 		var scrollUpdateTimerId;
 		
@@ -1587,9 +1567,6 @@ Mizuho.initializeTopBar = $.proxy(function() {
 		$window.bind('scroll', onScroll);
 	}
 	
-	// Called whenever the user scrolls. Updates the title of the
-	// Table of Contents button in the top bar to the section that
-	// the user is currently reading.
 	function update() {
 		if ($title.offset().top + $title.height() < $document.scrollTop()) {
 			if (!$topbar.is(':visible')) {
@@ -1632,7 +1609,6 @@ Mizuho.initializeTopBar = $.proxy(function() {
 			update();
 		}, 100);
 	}
-	
 	
 	if (isMobileDevice) {
 		// Mobile devices don't support position fixed.
