@@ -100,7 +100,14 @@ end
 
 各 Spec の前に、新しい window とビューコントローラクラスのインスタンスが作成されます。これらは、`window` と `controller` として Spec で利用できます。
 
-TIP: window または controller のカスタムインスタンスの作成を行う必要がある場合には、`tests` の前に呼ばれる `before` でそれを行うことができます。
+TIP: window または controller のカスタムインスタンスの作成を行う必要がある場合には、`tests` の前に呼ばれる `before` でそれを行うことができます。テストを実施する前にコントローラの初期化を実行する必要があることが一般的です。その場合には、`tests` メソッドに block を渡します。
+
+----
+describe "The 'taking over the world' view" do
+  tests TakingOverTheWorldViewController do |controller|
+    controller.initial_data = {}
+  end
+----
 
 Storyboards
 ^^^^^^^^^^^
