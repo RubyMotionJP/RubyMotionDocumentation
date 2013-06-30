@@ -1157,8 +1157,16 @@ end</pre>
 <td class="icon">
 <img src="../../icons/tip.png" alt="Tip">
 </td>
-<td class="content">window または controller のカスタムインスタンスの作成を行う必要がある場合には、<span class="monospaced">tests</span> の前に呼ばれる <span class="monospaced">before</span> でそれを行うことができます。</td>
+<td class="content">window または controller のカスタムインスタンスの作成を行う必要がある場合には、<span class="monospaced">tests</span> の前に呼ばれる <span class="monospaced">before</span> でそれを行うことができます。テストを実施する前にコントローラの初期化を実行する必要があることが一般的です。その場合には、<span class="monospaced">tests</span> メソッドに block を渡します。</td>
 </tr></table>
+</div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>describe "The 'taking over the world' view" do
+  tests TakingOverTheWorldViewController do |controller|
+    controller.initial_data = {}
+  end</pre>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_storyboards">3.1.1. Storyboards</h4>
@@ -1651,7 +1659,7 @@ view('Scrollable scrollview').contentOffset.y # =&gt; 400</pre>
 <div id="footnotes"><hr></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2013-06-18 19:35:57 JST
+Last updated 2013-06-30 13:16:37 JST
 </div>
 </div>
 <script>/*! jQuery v1.7.1 jquery.com | jquery.org/license */
