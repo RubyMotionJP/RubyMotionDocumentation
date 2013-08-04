@@ -26,7 +26,7 @@ Prerequisites
 
 RubyMotion の利用には、OSX 10.6 以上がインストールされている Mac が必要です。OSX 10.7 Lion 以上を強くおすすめします。
 
-あらかじめ iOS SDK と OS X SDK を Mac にインストールする必要があります。iOS SDK は Xcode に付属おり、Xcode は App Store アプリケーションを使用して、無料でダウンロード・インストールできます。
+あらかじめ iOS SDK と OS X SDK を Mac にインストールする必要があります。iOS SDK は Xcode に付属しており、Xcode は App Store アプリケーションを使用して、無料でダウンロード・インストールできます。
 
 NOTE: Xcode は Apple 製の IDE です。RubyMotion でプログラミングするときには Xcode を使う必要はなく、お気に入りのエディタを使い続けることができます。
 
