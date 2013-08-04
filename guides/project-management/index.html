@@ -1388,13 +1388,17 @@ end</pre>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">RubyMotion プロジェクトで使用するライブラリ名を含んだ <span class="monospaced">Array</span> を指定します (例 : <span class="monospaced">["libfoo.a"]</span>)。プロジェクトが複数のライブラリをビルドし、アプリで使用するライブラリをフィルタしたいというケースで、このキーを用います。</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-middle" rowspan="2"><p class="tableblock"><span class="monospaced">:static</span></p></td>
+<td class="tableblock halign-left valign-middle" rowspan="3"><p class="tableblock"><span class="monospaced">:static</span></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><span class="monospaced">:products</span></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">使用する static ライブラリ名を含んだ <span class="monospaced">Array</span> を指定します。デフォルト値は vendor プロジェクトディレクトリのすべての <em>.a</em> をリストにした値です。</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><span class="monospaced">:headers_dir</span></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">RubyMotion プロジェクトで使用される API が宣言されている、パブリックなヘッダファイルが置かれているディレクトリへのパスを指定します。<span class="monospaced">vendor_project</span> の第一引数で与えられたパスとの相対パスを指定します (例 : <span class="monospaced">"include"</span>)。デフォルト値は <span class="monospaced">vendor_project</span>  の第一引数に指定した値です。</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><span class="monospaced">:source_files</span></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">コンパイル対象となる全てのソースファイルとヘッダファイルを含む <span class="monospaced">Array</span> を指定します。デフォルト値はvendorプロジェクト内の <span class="monospaced">"<strong>*/</strong>.{c,m,cpp,cxx,mm,h}"</span> にマッチする全てのファイルのリストです。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><span class="monospaced">:cflags</span></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">コンパイルに使用するCFLAGSを指定します (例 : <span class="monospaced">"-fobjc-arc"</span> ARCをオンにする場合)。この設定は省略可能です。</p></td>
 </tr>
 </tbody>
 </table>
@@ -1784,7 +1788,7 @@ end</pre>
 <div id="footnotes"><hr></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2013-06-18 21:12:12 JST
+Last updated 2013-08-04 22:28:06 JST
 </div>
 </div>
 <script>/*! jQuery v1.7.1 jquery.com | jquery.org/license */
