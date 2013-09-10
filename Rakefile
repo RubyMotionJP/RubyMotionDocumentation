@@ -1,12 +1,12 @@
-task :default => :all
+task :default => :doc
 
-task :all do
+task :doc do
   Dir.glob('**/*.txt').each do |src|
     Dir.chdir(File.dirname(src)) do
       src = File.basename(src)
       dest = src.sub(/\.txt/, '.html')
       if !File.exist?(dest) or File.mtime(src) > File.mtime(dest)
-        sh "mizuho -a max-width=55em --icons-dir \"../../icons\" \"#{src}\" -o \"#{dest}\""
+        sh "bundle exec mizuho -a max-width=55em --icons-dir \"../../icons\" \"#{src}\" -o \"#{dest}\""
       end
     end
   end
