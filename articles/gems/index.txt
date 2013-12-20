@@ -13,7 +13,7 @@ RubyMotion は静的にビルドする Ruby 言語ですが、RubyMotion では�
 
 RubyMotion では、gems はプロジェクトの 'Rakefile' で require され、プロジェクトの設定を拡張します。たとえば、プロジェクトにファイルの追加や、新しい設定や、+rake+ タスクを導入します。
 
-この記事では、仮の +foo+ という gem を題材にします。その gem は以下のようなファイル構造です。
+この記事では、+foo+ という仮の gem を題材にします。その gem は以下のようなファイル構造です。
 
 ----
 foo.gemspec
@@ -48,7 +48,7 @@ Adding source files
 
 gem は、+Motion::Project::App+ ブロックを用い +app.files+ 変数へパスを追加することで、RubyMotion プロジェクトにファイルを追加することができます。
 
-例として、'lib/foo' 内にいくつかファイルを保有する +foo+ gem を仮定しましょう。'lib/foo' 内のファイルは RubyMotion プロジェクトへミックスされることを意図しています。
+例として、'lib/foo' 内にいくつかファイルを保有する +foo+ gem を仮定しましょう。'lib/foo' 内のファイルは RubyMotion プロジェクトへ追加されることを意図しています。
 
 ----
 foo.gemspec
@@ -60,7 +60,7 @@ lib
     foo-controller.rb
 ----
 
-'lib/foo.rb' は次のように修正することができます。
+'lib/foo.rb' ファイルは、次のように変更することができます。
 
 ----
 unless defined?(Motion::Project::Config)
@@ -81,7 +81,7 @@ Adding dependencies
 
 +foo+ gem はソースファイル追加に制限がされていません。そのため、+Motion::Project::Config+ や、RubyMotion プロジェクトで行う同じ設定にアクセスできます。
 
-たとえば、+foo+ gem が Objective-C のソースコードを持っているものと仮定しましょう。 
+たとえば、+foo+ gem が Objective-C のソースコードを持っているとしましょう。 
 
 ----
 foo.gemspec
@@ -116,7 +116,7 @@ end
 Adding +rake+ tasks
 -------------------
 
-RubyMotion gem は新しい +rake+ タスクを導入するためにビルドシステムを拡張することが非常に簡単にできます。
+RubyMotion の gem は、ビルドシステムを拡張し新しい +rake+ タスクを追加することも非常に簡単にできます。
 
 'foo.rb' は RubyMotion プロジェクトの 'Rakefile' ファイル内で require されるので、タスクをそこで定義するだけです。
 

@@ -7,27 +7,25 @@ Laurent Sansonetti <lrz@hipbyte.com>
 Synopsis
 --------
 
-TestFlight は開発用にビルドしたアプリを配布するために利用できるプラットフォームです。あなたは、フィードバックやコンソールログ、クラッシュレポートを自動的に受信できます。それはアプリの開発サイクルにおいて非常に有用でしょう。
+TestFlight は開発用にビルドしたアプリを配布するために利用できるプラットフォームです。あなたは、フィードバックやコンソールログ、クラッシュレポートを自動的に受信できます。それはアプリの開発サイクルにおいて非常に役立ちます。
 
 http://testflightapp.com[http://testflightapp.com] で、無料でアカウントを作成することができます。
 
 Installation
 ------------
 
-+motion-testflight+ gem の使用をお勧めします。
+円滑に TestFlight を扱える、+motion-testflight+ gem の使用をお勧めします。
 
 ----
 $ gem install motion-testflight
 ----
 
-+motion-testflight+ gem のソースコードは GitHub レポジトリの http://github.com/HipByte/motion-testflight[HipByte/motion-testflight]  にあります。
++motion-testflight+ gem のソースコードは GitHub レポジトリの http://github.com/HipByte/motion-testflight[HipByte/motion-testflight] にあります。
 
 Unpack the SDK
 --------------
 
 http://testflightapp.com/sdk/download から TestFlight SDK パッケージをダウンロードし、RubyMotion プロジェクトの 'vendor' ディレクトリに解凍する必要があります。
-
-'vendor' ディレクトリがなければ作成します。
 
 次のように TestFlight SDK を配置します。
 
@@ -40,7 +38,7 @@ TestFlight.h			release_notes.txt
 Change your project configuration
 ---------------------------------
 
-gem をセットアップするため、プロジェクトの 'Rakefile' を変更します。
+プロジェクトの 'Rakefile' を変更し gem をセットアップします。
 
 はじめに、gem を require します。'Rakefile' の先頭で、ほかの require 文の後に次の行を追加します。
 
@@ -49,7 +47,7 @@ require 'rubygems'
 require 'motion-testflight'
 ----
 
-次に設定します。アプリケーションの Configuration ブロック内に、次の行を追加します。
+次に設定します。アプリケーションの設定ブロックブロック内に、次の行を追加します。
 
 ----
 app.testflight.sdk = 'vendor/TestFlight'
@@ -71,7 +69,7 @@ Usage
 
 +rake testflight+ が、新しい rake タスクとして利用できるようになります。このタスクは、TestFlight へアプリの開発ビルドを自動的に提出します。
 
-+notes+ 引数の内容は提出したアプリの実際のリリースノートなり、この引数は必須となります。
++notes+ 引数の内容は提出したアプリの実際のリリースノートとなります。この引数は必須です。
 
 ----
 $ rake testflight notes='zomg!'
