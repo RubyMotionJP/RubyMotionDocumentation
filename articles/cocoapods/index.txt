@@ -11,7 +11,7 @@ CocoaPods は、Objective-C プロジェクトに不足している、ライブ�
 
 CocoaPods では、依存関係は Pods で扱われます。GitHub レポジトリの http://github.com/CocoaPods/Specs[CocoaPods/Specs] から利用可能な Pods のリストを取得できます。
 
-CocoaPods はそもそもは Xcode プロジェクトの Objective-C と統合されるように設計されています。しかし、CocoaPods の作者と作業し、RubyMotion プロジェクトで利用できるようになりました。
+CocoaPods はもともと Xcode プロジェクトの Objective-C と統合されるように設計されています。しかし、CocoaPods の作者と作業し、RubyMotion プロジェクトで利用できるようになりました。
 
 CocoaPods について、より多くの情報を望まれる場合には http://cocoapods.org の Web サイトをチェックしましょう。
 
@@ -43,7 +43,7 @@ require 'rubygems'
 require 'motion-cocoapods'
 ----
 
-gem を require すると、必要とする Pods を記述するために、アプリケーション設定の +pods+ メソッドを使うことができます。通常の Podfile で記述するのと同じ表現を用います。
+gem を require すると、アプリケーションで必要な Pods を指定ために、+pods+ という設定用のメソッドを使うことができます。通常の Podfile で記述するのと同じ表現を用います。
 
 たとえば、+JSONKit+ Pod を必要とする場合には、以下のように記述します。
 
@@ -56,6 +56,6 @@ Motion::Project::App.setup do |app|
 end
 ----
 
-これが、あなたが行わなければいけないことの全てです。
+以上がすべてです。
 
-あなたがプロジェクトをビルドするときに、+JSONKit+ のソースコードがダウンロード、ビルドされて、アプリケーションの実行ファイルにリンクされます。利用する Pod が依存関係を持っていれば、適切に処理されます。
+あなたがプロジェクトをビルドするときに、+JSONKit+ のソースコードがダウンロード、ビルドされて、アプリケーションの実行ファイルにリンクされます。利用する Pod に依存関係があっても、適切に処理されます。
