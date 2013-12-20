@@ -20,7 +20,7 @@ end
 
 task :deploy do
   system 'git checkout gh-pages'
-  system 'git merge master'
+  system 'git merge origin/master'
   Rake::Task['clean'].invoke
   Rake::Task['doc'].invoke
   system 'git add **/*.html'
