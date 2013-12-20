@@ -1196,15 +1196,41 @@ end</pre>
 <td class="icon">
 <img src="../../icons/tip.png" alt="Tip">
 </td>
-<td class="content">window または controller のカスタムインスタンスの作成を行う必要がある場合には、<span class="monospaced">tests</span> の前に呼ばれる <span class="monospaced">before</span> でそれを行うことができます。テストを実施する前にコントローラの初期化を実行する必要があることが一般的です。その場合には、<span class="monospaced">tests</span> メソッドに block を渡します。</td>
+<td class="content">window または controller のカスタムインスタンスの作成を行う必要がある場合には、<span class="monospaced">tests</span> の前に呼ばれる <span class="monospaced">before</span> でそれを行うことができます。<span class="monospaced">after</span> フィルタも同様に利用できます。テストで使用されるコントローラのインスタンスへの参照する際に、<span class="monospaced">tests</span> メソッドを呼び出す手前で <span class="monospaced">after</span> フィルタを登録する必要があります。<span class="monospaced">after</span> フィルタで window や controller のインスタンスを削除します。例えば、次のように行います。</td>
 </tr></table>
 </div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>describe "The 'taking over the world' view" do
-  tests TakingOverTheWorldViewController do |controller|
-    controller.initial_data = {}
-  end</pre>
+<pre>describe "Before and after filter order illustrated" do
+  # This `before` filter is defined __before__ the one of the `tests` method, so at this point the
+  # window instance is not yet created and you can perform controller initialization.  It is
+  # important to note, though, that once you call `window` it will be created on-demand.
+  before do
+    controller.dataThatNeedsToBeConfiguredBeforeAssigningToWindow = ['TableView Row 1', 'TableView Row 2']
+  end
+
+  # This `after` filter is defined __before__ the one of the `tests` method, so at this point the
+  # window and controller instances are not yet cleaned up and set to `nil`.
+  after do
+    controller.performCustomPostTestWork
+    window.performCustomPostTestWork
+  end
+
+  tests TakingOverTheWorldViewController
+  # Calling `tests` registers a `before` and an `after` filter that do something like the following:
+  #
+  #  before do
+  #    createWindowAndControllerIfNotCreatedYet
+  #  end
+  #
+  #  after do
+  #    cleanUpWindowAndController
+  #  end
+
+  it "performs tests" do
+    # ...
+  end
+end</pre>
 </div>
 </div>
 <div class="sect3">
