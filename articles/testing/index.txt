@@ -15,9 +15,9 @@ Spec Files
 
 Spec ファイルはプロジェクトのテストを含みます。
 
-Spec ファイルは RubyMotion プロジェクトの 'spec' ディレクトリ配下に作成されます。
+Spec ファイルは RubyMotion プロジェクトの 'spec' ディレクトリ配下に作成します。
 
-デフォルトでは、RubyMotion プロジェクトには 'spec/main_spec.rb' ファイルがあり、このファイルにはアプリケーションが単一のウィンドウを持っていることを保証する 1 つのテストが書かれています。
+デフォルトでは、RubyMotion プロジェクトには 'spec/main_spec.rb' ファイルがあり、このファイルにはアプリケーションが単一のウィンドウを持っていることを保証するテストが 1 つ書かれています。
 
 Spec Helpers
 ~~~~~~~~~~~~
@@ -26,7 +26,7 @@ Spec Helpers
 
 Spec ヘルパーは RubyMotion プロジェクトの 'spec/helpers' ディレクトリ下に作成されます(例 : 'spec/helpers/extension.rb')。
 
-デフォルトでは、RubyMotion プロジェクトに Spec ヘルパーは用意されていません。
+デフォルトでは、RubyMotion プロジェクトに Spec ヘルパーはありません。
 
 Running the Tests
 ~~~~~~~~~~~~~~~~~
@@ -40,7 +40,7 @@ $ rake spec:device
 
 このコマンドは、Spec フレームワーク、ヘルパー、Spec ファイルを含んだ特別バージョンのアプリケーションをコンパイルします。そして、シミュレータ上でバックグラウンド実行します。
 
-いったん spec が実行されると、プログラムは適切なステータスコード (+0+ の場合は成功、失敗の場合には +1+) をコマンドラインのプロンプトにもたらします。
+いったん spec が実行されると、プログラムは適切なステータスコード (成功時には +0+ 、失敗時には +1+) をコマンドラインのプロンプトに返します。
 
 Run Selected Spec Files
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -76,7 +76,7 @@ Views and Controllers Testing
 
 小規模な API で構成されており、Spec や、いくつかの Run Loop ヘルパー と `UIView` で利用できます。
 
-IMPORTANT: これは、完全なアプリケーションの受け入れテストのためのもの **ではありません**。したがって、アプリケーションを通常通り起動させるすべきではありません。たとえば、+application:didFinishLaunchingWithOptions:+ から素早く return するために、+RUBYMOTION_ENV+ を使用することで行えます。
+IMPORTANT: これは、完全なアプリケーションの受け入れテストのためのもの **ではありません**。したがって、アプリケーションを通常通り起動させるすべきではありません。たとえば、+application:didFinishLaunchingWithOptions:+ から素早く return するために、+RUBYMOTION_ENV+ を使用できます。
 
 ----
 class AppDelegate
@@ -88,7 +88,7 @@ class AppDelegate
 Configuring your Context
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Spec のコンテキストに、コントローラが指定されることを教える必要があります。必要な API で拡張します。次のような方法で、ビューコントローラクラスを指定することで、これを行います。
+Spec のコンテキストに、コントローラが指定されることを設定する必要があります。必要な API で拡張します。次のような方法で、ビューコントローラクラスを指定します。
 
 ----
 describe "The 'taking over the world' view" do
@@ -100,7 +100,7 @@ end
 
 各 Spec の前に、新しい window とビューコントローラクラスのインスタンスが作成されます。これらは、`window` と `controller` として Spec で利用できます。
 
-TIP: window または controller のカスタムインスタンスの作成を行う必要がある場合には、`tests` の前に呼ばれる `before` でそれを行うことができます。`after` フィルタも同様に利用できます。テストで使用されるコントローラのインスタンスへの参照する際に、`tests` メソッドを呼び出す手前で `after` フィルタを登録する必要があります。`after` フィルタで window や controller のインスタンスを削除します。例えば、次のように行います。
+TIP: window または controller のカスタムインスタンスの作成を行う必要がある場合には、`tests` の前に呼ばれる `before` でそれを行うことができます。`after` フィルタも同様に利用できます。テストで使用するコントローラのインスタンスを参照する際に、`tests` メソッドを呼び出す前に `after` フィルタを登録する必要があります。`after` フィルタで window や controller のインスタンスを削除します。例えば、次のように行います。
 
 ----
 describe "Before and after filter order illustrated" do
@@ -138,7 +138,7 @@ end
 Storyboards
 ^^^^^^^^^^^
 
-`tests` メソッドに `:id` オプションでコントローラの Xcode identifier を渡すことで、http://developer.apple.com/library/ios/#DOCUMENTATION/UIKit/Reference/UIStoryboard_Class/Reference/Reference.html[storyboard] からコントローラをテストできます。
+`tests` メソッドに `:id` オプションでコントローラの Xcode identifier を渡すことで、http://developer.apple.com/library/ios/#DOCUMENTATION/UIKit/Reference/UIStoryboard_Class/Reference/Reference.html[storyboard] 8976コントローラをテストできます。
 
 ----
 tests StoryboardViewController, :id => 'controller-id'
@@ -155,7 +155,7 @@ TIP: `:id` オプションに対応する __Identifier__ フィールドは、Xc
 Durations
 ~~~~~~~~~
 
-いくつかのメソッドは、秒単位でイベントが生成される期間を指定するために、`:duration` オプションがあります。`:duration` は**常に**オプションです。
+いくつかのメソッドは、秒単位でイベントが生成される期間を指定するために `:duration` というオプションがあります。`:duration` は**常に**オプションです。
 
 TIP: `Bacon::Functional.default_duration=` で、デフォルトの継続時間の値を変更できます。
 
