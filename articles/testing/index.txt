@@ -100,13 +100,39 @@ end
 
 各 Spec の前に、新しい window とビューコントローラクラスのインスタンスが作成されます。これらは、`window` と `controller` として Spec で利用できます。
 
-TIP: window または controller のカスタムインスタンスの作成を行う必要がある場合には、`tests` の前に呼ばれる `before` でそれを行うことができます。テストを実施する前にコントローラの初期化を実行する必要があることが一般的です。その場合には、`tests` メソッドに block を渡します。
+TIP: window または controller のカスタムインスタンスの作成を行う必要がある場合には、`tests` の前に呼ばれる `before` でそれを行うことができます。`after` フィルタも同様に利用できます。テストで使用されるコントローラのインスタンスへの参照する際に、`tests` メソッドを呼び出す手前で `after` フィルタを登録する必要があります。`after` フィルタで window や controller のインスタンスを削除します。例えば、次のように行います。
 
 ----
-describe "The 'taking over the world' view" do
-  tests TakingOverTheWorldViewController do |controller|
-    controller.initial_data = {}
+describe "Before and after filter order illustrated" do
+  # This `before` filter is defined __before__ the one of the `tests` method, so at this point the
+  # window instance is not yet created and you can perform controller initialization.  It is
+  # important to note, though, that once you call `window` it will be created on-demand.
+  before do
+    controller.dataThatNeedsToBeConfiguredBeforeAssigningToWindow = ['TableView Row 1', 'TableView Row 2']
   end
+
+  # This `after` filter is defined __before__ the one of the `tests` method, so at this point the
+  # window and controller instances are not yet cleaned up and set to `nil`.
+  after do
+    controller.performCustomPostTestWork
+    window.performCustomPostTestWork
+  end
+
+  tests TakingOverTheWorldViewController
+  # Calling `tests` registers a `before` and an `after` filter that do something like the following:
+  #
+  #  before do
+  #    createWindowAndControllerIfNotCreatedYet
+  #  end
+  #
+  #  after do
+  #    cleanUpWindowAndController
+  #  end
+
+  it "performs tests" do
+    # ...
+  end
+end
 ----
 
 Storyboards
