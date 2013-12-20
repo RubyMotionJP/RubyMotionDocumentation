@@ -11,3 +11,20 @@ task :doc do
     end
   end
 end
+
+task :clean do
+  Dir.glob('**/*.html').each do |file|
+    File.unlink(file)
+  end
+end
+
+task :deploy do
+  system 'git checkout gh-pages'
+  system 'git merge master'
+  Rake::Task['clean'].invoke
+  Rake::Task['doc'].invoke
+  system 'git add **/*.html'
+  system 'git commit -m "generate the HTML document"'
+  system 'git push origin gh-pages'
+  system 'git checkout japanese'
+end
