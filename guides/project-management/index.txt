@@ -354,6 +354,7 @@ Interactive Console
 アプリを実行するときに、Ruby の +irb+  と類似した、interactive shell が利用できます。
 
 interactive shell で式を評価できます。interactive shell は実行中のアプリをブロックしません。入力された式は、アプリを実行するメインスレッドに送られます。
+
 NOTE: REPL (read-eval-print-loop) のサポートはアプリの必要に応じて、共有ライブラリを通じてロードされます。デフォルトでは、シミュレータ向けにビルドされたアプリは、iOS デバイス向けにビルドされたアプリよりもコードが含まれません。
 
 +help+ を実行すると、ビルトインの式について情報を得ることができます。
