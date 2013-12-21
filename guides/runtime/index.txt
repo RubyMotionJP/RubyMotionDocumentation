@@ -209,7 +209,7 @@ end
 Builtin Classes
 ---------------
 
-いくつかの RubyMotion の組み込みクラスは、iOS と OS X のベースレイアである http://developer.apple.com/library/ios/#documentation/Cocoa/Reference/Foundation/ObjC_classic/\_index.html[Foundation framework] をベースとしています。
+いくつかの RubyMotion の組み込みクラスは、iOS と OS X のベースレイヤーである http://developer.apple.com/library/ios/#documentation/Cocoa/Reference/Foundation/ObjC_classic/\_index.html[Foundation framework] をベースとしています。
 
 Foundation framework は Objective-C のフレームワークですが、RubyMotion が Objective-C runtime をベースとしてあるおかげで、組み込みクラスの定義で自然に Foundation framework が利用されています。
 
