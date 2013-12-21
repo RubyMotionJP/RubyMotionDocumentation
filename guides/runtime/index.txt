@@ -572,7 +572,7 @@ RubyMotion では、+Fixnum+ と +Float+ 型は即値で、これらはオブジ
 
 メモリ使用無しでこれらの型が使えることは、アプリのかなりの部分が描画制御(算術アルゴリズムを大量に使用します) に費やされるので重要です。
 
-NOTE: Since iOS is using a 32-bit architecture, immediate types are encoded on a 30-bit pointer (we need 2 bits for type information). On OS X, immediate types will be encoded on a 62-bit pointer when the program runs on recent Mac computers, which are powered by a 64-bit architecture.
+NOTE: iOS では 32bit アーキテクチャが使用されているため、即値は 30bit のポインタとして変換されます(型情報として 2bit 使用します)。OS X では、最近の 64bit アーキテクチャの Mac 上で実行する際には即値は 62bit のポインタとして変換されます。
 
 Concurrency
 -----------
