@@ -3,7 +3,7 @@ Welcome to RubyMotion
 Laurent Sansonetti <lrz@hipbyte.com>
 
 
-Thank you for purchasing RubyMotion. This guide will help you get started with the product.
+RubyMotion をご購入いただき誠にありがとうございます。このガイドは RubyMotion の使用を開始するにあたりご一読下さい。
 
 Overview
 --------

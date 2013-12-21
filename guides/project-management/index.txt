@@ -2,7 +2,7 @@ RubyMotion Project Management Guide
 ===================================
 Laurent Sansonetti <lrz@hipbyte.com>
 
-In this guide we will explain how to create new RubyMotion projects, then configure and maintain them.
+このガイドでは、新しい RubyMotion プロジェクトの作成、設定方法について説明します。
 
 Creation
 --------
