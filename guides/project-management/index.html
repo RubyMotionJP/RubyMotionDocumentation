@@ -1645,8 +1645,15 @@ iOS プロジェクトでは、一つは (Mac 上で動作する) iOS シミュ�
 <div class="sect2">
 <span class="anchor_helper" id="_interactive_console"></span><h3 data-anchor="_interactive_console">4.2. Interactive Console</h3>
 <div class="paragraph"><p>アプリを実行するときに、Ruby の <span class="monospaced">irb</span>  と類似した、interactive shell が利用できます。</p></div>
-<div class="paragraph"><p>interactive shell で式を評価できます。interactive shell は実行中のアプリをブロックしません。入力された式は、アプリを実行するメインスレッドに送られます。
-NOTE: REPL (read-eval-print-loop) のサポートはアプリの必要に応じて、共有ライブラリを通じてロードされます。デフォルトでは、シミュレータ向けにビルドされたアプリは、iOS デバイス向けにビルドされたアプリよりもコードが含まれません。</p></div>
+<div class="paragraph"><p>interactive shell で式を評価できます。interactive shell は実行中のアプリをブロックしません。入力された式は、アプリを実行するメインスレッドに送られます。</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="../../icons/note.png" alt="Note">
+</td>
+<td class="content">REPL (read-eval-print-loop) のサポートはアプリの必要に応じて、共有ライブラリを通じてロードされます。デフォルトでは、シミュレータ向けにビルドされたアプリは、iOS デバイス向けにビルドされたアプリよりもコードが含まれません。</td>
+</tr></table>
+</div>
 <div class="paragraph"><p><span class="monospaced">help</span> を実行すると、ビルトインの式について情報を得ることができます。</p></div>
 <div class="paragraph"><p>interactive shell にはアプリ上で、view を選択する機能もあります。<span class="monospaced">command</span> キーを押しながらマウスをアプリのウィンドウ上を移動します。view の周りには赤い枠が表示され、interactive shell 上に選択されているオブジェクトが表示されます。クリックすると、interactive shell は選択した view のコンテキスト (<span class="monospaced">self</span> オブジェクト) で新しい session を開きます。</p></div>
 </div>
