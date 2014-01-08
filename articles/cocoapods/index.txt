@@ -7,31 +7,26 @@ Laurent Sansonetti <lrz@hipbyte.com>
 Synopsis
 --------
 
-CocoaPods は、Objective-C プロジェクトに不足している、ライブラリの依存関係を管理するためのものです。CocoaPods は RubyGems と似ており、Objective-C の依存関係を扱います。
+CocoaPods は、Objective-C プロジェクトの依存関係を管理するものです。CocoaPods は RubyGems や Bundler と似ており、Objective-C の依存関係を扱います。
 
-CocoaPods では、依存関係は Pods で扱われます。GitHub レポジトリの http://github.com/CocoaPods/Specs[CocoaPods/Specs] から利用可能な Pods のリストを取得できます。
+CocoaPods では、依存関係は Pods で扱われます。利用可能な Pods のリストと、より多くの情報を http://cocoapods.org から入手できます。
 
 CocoaPods はもともと Xcode プロジェクトの Objective-C と統合されるように設計されています。しかし、CocoaPods の作者と作業し、RubyMotion プロジェクトで利用できるようになりました。
-
-CocoaPods について、より多くの情報を望まれる場合には http://cocoapods.org の Web サイトをチェックしましょう。
 
 Installation
 ------------
 
-はじめに、CocoaPods のインストールとセットアップが必要となります。すでにセットアップ済みであれば、この作業は不要です。
+はじめに、CocoaPods のインストールとセットアップが必要となります。CocoaPods のインストール方法について http://guides.cocoapods.org/using/getting-started.html#installation[installation guide] を参照してください。CocoaPods をインストール後に次のようにコマンドを実行してください。
 
 ----
-$ sudo gem install cocoapods
 $ pod setup
 ----
 
-RubyMotion から CocoaPods を利用するために、次に gem をインストールします。
+http://github.com/HipByte/motion-cocoapods[RubyMotion と CocoaPods の統合]も gem を利用し、次のように gem をインストールします。
 
 ----
 $ sudo gem install motion-cocoapods
 ----
-
-この gem のコードは GitHub レポジトリの http://github.com/HipByte/motion-cocoapods[HipByte/motion-cocoapods] にあります。
 
 Usage
 -----
@@ -45,17 +40,40 @@ require 'motion-cocoapods'
 
 gem を require すると、アプリケーションで必要な Pods を指定ために、+pods+ という設定用のメソッドを使うことができます。通常の Podfile で記述するのと同じ表現を用います。
 
-たとえば、+JSONKit+ Pod を必要とする場合には、以下のように記述します。
+たとえば、+AFNetworking+ Pod を利用したい場合には、以下のように記述します。
 
 ----
 Motion::Project::App.setup do |app|
   # ...
   app.pods do
-    pod 'JSONKit'
+    pod 'AFNetworking'
   end
 end
 ----
 
-以上がすべてです。
+CocoaPods と統合するために以下のコマンドを実行します。ソースコードがダウンロードされ、次回のビルド時に +AFNetworking+ が利用できるように設定されます。
 
-あなたがプロジェクトをビルドするときに、+JSONKit+ のソースコードがダウンロード、ビルドされて、アプリケーションの実行ファイルにリンクされます。利用する Pod に依存関係があっても、適切に処理されます。
+----
+$ rake pod:install
+----
+
+そしてみなさんがプロジェクトをビルドするときに、+AFNetworking+ のソースがビルドされアプリケーションの実行ファイルにリンクされます。 
+
+----
+$ rake
+     Build ./build/iPhoneSimulator-7.1-Development
+     Build ./vendor/Pods/Pods.xcodeproj [AFNetworking - Release]
+   Compile ./vendor/Pods/AFNetworking/AFNetworking/AFHTTPRequestOperation.m
+   Compile ./vendor/Pods/AFNetworking/AFNetworking/AFHTTPRequestOperationManager.m
+   Compile ./vendor/Pods/AFNetworking/AFNetworking/AFHTTPSessionManager.m
+   Compile ./vendor/Pods/AFNetworking/UIKit+AFNetworking/AFNetworkActivityIndicatorManager.m
+   Compile ./vendor/Pods/AFNetworking/AFNetworking/AFNetworkReachabilityManager.m
+   Compile ./vendor/Pods/AFNetworking/AFNetworking/AFSecurityPolicy.m
+   Compile ./vendor/Pods/AFNetworking/AFNetworking/AFURLConnectionOperation.m
+   Compile ./vendor/Pods/AFNetworking/AFNetworking/AFURLRequestSerialization.m
+   Compile ./vendor/Pods/AFNetworking/AFNetworking/AFURLResponseSerialization.m
+   Compile ./vendor/Pods/AFNetworking/AFNetworking/AFURLSessionManager.m
+      Link ./vendor/Pods/.build/libPods-AFNetworking.a
+     Build ./vendor/Pods/Pods.xcodeproj [Pods - Release]
+      Link ./vendor/Pods/.build/libPods.a
+----
