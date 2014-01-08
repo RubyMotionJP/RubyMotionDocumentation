@@ -1081,29 +1081,26 @@ pre {
 <div class="sect1">
 <span class="anchor_helper" id="_synopsis"></span><h2 data-anchor="_synopsis">1. Synopsis</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>CocoaPods は、Objective-C プロジェクトに不足している、ライブラリの依存関係を管理するためのものです。CocoaPods は RubyGems と似ており、Objective-C の依存関係を扱います。</p></div>
-<div class="paragraph"><p>CocoaPods では、依存関係は Pods で扱われます。GitHub レポジトリの <a href="http://github.com/CocoaPods/Specs">CocoaPods/Specs</a> から利用可能な Pods のリストを取得できます。</p></div>
+<div class="paragraph"><p>CocoaPods は、Objective-C プロジェクトの依存関係を管理するものです。CocoaPods は RubyGems や Bundler と似ており、Objective-C の依存関係を扱います。</p></div>
+<div class="paragraph"><p>CocoaPods では、依存関係は Pods で扱われます。利用可能な Pods のリストと、より多くの情報を <a href="http://cocoapods.org">http://cocoapods.org</a> から入手できます。</p></div>
 <div class="paragraph"><p>CocoaPods はもともと Xcode プロジェクトの Objective-C と統合されるように設計されています。しかし、CocoaPods の作者と作業し、RubyMotion プロジェクトで利用できるようになりました。</p></div>
-<div class="paragraph"><p>CocoaPods について、より多くの情報を望まれる場合には <a href="http://cocoapods.org">http://cocoapods.org</a> の Web サイトをチェックしましょう。</p></div>
 </div>
 </div>
 <div class="sect1">
 <span class="anchor_helper" id="_installation"></span><h2 data-anchor="_installation">2. Installation</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>はじめに、CocoaPods のインストールとセットアップが必要となります。すでにセットアップ済みであれば、この作業は不要です。</p></div>
+<div class="paragraph"><p>はじめに、CocoaPods のインストールとセットアップが必要となります。CocoaPods のインストール方法について <a href="http://guides.cocoapods.org/using/getting-started.html#installation">installation guide</a> を参照してください。CocoaPods をインストール後に次のようにコマンドを実行してください。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>$ sudo gem install cocoapods
-$ pod setup</pre>
+<pre>$ pod setup</pre>
 </div>
 </div>
-<div class="paragraph"><p>RubyMotion から CocoaPods を利用するために、次に gem をインストールします。</p></div>
+<div class="paragraph"><p><a href="http://github.com/HipByte/motion-cocoapods">RubyMotion と CocoaPods の統合</a>も gem を利用し、次のように gem をインストールします。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>$ sudo gem install motion-cocoapods</pre>
 </div>
 </div>
-<div class="paragraph"><p>この gem のコードは GitHub レポジトリの <a href="http://github.com/HipByte/motion-cocoapods">HipByte/motion-cocoapods</a> にあります。</p></div>
 </div>
 </div>
 <div class="sect1">
@@ -1117,19 +1114,44 @@ require 'motion-cocoapods'</pre>
 </div>
 </div>
 <div class="paragraph"><p>gem を require すると、アプリケーションで必要な Pods を指定ために、<span class="monospaced">pods</span> という設定用のメソッドを使うことができます。通常の Podfile で記述するのと同じ表現を用います。</p></div>
-<div class="paragraph"><p>たとえば、<span class="monospaced">JSONKit</span> Pod を必要とする場合には、以下のように記述します。</p></div>
+<div class="paragraph"><p>たとえば、<span class="monospaced">AFNetworking</span> Pod を利用したい場合には、以下のように記述します。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>Motion::Project::App.setup do |app|
   # ...
   app.pods do
-    pod 'JSONKit'
+    pod 'AFNetworking'
   end
 end</pre>
 </div>
 </div>
-<div class="paragraph"><p>以上がすべてです。</p></div>
-<div class="paragraph"><p>あなたがプロジェクトをビルドするときに、<span class="monospaced">JSONKit</span> のソースコードがダウンロード、ビルドされて、アプリケーションの実行ファイルにリンクされます。利用する Pod に依存関係があっても、適切に処理されます。</p></div>
+<div class="paragraph"><p>CocoaPods と統合するために以下のコマンドを実行します。ソースコードがダウンロードされ、次回のビルド時に <span class="monospaced">AFNetworking</span> が利用できるように設定されます。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ rake pod:install</pre>
+</div>
+</div>
+<div class="paragraph"><p>そしてみなさんがプロジェクトをビルドするときに、<span class="monospaced">AFNetworking</span> のソースがビルドされアプリケーションの実行ファイルにリンクされます。</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ rake
+     Build ./build/iPhoneSimulator-7.1-Development
+     Build ./vendor/Pods/Pods.xcodeproj [AFNetworking - Release]
+   Compile ./vendor/Pods/AFNetworking/AFNetworking/AFHTTPRequestOperation.m
+   Compile ./vendor/Pods/AFNetworking/AFNetworking/AFHTTPRequestOperationManager.m
+   Compile ./vendor/Pods/AFNetworking/AFNetworking/AFHTTPSessionManager.m
+   Compile ./vendor/Pods/AFNetworking/UIKit+AFNetworking/AFNetworkActivityIndicatorManager.m
+   Compile ./vendor/Pods/AFNetworking/AFNetworking/AFNetworkReachabilityManager.m
+   Compile ./vendor/Pods/AFNetworking/AFNetworking/AFSecurityPolicy.m
+   Compile ./vendor/Pods/AFNetworking/AFNetworking/AFURLConnectionOperation.m
+   Compile ./vendor/Pods/AFNetworking/AFNetworking/AFURLRequestSerialization.m
+   Compile ./vendor/Pods/AFNetworking/AFNetworking/AFURLResponseSerialization.m
+   Compile ./vendor/Pods/AFNetworking/AFNetworking/AFURLSessionManager.m
+      Link ./vendor/Pods/.build/libPods-AFNetworking.a
+     Build ./vendor/Pods/Pods.xcodeproj [Pods - Release]
+      Link ./vendor/Pods/.build/libPods.a</pre>
+</div>
+</div>
 </div>
 </div>
 </div>

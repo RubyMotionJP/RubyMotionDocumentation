@@ -1092,25 +1092,25 @@ pre {
 <div class="sect1">
 <span class="anchor_helper" id="_synopsis"></span><h2 data-anchor="_synopsis">1. Synopsis</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>RubyMotion のデバッガは GNU Project のデバッガ <a href="http://www.gnu.org/software/gdb/">GDB</a> をベースとしています。</p></div>
-<div class="paragraph"><p>GDB は伝統的に C 言語ベースで書かれたプログラムをデバッグするために用いられてきました。RubyMotion は GDB に Ruby のサポートをもたらし、RubyMotion アプリのプロセスへの接続と内部の調査ができるようにします。</p></div>
+<div class="paragraph"><p>RubyMotion のデバッガは LLVM のデバッガ <a href="http://lldb.llvm.org">LLDB</a> をベースとしています。</p></div>
+<div class="paragraph"><p>LLDB は伝統的に C 言語ベースで書かれたプログラムをデバッグするために用いられてきました。RubyMotion は LLDB に Ruby のサポートをもたらし、RubyMotion アプリのプロセスへの接続と内部の調査ができるようにします。</p></div>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
 <img src="../../icons/note.png" alt="Note">
 </td>
-<td class="content">現時点では、GDB サポートは実験的なもので、またとても低レベルなものです。我々の目標は、より高いレベル、より友好的なデバッガを GDB 上に構築し、Ruby 開発者のみなさんにより良いエクスペリエンスを提供することです。</td>
+<td class="content">現時点では、LLDB サポートは実験的なもので、またとても低レベルなものです。我々の目標は、より高いレベル、より友好的なデバッガを LLDB 上に構築し、Ruby 開発者のみなさんにより良いエクスペリエンスを提供することです。</td>
 </tr></table>
 </div>
+<div class="paragraph"><p>このドキュメントは LLDB で RubyMotion アプリをデバッグするために必要な主要な機能について説明するもので、LLDB の完全なマニュアルではありません。完全なガイドを必要とされる場合には <a href="http://lldb.llvm.org/tutorial.html">the official LLDB documentation</a> を参照することをお勧めします。</p></div>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
 <img src="../../icons/note.png" alt="Note">
 </td>
-<td class="content">執筆時点では、<a href="http://lldb.llvm.org/">LLDB</a> (Apple の新しいデバッガ) はまだ成熟していません。LLDB が成熟したときには最終的にはデバッガを切り替えるかもしれません。</td>
+<td class="content">このガイドでは、すべてのデバッガコマンドを非省略語で記載します。すべてではありませんが、ほとんどのコマンドは省略語もあり <a href="http://lldb.llvm.org/tutorial.html">LLDB 公式ドキュメント</a> で確認できます。</td>
 </tr></table>
 </div>
-<div class="paragraph"><p>このドキュメントは GDB で RubyMotion アプリをデバッグするために必要な主要な機能について説明するもので、GDB の完全なマニュアルではありません。完全なガイドを必要とされる場合には公式の GDB ドキュメントを参照することをお勧めします。</p></div>
 </div>
 </div>
 <div class="sect1">
@@ -1145,10 +1145,12 @@ pre {
 <div class="content monospaced">
 <pre>$ rake debug=1 no_continue=1
 [...]
-(gdb) break hello_view.rb:10
-Breakpoint 4 (hello_view.rb:10) pending.
-(gdb) continue
-Continuing.</pre>
+(lldb) breakpoint set --file hello_view.rb --line 10
+Breakpoint 3: no locations (pending).
+WARNING:  Unable to resolve breakpoint to any actual locations.
+(lldb) c
+Process 87523 resuming
+[...]</pre>
 </div>
 </div>
 </div>
@@ -1159,7 +1161,7 @@ Continuing.</pre>
 <div class="paragraph"><p>app/hello_view.rb:10 のようにフルパスではなく、hello_view.rb:10 のようにファイル名だけを使います。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>$ echo "break hello_view.rb:10" &gt; debugger_cmds
+<pre>$ echo "breakpoint set --file hello_view.rb --line 10" &gt; debugger_cmds
 $ rake debug=1
 [...]</pre>
 </div>
@@ -1170,30 +1172,34 @@ $ rake debug=1
 <div class="sect1">
 <span class="anchor_helper" id="_managing_breakpoints"></span><h2 data-anchor="_managing_breakpoints">4. Managing breakpoints</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>ブレークポイントを設定するには、<span class="monospaced">break</span> コマンドを用いてソースコードの場所を指定します。デバッガは指定された場所で実行を停止します。停止する場所は <span class="monospaced">file:line</span> という表記を用いて指定します。</p></div>
+<div class="paragraph"><p>ブレークポイントを設定するには、<span class="monospaced">breakpoint</span> コマンドを用いてソースコードの場所を指定します。デバッガは指定された場所で実行を停止します。停止する場所は <span class="monospaced">--line</span> オプションを用いて指定します。</p></div>
 <div class="paragraph"><p>例として、次のコマンドは <em>hello_view.rb</em> ファイルの 10 行目にブレークポイントを設定します。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>$ break hello_view.rb:10</pre>
+<pre>(lldb) breakpoint set --file hello_view.rb --line 10</pre>
 </div>
 </div>
-<div class="paragraph"><p>現在のデバッグ環境で設定されているブレークポイントを確認するには <span class="monospaced">info breakpoints</span> コマンドを用いることができます。</p></div>
+<div class="paragraph"><p>現在のデバッグ環境で設定されているブレークポイントを確認するには <span class="monospaced">breakpoint list</span> コマンドを用いることができます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>(gdb) info breakpoints
-Num Type           Disp Enb Address    What
-1   breakpoint     keep y   0x0003b656 &lt;rb_exc_raise+6&gt;
-2   breakpoint     keep y   0x94c13827 &lt;malloc_error_break+6&gt;
-3   breakpoint     keep y   0x0000b1b0 in rb_scope__drawRect:__ at hello_view.rb:10
-        breakpoint already hit 1 time
-[...]</pre>
+<pre>(lldb) breakpoint list
+Current breakpoints:
+1: name = 'rb_exc_raise', locations = 1, resolved = 1
+  1.1: where = Hello`rb_exc_raise, address = 0x00049d70, resolved, hit count = 0
+
+2: name = 'malloc_error_break', locations = 1, resolved = 1
+  2.1: where = libsystem_malloc.dylib`malloc_error_break, address = 0x030b47f9, resolved, hit count = 0
+
+3: file = 'hello_view.rb', line = 10, locations = 1, resolved = 1
+  3.1: where = Hello`rb_scope__drawRect:__ + 1034 at hello_view.rb:10, address = 0x0000964a, resolved, hit count = 1</pre>
 </div>
 </div>
-<div class="paragraph"><p>先ほど指定したブレークポイント <span class="monospaced">hello_view.rb:10</span> と、それが有効であることを確認できます。<span class="monospaced">enable</span> と <span class="monospaced">disable</span> コマンドは、指定された番号のブレークポイントを有効・無効にすることができます。</p></div>
+<div class="paragraph"><p>先ほど指定したブレークポイント <span class="monospaced">hello_view.rb:10</span> と、それが有効であることを確認できます。<span class="monospaced">breakpoint enable</span> と <span class="monospaced">breakpoint disable</span> コマンドは、指定された番号のブレークポイントを有効・無効にすることができます。</p></div>
 <div class="paragraph"><p>私たちが追加したブレークポイントはリストの 3 番で、これを無効にするには次のように実行します。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>(gdb) disable 3</pre>
+<pre>(lldb) breakpoint disable 3
+1 breakpoints disabled.</pre>
 </div>
 </div>
 </div>
@@ -1202,53 +1208,89 @@ Num Type           Disp Enb Address    What
 <span class="anchor_helper" id="_getting_the_backtrace"></span><h2 data-anchor="_getting_the_backtrace">5. Getting the backtrace</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>ブレークポイントにヒットし実行が停止すると、そのメソッドがどこから呼び出されたのかバックトレースを実行し確認することができます。</p></div>
-<div class="paragraph"><p><span class="monospaced">backtrace</span> コマンドを用いることで、それを行うことができます。</p></div>
+<div class="paragraph"><p><span class="monospaced">thread backtrace</span> コマンドを用いることで、それを行うことができます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>Breakpoint 4, rb_scope__drawRect:__ (self=0x43a00003, rect=0x9353a10) at hello_view.rb:10
-10            bgcolor = UIColor.blackColor
-(gdb) backtrace
-#0  rb_scope__drawRect:__ (self=0x43a00003, rect=0x9353a10) at hello_view.rb:10
-#1  0x0000b90f in __unnamed_9 ()
-#2  0x0054b4be in -[UIView(CALayerDelegate) drawLayer:inContext:] ()
-#3  0x01e15a3f in -[CALayer drawInContext:] ()
-#4  0x01e1596b in backing_callback ()
-#5  0x01d27697 in CABackingStoreUpdate_ ()
-#6  0x01e1583c in CA::Layer::display_ ()
-#7  0x01e159ba in -[CALayer _display] ()
-#8  0x01e152b6 in CA::Layer::display ()
-#9  0x01e15994 in -[CALayer display] ()
-#10 0x01e0a0e2 in CA::Layer::display_if_needed ()</pre>
+<pre>(lldb) thread backtrace
+* thread #1: tid = 0x36e013, 0x0000964a Hello`rb_scope__drawRect:__(self=0x08fa34d0, rect=0x08f8d8a0) + 1034 at hello_view.rb:10, queue = 'com.apple.main-thread, stop reason = breakpoint 3.1
+    frame #0: 0x0000964a Hello`rb_scope__drawRect:__(self=0x08fa34d0, rect=0x08f8d8a0) + 1034 at hello_view.rb:10
+    frame #1: 0x00009d77 Hello`__unnamed_9 + 231
+    frame #2: 0x0065be43 UIKit`-[UIView(CALayerDelegate) drawLayer:inContext:] + 504
+    frame #3: 0x024bb800 QuartzCore`+[CATransaction flush] + 52
+    frame #4: 0x005eed70 UIKit`_UIApplicationHandleEvent + 683
+    frame #5: 0x03add6e1 GraphicsServices`PurpleEventCallback + 46
+    frame #6: 0x01da8ffb CoreFoundation`CFRunLoopRunInMode + 123
+    frame #7: 0x005ec8be UIKit`-[UIApplication _run] + 840
+    frame #8: 0x005eeabb UIKit`UIApplicationMain + 1225
+    frame #9: 0x000024cc Hello`main(argc=1, argv=0xbfffec0c) + 156 at main.mm:15</pre>
 </div>
 </div>
-<div class="paragraph"><p>みなさんのコードのバックトレース・フレームは <span class="monospaced">rb_scope__</span> というプレフィックスと、ファイル名と行番号の情報で確認することができます。</p></div>
+<div class="paragraph"><p>みなさんのコードのバックトレース・フレームは <span class="monospaced">rb_scope__</span> というプレフィックスと、<span class="monospaced">file:line</span> の情報で確認することができます。</p></div>
 <div class="sect2">
 <span class="anchor_helper" id="_frames"></span><h3 data-anchor="_frames">5.1. Frames</h3>
 <div class="paragraph"><p>バックトレースの一番最初のフレームは、ブレークポイントが設定されている <span class="monospaced">drawRect:</span> というメソッドです。ブレークポイントより下の他のフレームはネイティブの iOS から呼び出されたものです。<span class="monospaced">drawRect:</span> は <span class="monospaced">UIView</span> クラスから正しく呼び出されていることが確認できます。</p></div>
-<div class="paragraph"><p><span class="monospaced">frame</span> コマンドを使用すると、バックトレースの特定フレームに切り替えることができます。デフォルトでは、トップフレーム (#0) ですが、状況を確認するためにフレーム #4 へ移動してみましょう。次のコマンドを実行することでフレームを切り替えることができます。</p></div>
+<div class="paragraph"><p><span class="monospaced">frame</span> コマンドを使用すると、バックトレースの特定フレームに切り替えることができます。デフォルトでは、トップフレーム (#0) ですが、状況を確認するためにフレーム #2 へ移動してみましょう。次のコマンドを実行することでフレームを切り替えることができます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>(gdb) frame 4
-[...]</pre>
+<pre>(lldb) frame select 2
+frame #2: 0x0065be43 UIKit`-[UIView(CALayerDelegate) drawLayer:inContext:] + 504
+UIKit`-[UIView(CALayerDelegate) drawLayer:inContext:] + 504:
+-&gt; 0x65be43:  calll  0x6156b5                  ; UIGraphicsPopContext
+   0x65be48:  addl   $108, %esp
+   0x65be4b:  popl   %esi
+   0x65be4c:  popl   %edi</pre>
 </div>
 </div>
-<div class="paragraph"><p>言うまでもありませんが、バックトレースで示される Ruby で定義された特定のメソッドへ移動することが重要となります。</p></div>
+<div class="paragraph"><p>言うまでもありませんが、バックトレースで示される Ruby で定義された特定のメソッドへ移動することが重要です。さもなければ、前述の例のようにアセンブリコードだけを見ることになります。</p></div>
 </div>
 <div class="sect2">
 <span class="anchor_helper" id="_threads"></span><h3 data-anchor="_threads">5.2. Threads</h3>
-<div class="paragraph"><p><span class="monospaced">backtrace</span> コマンドは現在実行しているスレッドのバックトレースのみを表示します。マルチスレッドプログラムを扱う際に、たとえば競合状態をデバッグするときに、実行中のすべてのスレッドのバックトレースを表示することもできます。</p></div>
+<div class="paragraph"><p><span class="monospaced">thread backtrace</span> コマンドは現在実行しているスレッドのバックトレースのみを表示します。マルチスレッドプログラムを扱う際に、たとえば競合状態をデバッグするときに、実行中のすべてのスレッドのバックトレースを表示することもできます。</p></div>
 <div class="paragraph"><p>次のコマンドを実行すると、Terminal に実行中のすべてのスレッドのバックトレースが表示されます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>(gdb) thread apply all backtrace
-[...]</pre>
+<pre>(lldb) thread backtrace all
+* thread #1: tid = 0x36e013, 0x0000964a Hello`rb_scope__drawRect:__(self=0x08fa34d0, rect=0x08f8d8a0) + 1034 at hello_view.rb:10, queue = 'com.apple.main-thread, stop reason = breakpoint 3.1
+    frame #0: 0x0000964a Hello`rb_scope__drawRect:__(self=0x08fa34d0, rect=0x08f8d8a0) + 1034 at hello_view.rb:10
+    frame #1: 0x00009d77 Hello`__unnamed_9 + 231
+    frame #2: 0x0065be43 UIKit`-[UIView(CALayerDelegate) drawLayer:inContext:] + 504
+    frame #3: 0x024bb800 QuartzCore`+[CATransaction flush] + 52
+    frame #4: 0x005eed70 UIKit`_UIApplicationHandleEvent + 683
+    frame #5: 0x03add6e1 GraphicsServices`PurpleEventCallback + 46
+    frame #6: 0x01da8ffb CoreFoundation`CFRunLoopRunInMode + 123
+    frame #7: 0x005ec8be UIKit`-[UIApplication _run] + 840
+    frame #8: 0x005eeabb UIKit`UIApplicationMain + 1225
+    frame #9: 0x000024cc Hello`main(argc=1, argv=0xbfffec0c) + 156 at main.mm:15
+
+  thread #2: tid = 0x36e04e, 0x031bf992 libsystem_kernel.dylib`kevent64 + 10, queue = 'com.apple.libdispatch-manager
+    frame #0: 0x031bf992 libsystem_kernel.dylib`kevent64 + 10
+    frame #1: 0x02de018e libdispatch.dylib`_dispatch_mgr_invoke + 238
+    frame #2: 0x02ddfeca libdispatch.dylib`_dispatch_mgr_thread + 60
+
+  thread #3: tid = 0x36e04f, 0x031bf046 libsystem_kernel.dylib`__workq_kernreturn + 10
+    frame #0: 0x031bf046 libsystem_kernel.dylib`__workq_kernreturn + 10
+    frame #1: 0x03182dcf libsystem_pthread.dylib`_pthread_wqthread + 372
+
+  thread #4: tid = 0x36e050, 0x031bdd2e libsystem_kernel.dylib`accept$UNIX2003 + 10
+    frame #0: 0x031bdd2e libsystem_kernel.dylib`accept$UNIX2003 + 10
+    frame #1: 0x001397b6 Hello`-[RMREPL start] + 134
+    frame #2: 0x015567a7 Foundation`-[NSThread main] + 76
+    frame #3: 0x01556706 Foundation`__NSThread__main__ + 1275
+    frame #4: 0x031815fb libsystem_pthread.dylib`_pthread_body + 144
+    frame #5: 0x03181485 libsystem_pthread.dylib`_pthread_start + 130</pre>
 </div>
 </div>
-<div class="paragraph"><p>フレームの切り替えと同じように、<span class="monospaced">thread</span> コマンドを用いるとデバッガはスレッドを切り替えます。他の実行中スレッドで特定の Ruby メソッドを調査したいという場合に役立つでしょう。次のコマンドを実行すると、デバッガのプロンプトはスレッド #4 に切り替わります。</p></div>
+<div class="paragraph"><p>フレームの切り替えと同じように、<span class="monospaced">thread select</span> コマンドを用いるとデバッガはスレッドを切り替えます。他の実行中スレッドで特定の Ruby メソッドを調査したいという場合に役立つでしょう。次のコマンドを実行すると、デバッガのプロンプトはスレッド #4 に切り替わります。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>(gdb) thread 4
-[...]</pre>
+<pre>(lldb) thread select 4
+* thread #4: tid = 0x36e050, 0x031bdd2e libsystem_kernel.dylib`accept$UNIX2003 + 10
+    frame #0: 0x031bdd2e libsystem_kernel.dylib`accept$UNIX2003 + 10
+libsystem_kernel.dylib`accept$UNIX2003 + 10:
+-&gt; 0x31bdd2e:  jae    0x31bdd3e                 ; accept$UNIX2003 + 26
+   0x31bdd30:  calll  0x31bdd35                 ; accept$UNIX2003 + 17
+   0x31bdd35:  popl   %edx
+   0x31bdd36:  movl   29423(%edx), %edx</pre>
 </div>
 </div>
 </div>
@@ -1265,34 +1307,42 @@ Num Type           Disp Enb Address    What
 <div class="paragraph"><p><span class="monospaced">print-ruby-object</span> コマンドを使用することで、<span class="monospaced">self</span> と <span class="monospaced">rect</span> の両方の値を調査することができます。RubyMotion で定義されているこのコマンドは、指定されたオブジェクトに <span class="monospaced">inspect</span> メッセージを送信しその値を返します。このコマンドは利用しやすいように <span class="monospaced">pro</span> というショートカットで呼び出すこともできます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>Breakpoint 4, rb_scope__drawRect:__ (self=0x43a00003, rect=0x9353a10) at hello_view.rb:10
-10            bgcolor = UIColor.blackColor
-(gdb) print-ruby-object self
-#&lt;HelloView:0x934d580&gt;
-(gdb) pro rect
-#&lt;CGRect origin=#&lt;CGPoint x=0.0 y=0.0&gt; size=#&lt;CGSize width=320.0 height=480.0&gt;&gt;</pre>
+<pre>frame #0: 0x0000964a Hello`rb_scope__drawRect:__(self=0x08fa34d0, rect=0x08f8d8a0) + 1034 at hello_view.rb:10
+   7          end
+   8          text = "ZOMG!"
+   9        else
+-&gt; 10         bgcolor = UIColor.blackColor
+   11         text = @touches ? "Touched #{@touches} times!" : "Hello RubyMotion!"
+   12       end
+   13
+(lldb) print-ruby-object self
+#&lt;HelloView:0x8fa34d0&gt;
+(lldb) pro rect
+#&lt;CGRect origin=#&lt;CGPoint x=0.0 y=0.0&gt; size=#&lt;CGSize width=320.0 height=568.0&gt;&gt;</pre>
 </div>
 </div>
-<div class="paragraph"><p>ローカル変数のリストは <span class="monospaced">info locals</span> コマンドを用いて表示できます。リストでは各ローカル変数のアドレスも表示されます。</p></div>
+<div class="paragraph"><p>ローカル変数のリストは <span class="monospaced">frame variable</span> コマンドを用いて表示できます。リストでは各ローカル変数のアドレスも表示されます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>(gdb) info locals
-bgcolor = (VALUE) 0x75a81d0
-red = (VALUE) 0x4
-green = (VALUE) 0x4
-blue = (VALUE) 0x4
-text = (VALUE) 0x75a9020
-font = (VALUE) 0x4</pre>
+<pre>(lldb) frame variable
+(void *) self = 0x08fa34d0
+(void *) rect = 0x08f8d8a0
+(void *) bgcolor = 0x08f931c0
+(void *) red = 0x00000004
+(void *) green = 0x00000004
+(void *) blue = 0x00000004
+(void *) text = 0x09c55230
+(void *) font = 0x00000004</pre>
 </div>
 </div>
 <div class="paragraph"><p>これらのローカル変数は <span class="monospaced">pro</span> コマンドを用いて Terminal 上で個別に調査することもできます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>(gdb) pro bgcolor
-#&lt;UICachedDeviceWhiteColor:0x75a81d0&gt;
-(gdb) pro text
+<pre>(lldb) pro bgcolor
+#&lt;UICachedDeviceWhiteColor:0x8f931c0&gt;
+(lldb) pro text
 "Hello RubyMotion!"
-(gdb) pro font
+(lldb) pro font
 nil</pre>
 </div>
 </div>
@@ -1303,14 +1353,14 @@ nil</pre>
 <div class="paragraph"><p>コマンドに二つの引数を与えた場合には、一つ目はインスタンス変数を取得する対象のオブジェクトとなります。二つ目はインスタンス変数を表す文字列でなければなりません。インスタンス変数名には <span class="monospaced">@</span> を必ず含めてください。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>(gdb) pri self "@touches"
+<pre>(lldb) pri self "@touches"
 2</pre>
 </div>
 </div>
 <div class="paragraph"><p>引数を一つだけでコマンドを実行すると、コマンドは <span class="monospaced">self</span> から指定されたインスタンス変数を取得します。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>(gdb) pri "@touches"
+<pre>(lldb) pri "@touches"
 2</pre>
 </div>
 </div>
@@ -1320,41 +1370,52 @@ nil</pre>
 <div class="sect1">
 <span class="anchor_helper" id="_control_flow"></span><h2 data-anchor="_control_flow">7. Control flow</h2>
 <div class="sectionbody">
-<div class="paragraph"><p><span class="monospaced">next</span> コマンドはソースコードレベルで次の行まで実行を継続します。たいていの場合、Ruby ソースコードの次の行までとなります。Terminal には、ソースコードが表示されます。</p></div>
+<div class="paragraph"><p><span class="monospaced">next</span> コマンドはソースコードレベルで次の行まで実行を継続します。たいていの場合、Ruby ソースコードの次の行までとなります。 表示されている現在の行は、デバッガがまだ実行していないことを意味します。変数やその値を確認する際には、このことを注意してください。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>(gdb) next
-15          UIBezierPath.bezierPathWithRect(frame).fill
-(gdb) next
-17          font = UIFont.systemFontOfSize(24)
-(gdb) next
-18          UIColor.whiteColor.set
-(gdb) next
-19          text.drawAtPoint(CGPoint.new(10, 20), withFont:font)</pre>
+<pre>* thread #1: tid = 0x3702a0, 0x0000964a Hello`rb_scope__drawRect:__(self=0x08ed1600, rect=0x08d91620) + 1034 at hello_view.rb:10, queue = 'com.apple.main-thread, stop reason = breakpoint 3.1
+    frame #0: 0x0000964a Hello`rb_scope__drawRect:__(self=0x08ed1600, rect=0x08d91620) + 1034 at hello_view.rb:10
+   7          end
+   8          text = "ZOMG!"
+   9        else
+-&gt; 10         bgcolor = UIColor.blackColor
+   11         text = @touches ? "Touched #{@touches} times!" : "Hello RubyMotion!"
+   12       end
+   13
+(lldb) next
+Process 87162 stopped
+* thread #1: tid = 0x3702a0, 0x000096c9 Hello`rb_scope__drawRect:__(self=0x08ed1600, rect=0x08d91620) + 1161 at hello_view.rb:11, queue = 'com.apple.main-thread, stop reason = step over
+    frame #0: 0x000096c9 Hello`rb_scope__drawRect:__(self=0x08ed1600, rect=0x08d91620) + 1161 at hello_view.rb:11
+   8          text = "ZOMG!"
+   9        else
+   10         bgcolor = UIColor.blackColor
+-&gt; 11         text = @touches ? "Touched #{@touches} times!" : "Hello RubyMotion!"
+   12       end
+   13
+   14       bgcolor.set</pre>
 </div>
 </div>
 <div class="paragraph"><p><span class="monospaced">continue</span> コマンドで、ブレークポイントに到達するまで実行を再開します。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>(gdb) continue
-[...]</pre>
+<pre>(lldb) continue
+Process 87162 resuming</pre>
 </div>
 </div>
 <div class="paragraph"><p>プログラム実行中に、<span class="monospaced">control+c</span> (<span class="monospaced">^C</span>) をタイプすることでいつでも実行を停止しデバッガのプロンプトに戻ることができます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>^C
-Program received signal SIGINT, Interrupt.
-0x910217d2 in mach_msg_trap ()
-(gdb)</pre>
+Process 87162 stopped
+[...]
+(lldb)</pre>
 </div>
 </div>
 <div class="paragraph"><p>デバッガを終了する場合には、<span class="monospaced">quit</span> コマンドを実行し終了確認をします。アプリケーションを終了しシェルプロンプトへ戻ります。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
-<pre>(gdb) quit
-The program is running.  Quit anyway (and detach it)? (y or n) y
-Detaching from process 91850.
+<pre>(lldb) quit
+Quitting LLDB will detach from one or more processes. Do you really want to proceed: [Y/n] y
 $</pre>
 </div>
 </div>
