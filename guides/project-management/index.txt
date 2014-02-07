@@ -115,6 +115,7 @@ OS X Options
 |+icon+ | アプリケーションのアイコンとして使用するアイコンのリソースファイル名 (+String+)。 例 : +"Icon.png"+ 。デフォルト値は空の文字列 +''+ です。
 |+copyright+| アプリケーションのプロパティファイルで使用される、誰でも読むことができる Copyright を指定します (+String+)。デフォルト値は +"Copyright (c) CURRENT_DATE CURRENT_USER. All Right Reserved."+ です。
 |+embedded_frameworks+| アプリケーションバンドルに埋め込む 3rd-party frameworks のリストで、ファイルパス文字列の +Array+ にしたものです。例 : +["../MyFramework/framework"]+ 。 デフォルトの値は空の配列です。
+|+external_frameworks+| +/System/Library/Frameworks+ 以外の使用するフレームワークのリストで、アプリケーションには埋め込みません。ファイルパス文字列の +Array+ にしたものです。例 : +["/Library/Frameworks/iTunesLibrary.framework"]+ 。 デフォルトの値は空の配列です。
 |====
 
 Providing Custom Values
@@ -173,15 +174,17 @@ RubyMotion でサードパーティライブラリを利用するには、ソー
 [cols=".^,.^,.^",options="header,autowidth"]
 |====
 | Project Type | Key | Discussion
-.6+|+:xcode+ | +:xcodeproj+ | 使用する Xcode プロジェクトファイル名を指定します。ディレクトリに '.xcodeproj' が 1 つだけしかない場合には不要です。
+.7+|+:xcode+ | +:xcodeproj+ | 使用する Xcode プロジェクトファイル名を指定します。ディレクトリに '.xcodeproj' が 1 つだけしかない場合には不要です。
 | +:target+ | ビルドするターゲット名を指定します。省略すると、デフォルトのターゲットが使用されます。+:scheme+ と一緒に使用することはできません。
 | +:scheme+ | ビルドするスキーム名を指定します。省略すると、デフォルトのスキームが使用されます。+:target+ と一緒に使用することはできません。
 | +:configuration+ | ビルドするコンフィギュレーション名を指定します。省略すると +"Release"+ が使用されます。
 | +:headers_dir+ | RubyMotion プロジェクトで使用される API が宣言されている、パブリックなヘッダファイルが置かれているディレクトリへのパスを指定します。+vendor_project+ の第一引数で与えられたパスとの相対パスを指定します (例 : +"Sources/Headers"+)。この設定は省略可能です。
 | +:products+ | RubyMotion プロジェクトで使用するライブラリ名を含んだ +Array+ を指定します (例 : +["libfoo.a"]+)。プロジェクトが複数のライブラリをビルドし、アプリで使用するライブラリをフィルタしたいというケースで、このキーを用います。
-.3+| +:static+ | +:products+ | 使用する static ライブラリ名を含んだ +Array+ を指定します。デフォルト値は vendor プロジェクトディレクトリのすべての '.a' をリストにした値です。
+| +:bridgesupport_cflags+ | BridgeSupport メタデータを生成する際に使用する CFLAGS を指定します。(例 : +"-fobjc-arc"+ ARCをオンにする場合)。この設定は省略可能です。
+.4+| +:static+ | +:products+ | 使用する static ライブラリ名を含んだ +Array+ を指定します。デフォルト値は vendor プロジェクトディレクトリのすべての '.a' をリストにした値です。
 | +:source_files+ | コンパイル対象となる全てのソースファイルとヘッダファイルを含む +Array+ を指定します。デフォルト値はvendorプロジェクト内の +"**/*.{c,m,cpp,cxx,mm,h}"+ にマッチする全てのファイルのリストです。
-| +:cflags+ | コンパイルに使用するCFLAGSを指定します (例 : +"-fobjc-arc"+ ARCをオンにする場合)。この設定は省略可能です。
+| +:cflags+ | コンパイルに使用する CFLAGS を指定します (例 : +"-fobjc-arc"+ ARCをオンにする場合)。この設定は省略可能です。
+| +:bridgesupport_cflags+ | BridgeSupport メタデータを生成する際に使用する CFLAGS を指定します。(例 : +"-fobjc-arc"+ ARCをオンにする場合)。この設定は省略可能で、デフォルトは +:cflags+ の値です。
 |====
 
 さきほどの例を引き続き、サードパーティライブラリの OAuth2Client を使用するビデオプレーヤープロジェクトを仮定しましょう。'vendor' ディレクトリを作成し、OAuth2Client のソースコードをそこへ追加します。
