@@ -1346,6 +1346,10 @@ $ cd Hello</pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">embedded_frameworks</span></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">アプリケーションバンドルに埋め込む 3rd-party frameworks のリストで、ファイルパス文字列の <span class="monospaced">Array</span> にしたものです。例 : <span class="monospaced">["../MyFramework/framework"]</span> 。 デフォルトの値は空の配列です。</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">external_frameworks</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">/System/Library/Frameworks</span> 以外の使用するフレームワークのリストで、アプリケーションには埋め込みません。ファイルパス文字列の <span class="monospaced">Array</span> にしたものです。例 : <span class="monospaced">["/Library/Frameworks/iTunesLibrary.framework"]</span> 。 デフォルトの値は空の配列です。</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -1406,7 +1410,7 @@ end</pre>
 </tr></thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-middle" rowspan="6"><p class="tableblock"><span class="monospaced">:xcode</span></p></td>
+<td class="tableblock halign-left valign-middle" rowspan="7"><p class="tableblock"><span class="monospaced">:xcode</span></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><span class="monospaced">:xcodeproj</span></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">使用する Xcode プロジェクトファイル名を指定します。ディレクトリに <em>.xcodeproj</em> が 1 つだけしかない場合には不要です。</p></td>
 </tr>
@@ -1431,7 +1435,11 @@ end</pre>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">RubyMotion プロジェクトで使用するライブラリ名を含んだ <span class="monospaced">Array</span> を指定します (例 : <span class="monospaced">["libfoo.a"]</span>)。プロジェクトが複数のライブラリをビルドし、アプリで使用するライブラリをフィルタしたいというケースで、このキーを用います。</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-middle" rowspan="3"><p class="tableblock"><span class="monospaced">:static</span></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><span class="monospaced">:bridgesupport_cflags</span></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">BridgeSupport メタデータを生成する際に使用する CFLAGS を指定します。(例 : <span class="monospaced">"-fobjc-arc"</span> ARCをオンにする場合)。この設定は省略可能です。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle" rowspan="4"><p class="tableblock"><span class="monospaced">:static</span></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><span class="monospaced">:products</span></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">使用する static ライブラリ名を含んだ <span class="monospaced">Array</span> を指定します。デフォルト値は vendor プロジェクトディレクトリのすべての <em>.a</em> をリストにした値です。</p></td>
 </tr>
@@ -1441,7 +1449,11 @@ end</pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><span class="monospaced">:cflags</span></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">コンパイルに使用するCFLAGSを指定します (例 : <span class="monospaced">"-fobjc-arc"</span> ARCをオンにする場合)。この設定は省略可能です。</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">コンパイルに使用する CFLAGS を指定します (例 : <span class="monospaced">"-fobjc-arc"</span> ARCをオンにする場合)。この設定は省略可能です。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><span class="monospaced">:bridgesupport_cflags</span></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">BridgeSupport メタデータを生成する際に使用する CFLAGS を指定します。(例 : <span class="monospaced">"-fobjc-arc"</span> ARCをオンにする場合)。この設定は省略可能で、デフォルトは <span class="monospaced">:cflags</span> の値です。</p></td>
 </tr>
 </tbody>
 </table>
