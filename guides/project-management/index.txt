@@ -116,6 +116,8 @@ OS X Options
 |+copyright+| アプリケーションのプロパティファイルで使用される、誰でも読むことができる Copyright を指定します (+String+)。デフォルト値は +"Copyright (c) CURRENT_DATE CURRENT_USER. All Right Reserved."+ です。
 |+embedded_frameworks+| アプリケーションバンドルに埋め込む 3rd-party frameworks のリストで、ファイルパス文字列の +Array+ にしたものです。例 : +["../MyFramework/framework"]+ 。 デフォルトの値は空の配列です。
 |+external_frameworks+| +/System/Library/Frameworks+ 以外の使用するフレームワークのリストで、アプリケーションには埋め込みません。ファイルパス文字列の +Array+ にしたものです。例 : +["/Library/Frameworks/iTunesLibrary.framework"]+ 。 デフォルトの値は空の配列です。
+|+codesign_for_development+| development ビルドでコード署名をするか指定します。+false+ の場合には、コード署名は行われません。デフォルト値は +false+ です。
+|+codesign_for_release+| release ビルドでコード署名をするか指定します。+false+ の場合には、コード署名は行われません。デフォルト値は +true+ です。
 |====
 
 Providing Custom Values
