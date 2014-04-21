@@ -68,8 +68,8 @@ $ sudo motion update
 インストールされている RubyMotion のバージョンを確認する場合には、以下のようにコマンドを実行します。
 
 ----
-$ motion -v
-1.0
+$ motion --version
+2.24
 ----
 
 一日に一度、RubyMotion のビルドシステムは新しい RubyMotion がインストールできないか Software アップデートサーバに問い合わせします。
