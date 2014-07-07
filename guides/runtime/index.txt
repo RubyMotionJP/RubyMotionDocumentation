@@ -426,6 +426,7 @@ end
 |=======================================================
 | C Type Pointer | Runtime Type String | Shortcut Symbol
 | id *  | "@" | :object
+| BOOL *  | "B" | :bool / :boolean
 | char *  | "c" | :char
 | unsigned char *  | "C" | :uchar
 | short *  | "s" | :short
