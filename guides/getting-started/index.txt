@@ -54,6 +54,11 @@ image:http://www.rubymotion.com/developer-center/guides/getting-started/images/x
 $ sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer
 ----
 
+Text Editor
+-----------
+
+RubyMotion をインストールしたあとは開発のためにテキストエディタの設定をします。もし RubyMine や Vim、TextMate といったお気に入りのエディタがあるのでしたら、準備は万全です。 より詳しい情報については、http://rubymotion.jp/RubyMotionDocumentation/articles/editors/index.html[editors] ガイドをご覧ください。
+
 Software Updates
 ----------------
 
@@ -193,7 +198,7 @@ rake のデフォルトタスクを実行してみましょう。
 $ rake
 ----
 
-プロジェクトをビルドし、シミュレータが起動します。まだコードを何も書いていないので、空のウィンドウが表示されます。
+プロジェクトをビルドするとアプリが起動します。まだコードを何も書いていないので、空のウィンドウが表示されます。
 
 'app' ディレクトリの中にはデフォルトで作成される 'app_delegate.rb' というファイルがあります。このファイルには、アプリケーションの制御という役割をする AppDelegate が実装されています。
 
