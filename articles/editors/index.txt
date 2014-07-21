@@ -11,7 +11,7 @@ RubyMine
 
 http://http://www.jetbrains.com/ruby/[RubyMine] は Ruby 向けの商用 IDE で、 JetBrains 社の IntelliJ IDEA プラットフォーム上に構築されています。
 
-現在、RubyMotion で作業するベストな環境です。RubyMine には、コンテキストベースの自動補完、GUI でのデバッグ(シミュレータとデバイス両方をサポート)the simulator and the device), inline documentation, and so on.
+現在、RubyMotion で作業するベストな環境です。RubyMine には、コンテキストベースの自動補完、GUI でのデバッグ(シミュレータとデバイス両方をサポート)、インラインドキュメントなどの機能があります。
 
 より詳しい情報については、http://confluence.jetbrains.com/display/RUBYDEV/Getting+Started+with+RubyMotion[Getting Started with  RubyMotion] ガイドが JetBrains 社の開発者向けサイトにあります。
 
