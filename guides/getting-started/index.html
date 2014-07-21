@@ -1073,12 +1073,13 @@ pre {
 <div id="toctitle">Table of Contents</div>
 <div class="foo toclevel2"><a href="#_overview">1. Overview</a></div>
 <div class="foo toclevel2"><a href="#_prerequisites">2. Prerequisites</a></div>
-<div class="foo toclevel2"><a href="#_software_updates">3. Software Updates</a></div>
-<div class="foo toclevel2"><a href="#_support">4. Support</a></div>
-<div class="foo toclevel2"><a href="#_hello_world">5. Hello World</a></div>
-<div class="foo toclevel3"><a href="#_ios">5.1. iOS</a></div>
-<div class="foo toclevel3"><a href="#_os_x">5.2. OS X</a></div>
-<div class="foo toclevel2"><a href="#_and_now">6. And Now?</a></div>
+<div class="foo toclevel2"><a href="#_text_editor">3. Text Editor</a></div>
+<div class="foo toclevel2"><a href="#_software_updates">4. Software Updates</a></div>
+<div class="foo toclevel2"><a href="#_support">5. Support</a></div>
+<div class="foo toclevel2"><a href="#_hello_world">6. Hello World</a></div>
+<div class="foo toclevel3"><a href="#_ios">6.1. iOS</a></div>
+<div class="foo toclevel3"><a href="#_os_x">6.2. OS X</a></div>
+<div class="foo toclevel2"><a href="#_and_now">7. And Now?</a></div>
 </div>
 </div>
 <div id="content">
@@ -1139,7 +1140,13 @@ pre {
 </div>
 </div>
 <div class="sect1">
-<span class="anchor_helper" id="_software_updates"></span><h2 data-anchor="_software_updates">3. Software Updates</h2>
+<span class="anchor_helper" id="_text_editor"></span><h2 data-anchor="_text_editor">3. Text Editor</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>RubyMotion をインストールしたあとは開発のためにテキストエディタの設定をします。もし RubyMine や Vim、TextMate といったお気に入りのエディタがあるのでしたら、準備は万全です。 より詳しい情報については、<a href="http://rubymotion.jp/RubyMotionDocumentation/articles/editors/index.html">editors</a> ガイドをご覧ください。</p></div>
+</div>
+</div>
+<div class="sect1">
+<span class="anchor_helper" id="_software_updates"></span><h2 data-anchor="_software_updates">4. Software Updates</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>コマンドラインから Software アップデートを行うことができます。</p></div>
 <div class="paragraph"><p>以下のコマンドで、最新の RubyMotion をネットワークから取得しインストールします。RubyMotion のアップデートを行う際には、インターネットに接続した環境が必要になります。</p></div>
@@ -1160,7 +1167,7 @@ pre {
 </div>
 </div>
 <div class="sect1">
-<span class="anchor_helper" id="_support"></span><h2 data-anchor="_support">4. Support</h2>
+<span class="anchor_helper" id="_support"></span><h2 data-anchor="_support">5. Support</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>問題に直面している場合や、機能のリクエストや質問など、コマンドラインから ticket を提出できます。</p></div>
 <div class="listingblock">
@@ -1172,10 +1179,10 @@ pre {
 </div>
 </div>
 <div class="sect1">
-<span class="anchor_helper" id="_hello_world"></span><h2 data-anchor="_hello_world">5. Hello World</h2>
+<span class="anchor_helper" id="_hello_world"></span><h2 data-anchor="_hello_world">6. Hello World</h2>
 <div class="sectionbody">
 <div class="sect2">
-<span class="anchor_helper" id="_ios"></span><h3 data-anchor="_ios">5.1. iOS</h3>
+<span class="anchor_helper" id="_ios"></span><h3 data-anchor="_ios">6.1. iOS</h3>
 <div class="paragraph"><p>最初の RubyMotion iOS プログラム "Hello World" を記述する準備が整いました。</p></div>
 <div class="paragraph"><p>Terminal を起動し、プロジェクトを作成する場所へ移動します。そして、以下のようにコマンドを実行してください。</p></div>
 <div class="listingblock">
@@ -1237,7 +1244,7 @@ end</pre>
 <div class="paragraph"><p>これで、はじめての RubyMotion プログラムの作成が終わりです。どうでしょう、難しかったですか？</p></div>
 </div>
 <div class="sect2">
-<span class="anchor_helper" id="_os_x"></span><h3 data-anchor="_os_x">5.2. OS X</h3>
+<span class="anchor_helper" id="_os_x"></span><h3 data-anchor="_os_x">6.2. OS X</h3>
 <div class="paragraph"><p>さぁ、最初の RubyMotion OS X プログラム "Hello World" を記述してみましょう。</p></div>
 <div class="paragraph"><p>Terminal を起動し、プロジェクトを作成する場所へ移動します。そして、以下のようにコマンドを実行してください。</p></div>
 <div class="listingblock">
@@ -1271,7 +1278,7 @@ Rakefile app resources spec</pre>
 <pre>$ rake</pre>
 </div>
 </div>
-<div class="paragraph"><p>プロジェクトをビルドし、シミュレータが起動します。まだコードを何も書いていないので、空のウィンドウが表示されます。</p></div>
+<div class="paragraph"><p>プロジェクトをビルドするとアプリが起動します。まだコードを何も書いていないので、空のウィンドウが表示されます。</p></div>
 <div class="paragraph"><p><em>app</em> ディレクトリの中にはデフォルトで作成される <em>app_delegate.rb</em> というファイルがあります。このファイルには、アプリケーションの制御という役割をする AppDelegate が実装されています。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
@@ -1306,7 +1313,7 @@ end</pre>
 </div>
 </div>
 <div class="sect1">
-<span class="anchor_helper" id="_and_now"></span><h2 data-anchor="_and_now">6. And Now?</h2>
+<span class="anchor_helper" id="_and_now"></span><h2 data-anchor="_and_now">7. And Now?</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>いくつか iOS と OS X のサンプルコードが GitHub の <a href="https://github.com/HipByte/RubyMotionSamples">Sample Code Repository</a> にあります。サブフォルダは、上記のように作成した RubyMotion プロジェクトです。 サブフォルダで <span class="monospaced">rake</span> コマンドを実行しアプリを試すことや、<em>app</em> ディレクトリ内のソースコードを確認することができます。</p></div>
 <div class="paragraph"><p>そのほかのガイドや RubyMotion に関する記事、screencast などは <a href="http://www.rubymotion.com/developer-center">Developer Center</a> で確認してください。</p></div>
