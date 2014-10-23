@@ -1,17 +1,27 @@
 RubyMotion Runtime Guide
 ========================
-Laurent Sansonetti <lrz@hipbyte.com>
 
 RubyMotion ランタイムは、アプリケーションの実行時に必要な Ruby の言語機能を実装しています。ランタイムの一部には、オブジェクトモデル、組み込みクラスとメモリ管理システムがあります。
 
+
+RubyMotion には二つのランタイムがあります。
+
+* RubyMotion for *iOS and OS X*: Objective-C ランタイムと Cocoa クラスをベースとしています。
+* RubyMotion for *Android*: Android ランタイム (Dalvik または ART) と Java コアクラスをベースとしています。
+
 外観上、RubyMotion ランタイムは http://www.ruby-lang.org/en/[CRuby] (MRI や、単に Ruby とも呼ばれます) と似ていますが完全に異なる実装があります。以下のセクションでは、CRuby との主な違いについて取り上げます。
 
-RubyMotion ランタイムの重要な特徴として、iOS と OS X との密接な統合があります。これは、アプリケーションの効率的な動作を意味します。
-
+RubyMotion ランタイムの主な機能は Objective-C と Java ランタイムとの密接な統合で、これは省電力で動作しパフォーマンス効率の良いコードを記述するのに適しています。
+  
 RubyMotion は Ruby 1.9 の言語仕様に準拠します。
 
-Object Model
+iOS and OS X
 ------------
+
+ここからは、iOS や OS X の RubyMotion プロジェクトの動力となっている RubyMotion ランタイムの一つを扱います。
+
+Object Model
+~~~~~~~~~~~~
 
 RubyMotion のオブジェクトモデルは http://en.wikipedia.org/wiki/Objective-C[Objective-C] をベースとし、iOS と OS X SDK の基本的な言語ランタイムに基づいています。Objective-C は C 言語にオブジェクト指向を取り入れ、Ruby と同じく、http://en.wikipedia.org/wiki/Smalltalk[Smalltalk] から強く影響を受けています。
 
@@ -24,7 +34,7 @@ RubyMotion では、Ruby クラスのメソッドやオブジェクトは、Obje
 同じオブジェクトモデル構成を共有することで、Objective-C と RubyMotion の API はパフォーマンスの犠牲なしで相互に乗り入れできます。
 
 Objective-C Messages
-~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^
 
 RubyMotion では Objective-C のメッセージ定義やメッセージ送信ができます。
 
@@ -66,7 +76,7 @@ end
 TIP: Objective-C のセレクタを定義するために用いられる構文は RubyMotion に追加され、これは Ruby の標準ではありません。
 
 Objective-C Interfaces
-~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^
 
 Objective-C は iOS SDK を記述するメイン言語として使われ、Objective-C インタフェースの読み方や Ruby から使う方法について学ぶ必要があります。
 
@@ -110,7 +120,7 @@ instance = Test.sharedInstanceWithObject(obj1, andObject:obj2)
 ----
 
 Selector Shortcuts
-~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^
 
 RubyMotion ランタイムは特定の Objective-C セレクタに対して、便利なショートカットを用意しています。
 
@@ -130,7 +140,7 @@ view.hidden = true unless view.hidden?
 ----
 
 Super
-~~~~~
+^^^^^
 
 Objective-C では、+super+ は現在のクラスのスーパークラスへメソッドを送信し、メソッドを実行します。以下の例では、+super+ は +MediaController+ へ +song+ という引数と一緒に +play+ メッセージを送信します。
 
@@ -207,7 +217,7 @@ end
 ----
 
 Builtin Classes
----------------
+~~~~~~~~~~~~~~~
 
 いくつかの RubyMotion の組み込みクラスは、iOS と OS X のベースレイヤーである http://developer.apple.com/library/ios/#documentation/Cocoa/Reference/Foundation/ObjC_classic/\_index.html[Foundation framework] をベースとしています。
 
@@ -219,16 +229,6 @@ Foundation ではプリミティブなオブジェクトクラスと同様に +N
 
 ここで、いくつかの組み込みクラスと、新規に +Hello+ というクラスを作成した場合で、それぞれのクラスの祖先がどのようになるか示します。
 
-[options="header,autowidth"]
-|==================================
-| Ruby Class | Ancestors
-| +Hello+    | +NSObject+ → +Kernel+
-| +String+   | +NSMutableString+ → +NSString+ → +Comparable+ → +NSObject+ → +Kernel+
-| +Array+    | +NSMutableArray+ → +NSArray+ → +Enumerable+ → +NSObject+ → +Kernel+
-| +Hash+     | +NSMutableDictionary+ → +NSDictionary+ → +Enumerable+ → +NSObject+ → +Kernel+
-| +Numeric+  | +Comparable+ → +NSNumber+ → +NSValue+ → +NSObject+ → +Kernel+
-| +Time+     | +Comparable+ → +NSDate+ → +NSObject+ → +Kernel+
-|===================================
 
 Ruby の組み込みクラスを Foundation 上に実装した結果、インスタンスがより多くのメッセージに応答するようになります。
 たとえば、+NSString+ クラスは +uppercaseString+ メソッドを定義します。+String+ クラスは +NSString+ のサブクラスなので、Ruby で作成した文字列もそのメソッドに応答します。
@@ -251,7 +251,7 @@ iterate NSArray.arrayWithObject(42)
 しかし、この設計の主な目的は Objective-C と Ruby との間でデータ変換が不要なため、パフォーマンスの犠牲なしにプリミティブな型の変換を行えることにあります。典型的なアプリケーションで変換される型の多くは組み込み型なので、このことは重要です。Ruby で作成した +String+ オブジェクトは、+NSString+ を期待する Objective-C メソッドの引数にできるメモリアドレスを持っています。
 
 Mutability
-~~~~~~~~~~
+^^^^^^^^^^
 
 Foundation framework は mutable と immutable の両方をセットとして持っています。mutable オブジェクトは変更することができます。一方、immutable オブジェクトは変更できません。
 
@@ -269,7 +269,7 @@ RubyMotion で作られる文字列は +NSMutableString+ を継承するので�
 しかし、iOS SDK API はごく一般的に immutable なオブジェクトを返すので注意しなければなりません。この場合、+dup+ や +mutableCopy+ メッセージを送信することで、mutable なオブジェクトを取得できます。そして内容を変更できるようになります。
 
 Interfacing with C
-------------------
+~~~~~~~~~~~~~~~~~~
 
 RubyMotion を使用する際には、あなたが C プログラマである必要はありませんが、このセクションで説明されるいくつかの基本概念が必要となります。
 Objective-C は C 言語のスーパーセットです。そのため、Objective-C メソッドは C 言語の型を受け付けたり、返したりします。
@@ -279,7 +279,7 @@ Objective-C は C 言語のスーパーセットです。そのため、Objectiv
 RubyMotion は Ruby で C API を利用する対応するためのインタフェースがあります。
 
 Basic Types
-~~~~~~~~~~~
+^^^^^^^^^^^
 
 C 言語や間接的に Objective-C は変数に型があります。iOS SDK API では、型がついた変数を受け付けたり返したりするのが一般的です。
 
@@ -318,7 +318,7 @@ handle.fileDescriptor # => 2
 C 言語の +void+ 型を返す API を使用するとき、RubyMotion は +nil+ を返します。
 
 Structures
-~~~~~~~~~~
+^^^^^^^^^^
 
 C 言語の構造体は RubyMotion ではクラスとしてマッピングされています。Ruby で生成した構造体のインスタンスは、C 言語の構造体を期待する API で使用できます。同様に、C 言語の構造体を返す API は、適切な構造体クラスのインスタンスを返します。
 
@@ -347,7 +347,7 @@ RubyMotion は Array オブジェクトも受け付けます。この場合、�
 ----
 
 Enumerations and Constants
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 C 言語の列挙子や定数は +Object+ クラスの定数としてマッピングされます。
 
@@ -369,7 +369,7 @@ locationManager.desiredAccuracy = KCLLocationAccuracyBest # works
 ----
 
 Functions
-~~~~~~~~~
+^^^^^^^^^
 
 C 言語の関数は、+Object+ クラスのメソッドとして使用できます。フレームワークのヘッダファイルで実装されているインライン関数もサポートしてます。
 
@@ -388,7 +388,7 @@ NSHomeDirectory() # works
 ----
 
 Pointers
-~~~~~~~~
+^^^^^^^^
 
 ポインターは C 言語において非常に基本的なデータタイプです。概念的に、ポインターはオブジェクトを指し示すメモリアドレスです。
 
@@ -450,7 +450,7 @@ rect_ptr = Pointer.new(CGRect.type)
 C 言語の文字列へのポインタは、RubyMotion によって +String+ と自動的に相互変換されます。
 
 Function Pointers and Blocks
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 RubyMotion では、C の関数ポインタや C Blocks を受け付ける C や Objective-C API は、引数に +Proc+ オブジェクトを渡すことで呼び出すことができます。
 
@@ -498,7 +498,7 @@ IMPORTANT: +Proc+ オブジェクトは、C の関数ポインタや、Blocks �
 IMPORTANT: C 言語の関数ポインタを引数とするケースでは、+Proc+ オブジェクトがメモリ管理により、処理の途中で回収されないようにする必要があります。もし非同期でメソッドが関数ポインタを呼び出す場合には、+Proc+ オブジェクトの参照を保持しておかなければなりません。メモリ管理については次のセクションで説明します。
 
 Memory Management
------------------
+~~~~~~~~~~~~~~~~~
 
 RubyMotion は自動的なメモリ管理を提供します。みなさんは、使わなくなったオブジェクトを解放したりする必要がありません。
 
@@ -511,7 +511,7 @@ RubyMotion のメモリ管理しシステムは開発プロセスを単純化す
 NOTE: オブジェクトの回収はシステムにより引き起こされますが、いつ回収されるかは決定的ではありません。RubyMotion は既存の autorelease pool 構造をベースとしています。この autorelease pool は iOS が event run loop などで生成・破棄します。
 
 Weak References
-~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^
 
 2 つ以上のオブジェクトが相互参照するときに生じる、オブジェクトの循環は現在ランタイムによって処理されません。そのため、オブジェクトのメモリリークを避けるために弱参照を作成することが重要です。
 
@@ -547,7 +547,7 @@ end
 NOTE: 将来、RubyMotion のランタイムは循環参照を解決できることでしょう。その際には +WeakRef+ は使用しても機能しないものに置き換えられることでしょう。
 
 Objective-C  and CoreFoundation Objects
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Objective-C や CoreFoundation-style API によって生成されるオブジェクトは、RubyMotion によって自動的に管理されます。+retain+ や +release+ 、+autorelease+ メッセージをオブジェクトに送信したり、+CFRetain+ や +CFRelease+ 関数を使う必要はありません。
 
@@ -567,7 +567,7 @@ date2 = NSDate.date
 オブジェクトの参照を生成する方法は他にもいくつかあります。定数の定義、クラス変数を使用、オブジェクトのコンテナに追加する (たとえば、+Array+ や +Hash+ など) などがあります。RubyMotion で生成されたオブジェクトで Objective-C API に渡されるものも、必要に応じて参照が生成されます。
 
 Immediate Types
-~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^
 
 RubyMotion では、+Fixnum+ と +Float+ 型は即値で、これらはオブジェクト用のメモリ領域を使用しません。RubyMotion ランタイムでは、http://en.wikipedia.org/wiki/Tagged_pointer[tagged pointers] と呼ばれるテクニックを使用してこれを実装しています。
 
@@ -576,7 +576,7 @@ RubyMotion では、+Fixnum+ と +Float+ 型は即値で、これらはオブジ
 NOTE: iOS では 32bit アーキテクチャが使用されているため、即値は 30bit のポインタとして変換されます(型情報として 2bit 使用します)。OS X では、最近の 64bit アーキテクチャの Mac 上で実行する際には即値は 62bit のポインタとして変換されます。
 
 Concurrency
------------
+~~~~~~~~~~~
 
 iOS デバイスにマルチコアプロセッサが登場したので、コードを平行して実行させる能力は重要になりました。RubyMotion はこの目的に沿って設計されています。
 
@@ -589,13 +589,304 @@ CAUTION: CRuby の実装とは異なり、スレッドの平行実行を禁止�
 RubyMotion では平行動作するコードを記述する際に、次の異なる選択肢を利用できます。
 
 Threads and Mutexes
-~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^
 
 +Thread+ クラスは POSIX スレッドを生成します。生成されたスレッドは他のスレッドと平行して動作します。+Mutex+ クラスは POSIX ミューテックスをラップしたもので、共有リソースへの同時アクセスを防止するのに使うことができます。
 
 Grand Central Dispatch
-~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^
 
 RubyMotion は http://developer.apple.com/library/ios/#documentation/Performance/Reference/GCD_libdispatch_Ref/Reference/reference.html[Grand Central Dispatch] (GCD) ライブラリを +Dispatch+ モジュールとしてラップしています。concurrent queue や serial queue のもとで同期・非同期 Blocks を実行することができます。
 
 普通のスレッドに比べて理解することが難しくなりますが、GCD は平行動作するエレガントなコードを提供してくれます。GCD はスレッドのプールを保持し、ミューテックスの使用しないで済むように API が構成されています。
+
+Android
+-------
+
+From this part of the document we will refer to the RubyMotion runtime as the one that powers Android RubyMotion projects.
+
+NOTE: Android support is currently in public beta. While it is fully functional, we are still working on making it ready for prime time.
+
+Object Model
+~~~~~~~~~~~~
+
+The RubyMotion object model is based on http://en.wikipedia.org/wiki/Java_(programming_language)[Java], the de-facto programming language of Android, Google's mobile platform.
+
+More specifically, RubyMotion re-implements the Ruby language on top of the http://en.wikipedia.org/wiki/Java_Native_Interface[Java Native Interface] (JNI) of the Android runtime.
+
+While Java has certainly less similarities with Ruby than Objective-C, they are still close enough to make such an integration possible.
+
+In RubyMotion, all objects are Java objects, all Java classes and methods are available in Ruby, and some Ruby classes and methods are available to Java. This unified approach allows us to interface with the native Java APIs at no extra performance cost.
+
+RubyMotion is compatible with both http://en.wikipedia.org/wiki/Dalvik_(software)[Dalvik] and http://en.wikipedia.org/wiki/Android_Runtime[ART] Android runtimes.
+
+Classes
+^^^^^^^
+
+All Java classes are natively exposed to Ruby. However, the way to access them differs from the syntax you would use in Java.
+
+Java features the notion of packages, which is a way to group a set of classes under a component that can be either accessed directly or included.
+
+As an example, +java.lang.Object+ represents a path where the +Object+ class is defined under the +java.lang+ package. Java classes are often described using their full package path.
+
+In RubyMotion, Java packages are accessed as if they were defined as a chain of Ruby constants, where each part of the package starts with an upper-case character.
+
+In Ruby, the +java.lang.Object+ path can be accessed using +Java::Lang::Object+.
+
+----
+obj = Java::Lang::Object.new
+----
+
+Java classes which are not defined as 'final' can be subclassed. As an example, the public non-final http://developer.android.com/reference/android/app/Activity.html[+android.app.Activity+] class is available as +Android::App::Activity+ in Ruby, and can be subclasses as following.
+
+----
+class MyActivity < Android::App::Activity
+  # ...
+end
+----
+
+NOTE: At the time of this writing, packages cannot be included in Ruby, so you have to use full paths.
+
+Primitive Java Types
+^^^^^^^^^^^^^^^^^^^^
+
+Like Objective-C, Java comes with a set of primitive / builtin data types. Java methods make use of these types, and it is important to describe how they are interfaced with Ruby code.
+
+[options="header,autowidth"]
+|=========================================
+| Java Type | From Ruby to Java | From Java to Ruby
+| +boolean+ .^| If the object is +false+ or +nil+, +false+, otherwise, +true+. Note: the +0+ fixnum will evaluate to +true+. .^| Either +true+ or +false+.
+| +byte+ .5+.^| If the object is a +Fixnum+ or a +Bignum+, the value is returned. If the object is +true+ or +false+, +1+ or +0+ are respectively returned. If the object responds to the +to_i+ message, it is sent and the result is returned. .5+.^| Either a +Fixnum+ or a +Bignum+ object.
+| +char+
+| +short+
+| +int+
+| +long+
+| +float+ .2+.^| If the object is a +Float+, the value is returned. If the object is +true+ or +false+, +1.0+ or +0.0+ are respectively returned. If the object responds to the +to_f+ message, it is sent and the result is returned. .2+.^| A +Float+ object.
+| +double+
+|=========================================
+
+Builtin Ruby Classes
+^^^^^^^^^^^^^^^^^^^^
+
+Some of the built-in classes of RubyMotion are based on the http://en.wikipedia.org/wiki/Java_Development_Kit[Java Class Library], the core classes of the Android SDK.
+
+Java comes with a class called http://developer.android.com/reference/java/lang/Object.html:[+java.lang.Object+], which is the root class of all Java classes.
+
+Because of RubyMotion's unified runtime approach, all Ruby classes are also based on +java.lang.Object+. The +Object+ constant point to that class as well.
+
+Here is a table showing the base class of a newly created class, +Hello+, as well as some of the Ruby built-in classes.
+
+[options="header,autowidth"]
+|==================================
+| Ruby Class   | Base
+| +Hello+      | +java.lang.Object+
+| +Fixnum+     | +java.lang.Integer+
+| +Float+      | +java.lang.Float+
+| +Proc+       | +java.lang.Runnable+ (interface)
+| +String+     | +java.lang.CharSequence+ (interface)
+| +Array+      | +java.util.ArrayList+
+| +Hash+       | +java.util.HashMap+
+| +Thread+     | +java.lang.Thread+
+| +Regexp+     | +java.util.regex.Pattern+
+| +MatchData+  | +java.util.regex.Matcher+
+|===================================
+
+The main purpose of this design is to allow the exchange of primitive types between Java and Ruby at no performance cost, since they don’t have to be converted. This is important as most of the types that will be exchanged in a typical application are likely going to be built-in types. 
+
+A String object created in Ruby can have its object reference passed as the argument of an Java method that expects an object that implements the +java.lang.CharSequence+ interface, such as the +setText+ method of +android.widget.TextView+ class.
+
+----
+textView.text = "foo"
+----
+
+Methods
+^^^^^^^
+
+Java methods are natively exposed to Ruby, and can be accessed as if they have been defined as Ruby methods.
+
+As an example, the +java.lang.Object+ class implements the +toString()+ method.
+
+----
+String	toString()
+----
+
+That method can be called on all objects in Ruby.
+
+----
+42.toString         #=> "42"
+true.toString       #=> "true"
+textView.toString   #=> "android.widget.TextView{3607..."
+----
+
+When you are subclassing a Java class in Ruby, you can override any of its methods.
+
+As an example, the +android.app.Activity+ class implements the +onCreate()+ method, which is meant to be overridden by subclasses.
+
+----
+void onCreate (Bundle savedInstanceState)
+----
+
+We can do that naturally from Ruby. 
+
+----
+class MyActivity < Android::App::Activity
+  def onCreate(saved_instance)
+    super
+    # ...
+  end
+end
+----
+
+Note that we use the +super+ Ruby language keyword to call the super class implementation, defined in Java.
+
+Method Shortcuts
+^^^^^^^^^^^^^^^^
+
+The RubyMotion runtime provides convenience shortcuts for certain Java methods.
+
+[options="header,autowidth"]
+|===============================
+| Method              | Shortcut
+| +setFoo+            | +foo=+
+| +getFoo+            | +foo+
+|===============================
+
+As an example, the +getText+ and +setText+ methods of +android.widget.TextView+ can be called using the +text+ and +text=+ shortcuts.
+
+----
+view.text          # instead of view.getText
+view.text = "foo"  # instead of view.setText("foo")
+----
+
+Interfaces
+^^^^^^^^^^
+
+http://en.wikipedia.org/wiki/Interface_(Java)[Java interfaces] are an important concept to understand when programming Android apps with RubyMotion.
+
+In Java, an interface is basically a list of method declarations. A class is said to implement an interface when it provides definitions for all the methods in the interface.
+
+NOTE: Java interfaces are similar to protocols in Objective-C.
+
+In RubyMotion, you can implement an interface in a class just by defining the required methods. There is no need to specify the name of the interface, the compiler will determine that for you automatically.
+
+As an example, the +setOnClickListener+ method of +android.view.View+ expects an object that implements the http://developer.android.com/reference/android/view/View.OnClickListener.html[+android.view.View.OnClickListener+] interface, which features only one method, +onClick+.
+
+----
+abstract void	onClick(View v)
+----
+
+In order to implement that interface in Ruby, you just need to provide an implementation for that method in a class.
+
+----
+class MyButtonListener
+  def onClick(view)
+    # ...
+  end
+end
+
+# ...
+button.onClickListener = MyButtonListener.new
+----
+
+Methods Overloading
+^^^^^^^^^^^^^^^^^^^
+
+Java features the concept of http://en.wikipedia.org/wiki/Function_overloading[method overloading], which does not exist in Ruby.
+
+In Java, it is possible to define the same method name multiple times but with different argument types. The compiler will then identify which method has to be called.
+
+As an example, the +android.widget.TextView+ Java class features the following +setText+ methods:
+
+----
+void	setText(int resid)
+void	setText(char[] text, int start, int len)
+void	setText(int resid, TextView.BufferType type)
+void	setText(CharSequence text)
+void	setText(CharSequence text, TextView.BufferType type)
+----
+
+As you can see, each of these methods have the same name (and return type) but have different arguments.
+
+Because Ruby is dynamically-typed, overloaded methods have to be resolved at runtime and not at compile time.
+
+The +setText(int resid)+ method will be called if you pass a Fixnum to it. The +setText(CharSequence text)+ method will be called if you provide an object that implements the +CharSequence+ interface (such as a string).
+
+----
+textView.text = 42      #=> calls setText(int) 
+textView.text = 'foo'   #=> calls setText(CharSequence) 
+----
+
+In case the runtime cannot figure out which overloaded method to call during a method dispatch, a +NoMethodError+ exception will be raised with an appropriate message.
+
+Fields
+^^^^^^
+
+Java fields are variables attached to a class. There are two types of Java fields:
+
+1. Instance fields; these are similar to instance variables in Ruby.
+2. Static fields; these are similar to class variables in Ruby.
+
+In the Android SDK, constants are usually static Java fields, and can be retrieved exactly as if they were constants in Ruby.
+
+For example, the http://developer.android.com/reference/android/widget/LinearLayout.html#HORIZONTAL[+android/widget/LinearLayout+] class has a few constants.
+
+----
+public static final int HORIZONTAL
+public static final int VERTICAL
+...
+----
+
+These constants can be naturally retrieved in Ruby.
+
+----
+layout = Android::Widget::LinearLayout.new(self)
+layout.orientation = Android::Widget::LinearLayout::VERTICAL
+----
+
+Instance Java fields can be retrieved in Ruby as if they were defined using +attr_accessor+.
+
+Annotations
+^^^^^^^^^^^
+
+Java annotations are special objects that can be applied to methods (and other types).
+
+An example is the WebKit framework of Android, which requires methods to be exposed to JavaScript to be properly annotated, for security reasons.
+
+This can be done in RubyMotion using the +__annotation__+ special method right before the definition of a method. The annotation will be retrieved at compilation time.
+
+----
+class DemoJavaScriptInterface
+  __annotation__('@android.webkit.JavascriptInterface')
+  def methodFromJavaScript
+  end
+end
+----
+
+NOTE: At the time of this writing, only methods can be annotated in RubyMotion.
+
+Memory Management
+~~~~~~~~~~~~~~~~~
+
+RubyMotion relies on the Dalvik or ART garbage collector to allocate and dispose of unused memory.
+
+From a Ruby developer perspective, you do not have to think about memory management at all.
+
+Internally, RubyMotion makes use of local references for local variables and global references for everything else. The destruction of local references is determined at compilation time.
+
+There are two important things you might need to consider:
+
+1. The garbage collector is multithreaded. Collections might happen on other threads. If you override the +finalize+ method of +java.lang.Object+ in your code, make sure it's properly re-entrant.
+2. The garbage collector is able to detect and handle cyclic references. Unlike RubyMotion for iOS and OS X, you do not need to create +WeakRef+ objects.
+
+Concurrency
+~~~~~~~~~~~
+
+RubyMotion has been designed for concurrency in mind.
+ 
+RubyMotion has the concept of virtual machine objects, which wrap the state of a thread of execution. A piece of code is running through a virtual machine.
+
+Virtual machines don't have locks and there can be multiple virtual machines running at the same time, concurrently.
+
+CAUTION: Unlike the mainstream Ruby implementation, http://en.wikipedia.org/wiki/Race_condition#Computing[race conditions] are possible in RubyMotion, since there is no http://en.wikipedia.org/wiki/Global_Interpreter_Lock[Global Interpreter Lock] (GIL) to prohibit threads from running concurrently. You must be careful to secure concurrent access to shared resources.
+
+The +Thread+ class is available for concurrency patterns. It is a direct subclass of http://developer.android.com/reference/java/lang/Thread.html[+java.lang.Thread+].

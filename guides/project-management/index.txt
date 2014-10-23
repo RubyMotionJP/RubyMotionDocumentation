@@ -1,8 +1,10 @@
 RubyMotion Project Management Guide
 ===================================
-Laurent Sansonetti <lrz@hipbyte.com>
 
 このガイドでは、新しい RubyMotion プロジェクトの作成、設定方法について説明します。
+
+NOTE: このドキュメントは RubyMotion の iOS と OS X プロジェクト向けのものです。早期に Android 向けに同様のドキュメントを用意いたします。それまでの間、
+https://github.com/HipByte/RubyMotionSamples/tree/master/android[サンプルコード] を参考ください。
 
 Creation
 --------
