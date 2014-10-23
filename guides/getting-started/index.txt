@@ -1,22 +1,20 @@
 Welcome to RubyMotion
 =====================
-Laurent Sansonetti <lrz@hipbyte.com>
-
 
 RubyMotion をご購入いただき誠にありがとうございます。このガイドは RubyMotion の使用を開始するにあたりご一読下さい。
 
 Overview
 --------
 
-http://www.rubymotion.com[RubyMotion] はプログラミング言語 Ruby を用いて iOS と OS X アプリケーションを開発するためのツールチェインです。
+http://www.rubymotion.com[RubyMotion] はプログラミング言語 Ruby を用いて iOS と OS X、Android アプリケーションを開発するためのツールチェインです。
 
-http://www.apple.com/ios[iOS] は Apple のモバイルオペレーティングシステムで、iPhone や iPod、iPad などさまざまなデバイスを制御しています。http://www.apple.com/osx[OS X] は Apple のデスクトップ OS で、iMac や MacBook Air といった Mac コンピュータを動かしています。
+http://www.apple.com/ios[iOS] は Apple のモバイルオペレーティングシステムで、iPhone や iPod、iPad などさまざまなデバイスを制御しています。http://www.apple.com/osx[OS X] は Apple のデスクトップ OS で、iMac や MacBook Air といった Mac コンピュータを動かしています。http://www.android.com[Android] は Google のモバイルオペレーティングシステムで、異なるメーカの多種多様な機器を動かしています。
 
-開発者は iOS や OS X 向けのアプリケーションを作成し、そして Apple のアプリケーション配信システムである App Store にアプリケーションを登録できます。
+開発者は iOS や OS X 向けのアプリケーションを作成し、そして Apple のアプリケーション配信システムである App Store にアプリケーションを登録できます。あるいは、Android アプリケーションを Google Play ストアで配布するのに RubyMotion を使用することができます。
 
 RubyMotion は、主に二つの構成要素から成ります。
 
-* *Runtime*: 新規の Ruby 言語の実装で、ネイティブの Apple のランタイムと密接に統合され iOS デバイスに最適化されています。
+* *Runtime*: 新規の Ruby 言語の実装で、ネイティブの Apple あるいは Google のランタイムと密接に統合されデバイスに最適化されています。
 * *Project Management*: RubyMotion のプロジェクトを作成・管理、また対話的に開発するためのコマンドラインインタフェースです。他にも、Ruby コードを最適化された機械語にコンパイルする静的なコンパイラと、その場でリアルタイムに式を評価しアプリケーションの動作を変更できるインタラクティブなコンソールがあります。
 
 RubyMotion は '/Library/RubyMotion' にインストールされ、コマンドラインインタフェースのシンボリックリンクが '/usr/bin/motion' に作成されます。
@@ -26,7 +24,15 @@ Prerequisites
 
 RubyMotion の利用には、OSX 10.8.4 以上がインストールされている 64-bit Mac が必要です。OS X 10.9 Mavericks を推奨します。
 
-あらかじめ iOS SDK と OS X SDK を Mac にインストールする必要があります。iOS SDK は Xcode に付属しており、Xcode は App Store アプリケーションを使用して、無料でダウンロード・インストールできます。
+iOS and OS X
+~~~~~~~~~~~~
+
+あらかじめ iOS SDK と OS X SDK を Mac にインストールする必要があります。SDK は Xcode に付属してます。
+
+Installing Xcode
+^^^^^^^^^^^^^^^^
+
+Xcode は App Store アプリケーションを使用して、無料でダウンロード・インストールできます。
 
 NOTE: Xcode は Apple 製の IDE です。RubyMotion でプログラミングするときには Xcode を使う必要はなく、お気に入りのエディタを使い続けることができます。
 
@@ -53,6 +59,146 @@ image:http://www.rubymotion.com/developer-center/guides/getting-started/images/x
 ----
 $ sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer
 ----
+
+Android
+~~~~~~~
+
+NOTE: Android のサポートは現在パブリックベータです。 While it is fully functional, we are still working on making it ready for prime time.
+
+はじめに、つぎのコマンドを使用して RubyMotion の Android ベータをインストールします。
+
+----
+$ sudo motion update --pre
+----
+
+'/Library/RubyMotionPre' ディレクトリにインストールされます。
+
+この後、Android 開発環境特有のセットアップを行います。
+
+Installing Java
+^^^^^^^^^^^^^^^
+
+RubyMotion のビルドシステムは、Java コンパイラのインストールを必要とします。デフォルトでは、Java は OS X に付属してません。
+
+ご使用の環境にインストールする Java を http://support.apple.com/kb/DL1572[Apple のサイト] の手順に従います。
+
+適切に Java がインストールされたかを確認します。
+
+----
+$ javac -version
+javac 1.6.0_65
+----
+
+Java 1.7 でも動作しますが、Java 1.6 の使用を推奨します.
+
+Downloading the SDK
+^^^^^^^^^^^^^^^^^^^
+
+Androidの公式サイトから、http://developer.android.com/sdk/index.html[Eclipse ADT] バンドルをダウンロードします。ダウンロードの前には利用条項に承諾する必要があります。
+
+Eclipse ADT という名称ですが、このバンドル内に SDK が同梱されています。
+
+ダウンロードした後、.zip ファイルを開きます。'eclipse' と 'sdk' の 2 つのディレクトリがあるはずです。RubyMotion では 'sdk' を必要とします。
+
+ホームディレクトリなどに 'sdk' ディレクトリをコピーすることをお勧めします。このドキュメントでは、'~/android-rubymotion' を使用します。
+
+----
+$ mkdir ~/android-rubymotion
+$ cp -r ~/Downloads/adt-bundle-mac-x86_64-20140702/sdk ~/android-rubymotion
+----
+
+正しく '~/android-rubymotion/sdk' ディレクトリにコピーされたことを確認します。(執筆時点で)以下のものが含まれています。
+
+----
+$ ls ~/android-rubymotion/sdk 
+build-tools	extras		platform-tools	platforms	tools
+----
+
+もし Eclipse を使用する予定がなければ、.zip ファイルとそれを展開してできたディレクトリを削除して問題ありません。
+
+Setting up the SDK
+^^^^^^^^^^^^^^^^^^
+
+Android SDK をコピーしましたが、まだ内部パッケージをダウンロードし設定する必要があります。'android' ツールを実行します。
+
+----
+$ ~/android-rubymotion/sdk/tools/android
+----
+
+*Android SDK Manager* というインストールする必要があるパッケージセクションのウィンドウが表示されます。*Install* ボタンをクリックし、若干時間がかかりますが完了するまでお待ちください。
+
+Downloading the NDK
+^^^^^^^^^^^^^^^^^^^
+
+Androidの公式サイトから、https://developer.android.com/tools/sdk/ndk/index.html[Mac OS X 64-bit] パッケージをダウンロードします。ダウンロードの前には利用条項に承諾する必要があります。
+
+NOTE: 適切な NDK パッケージをダウンロードすることが重要です。執筆時点では、Mac OS X 32-bit パッケージでは動作しません。
+
+Android NDK パッケージは自己解凍ファイルとなっています。ダウンロード、バイナリーを実行可能なファイルにパーミッションを変更し、ファイルを実行します。インストールされたディレクトリを '~/android-rubymotion/ndk' に変更します。
+
+----
+$ chmod +x ~/Downloads/android-ndk-r10c-darwin-x86_64.bin
+$ ~/Downloads/android-ndk-r10c-darwin-x86_64.bin
+$ mv ~/Downloads/android-ndk-r10c ~/android-rubymotion/ndk
+----
+
+インストールが成功したことを確認するため、'~/android-rubymotion/ndk' には以下のファイル(執筆時点)が含まれているかチェックしてください。
+
+----
+$ ls ~/android-rubymotion/ndk
+GNUmakefile			ndk-gdb-py.cmd
+README.TXT			ndk-gdb.py
+RELEASE.TXT			ndk-stack
+build				ndk-which
+docs				platforms
+find-win-host.cmd		prebuilt
+ndk-build			remove-windows-symlink.sh
+ndk-build.cmd			samples
+ndk-depends			sources
+ndk-gdb				tests
+ndk-gdb-py			toolchains
+----
+
+インストール後には、.bin ファイルを削除して問題ありません。
+
+Configuring RubyMotion
+^^^^^^^^^^^^^^^^^^^^^^
+
+作業はほぼ完了しています。あとは RubyMotion に Android SDK と NDK のディレクトリを指定します。
+
+'~/.profile' ファイル(もしファイルが存在してなければ作成します) に以下の行を追加します。
+
+----
+export RUBYMOTION_ANDROID_SDK=~/android-rubymotion/sdk
+export RUBYMOTION_ANDROID_NDK=~/android-rubymotion/ndk
+----
+
+追加後、環境変数を反映するためにターミナルを再起動します。
+
+環境変数が正しく設定されているか、次のように確認します。
+
+----
+$ env | grep RUBYMOTION_ANDROID
+RUBYMOTION_ANDROID_SDK=...
+RUBYMOTION_ANDROID_NDK=...
+----
+
+Configuring your device for development
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+RubyMotion で Android アプリを開発する際に、Android デバイスで開発者向けの機能が必要になるかもしれません。(Android で提供されているエミュレータがとても遅いので。)
+
+まだ機能を有効にされてなければ、デバイスを USB で Mac と接続していることを確認し、次の手順を実施してください。
+
+1. デバイス上で **設定** アプリを起動します。
+2. 画面をスクロールし **端末情報** または **タブレット情報** (デバイスの種類に応じてどちらかが表示されます) をタップします。 別の画面が表示されます。
+3. 再び画面をスクロールし、**ビルド番号** という部分を 7 回タップします。 成功すると、開発者モードになったことを示すメッセージが表示されます。
+4. 前の画面に戻り画面をスクロールし最下部のところに **開発者向けオプション** が有効になっています。これをタップします。
+5. **USBデバッグ** を有効にします。これは Mac とデバイスが開発処理で必要な通信を許可します。デバイス上にウィンドウが表示され、Mac を許可するかを求められます。必ず許可してください。
+
+これで完了です。
+
+もし古いバージョンの Android を使用されている場合には、これらの手順は異なるかもしれません。**開発者モード 有効** と Android のバージョン番号などを、Google で検索すると良いでしょう。
 
 Text Editor
 -----------
@@ -166,7 +312,7 @@ $ rake device
 これで、はじめての RubyMotion プログラムの作成が終わりです。どうでしょう、難しかったですか？
 
 OS X
-~~~
+~~~~
 
 さぁ、最初の RubyMotion OS X プログラム "Hello World" を記述してみましょう。
 
@@ -230,10 +376,50 @@ Terminal で再び +rake+ コマンドを実行すると、シミュレータ上
 
 image:http://www.rubymotion.com/developer-center/guides/getting-started/images/hello-osx.png["Hello World"]
 
-おめでとうございます、みなさんは最初の RubyMotion iOS, OS X プログラムを作ることに成功しました。それほど難しくなかったでしょう？
+Android
+~~~~~~~
+
+Android の Hello World アプリを作ってみましょう。
+
+任意のディレクトリで、新しい Android プロジェクトを作成するために次のコマンドを実行します。
+
+----
+$ motion create --template=android Hello
+$ cd Hello
+----
+
+NOTE: ツールチェーンに +--template=android+ を指定することに注意します。デフォルトでは、RubyMotion は iOS プロジェクトを作成するので、Android テンプレートを選択します。
+
+新しく 'Hello' というディレクトリが作成されます。'Rakefile' と 'app/main_activity.rb' ファイルを見てみましょう。
+
+USB でデバイスが接続されていること確認し、以下のコマンドによってデバイス上でアプリを実行することができます。
+
+----
+$ rake device
+----
+
+アプリはすぐに実行されることでしょう (最初にデバイス画面をロック解除しておきます)。ウィンドウは空の状態ですが、これはまだ何もコードを記述していないためです。
+
+では、'app/main_activity.rb' ファイルを編集し、内容を以下のコードに変更してみましょう。
+
+----
+class MainActivity < Android::App::Activity
+  def onCreate(savedInstanceState)
+    puts "Hello World!"
+    super
+    view = Android::Widget::TextView.new(self)
+    view.text = "Hello World!"
+    self.contentView = view
+  end
+end
+----
+
+ふたたび +rake device+ を実行すると、デバイス上に Hello world というメッセージが表示されます。+#puts+ メソッドを呼び出すことで、ターミナル上にもメッセージを表示されます。
 
 And Now?
 --------
+
+おめでとうございます、みなさんは最初の RubyMotion iOS, OS X そして Android プログラムを作ることに成功しました。それほど難しくなかったでしょう？
 
 いくつか iOS と OS X のサンプルコードが GitHub の https://github.com/HipByte/RubyMotionSamples[Sample Code Repository] にあります。サブフォルダは、上記のように作成した RubyMotion プロジェクトです。 サブフォルダで +rake+ コマンドを実行しアプリを試すことや、'app' ディレクトリ内のソースコードを確認することができます。
 
