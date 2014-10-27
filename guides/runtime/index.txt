@@ -3,7 +3,6 @@ RubyMotion Runtime Guide
 
 RubyMotion ランタイムは、アプリケーションの実行時に必要な Ruby の言語機能を実装しています。ランタイムの一部には、オブジェクトモデル、組み込みクラスとメモリ管理システムがあります。
 
-
 RubyMotion には二つのランタイムがあります。
 
 * RubyMotion for *iOS and OS X*: Objective-C ランタイムと Cocoa クラスをベースとしています。

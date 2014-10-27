@@ -1828,35 +1828,35 @@ date2 = NSDate.date</pre>
 <div class="sect1">
 <span class="anchor_helper" id="_android"></span><h2 data-anchor="_android">2. Android</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>From this part of the document we will refer to the RubyMotion runtime as the one that powers Android RubyMotion projects.</p></div>
+<div class="paragraph"><p>ここからは、Android の RubyMotion プロジェクトの動力となっている RubyMotion ランタイムの一つを扱います。</p></div>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
 <img src="../../icons/note.png" alt="Note">
 </td>
-<td class="content">Android support is currently in public beta. While it is fully functional, we are still working on making it ready for prime time.</td>
+<td class="content">現在、Android サポートはパブリックベータです。While it is fully functional, we are still working on making it ready for prime time.</td>
 </tr></table>
 </div>
 <div class="sect2">
 <span class="anchor_helper" id="_object_model_2"></span><h3 data-anchor="_object_model_2">2.1. Object Model</h3>
-<div class="paragraph"><p>The RubyMotion object model is based on <a href="http://en.wikipedia.org/wiki/Java_(programming_language)">Java</a>, the de-facto programming language of Android, Google’s mobile platform.</p></div>
-<div class="paragraph"><p>More specifically, RubyMotion re-implements the Ruby language on top of the <a href="http://en.wikipedia.org/wiki/Java_Native_Interface">Java Native Interface</a> (JNI) of the Android runtime.</p></div>
-<div class="paragraph"><p>While Java has certainly less similarities with Ruby than Objective-C, they are still close enough to make such an integration possible.</p></div>
-<div class="paragraph"><p>In RubyMotion, all objects are Java objects, all Java classes and methods are available in Ruby, and some Ruby classes and methods are available to Java. This unified approach allows us to interface with the native Java APIs at no extra performance cost.</p></div>
-<div class="paragraph"><p>RubyMotion is compatible with both <a href="http://en.wikipedia.org/wiki/Dalvik_(software)">Dalvik</a> and <a href="http://en.wikipedia.org/wiki/Android_Runtime">ART</a> Android runtimes.</p></div>
+<div class="paragraph"><p>RubyMotion のオブジェクトモデルは、Google のモバイルプラットフォームである Android の標準的なプログラミング言語の <a href="http://en.wikipedia.org/wiki/Java_(programming_language)">Java</a> に基づいています。</p></div>
+<div class="paragraph"><p>より具体的に、RubyMotion は Android ランタイムの <a href="http://en.wikipedia.org/wiki/Java_Native_Interface">Java Native Interface</a> (JNI) 上に Ruby 言語を再実装しています。</p></div>
+<div class="paragraph"><p>Java は Objective-C と比べると Ruby との類似点は少ないのですが、統合するのに十分な類似性があります。</p></div>
+<div class="paragraph"><p>RubyMotion では、すべてのオブジェクトは Java のオブジェクトであり、すべての Java のクラスやメソッドは Ruby で利用できます。また、いくつかの Ruby のクラスやメソッドは Java で利用できます。この統一されたアプローチは、無駄なパフォーマンスコストなしで、ネイティブの Java API を扱えるようになります。</p></div>
+<div class="paragraph"><p>RubyMotion は both <a href="http://en.wikipedia.org/wiki/Dalvik_(software)">Dalvik</a> と <a href="http://en.wikipedia.org/wiki/Android_Runtime">ART</a> の Android ランタイム双方と互換性があります。</p></div>
 <div class="sect3">
 <span class="anchor_helper" id="_classes"></span><h4 data-anchor="_classes">2.1.1. Classes</h4>
-<div class="paragraph"><p>All Java classes are natively exposed to Ruby. However, the way to access them differs from the syntax you would use in Java.</p></div>
-<div class="paragraph"><p>Java features the notion of packages, which is a way to group a set of classes under a component that can be either accessed directly or included.</p></div>
-<div class="paragraph"><p>As an example, <span class="monospaced">java.lang.Object</span> represents a path where the <span class="monospaced">Object</span> class is defined under the <span class="monospaced">java.lang</span> package. Java classes are often described using their full package path.</p></div>
-<div class="paragraph"><p>In RubyMotion, Java packages are accessed as if they were defined as a chain of Ruby constants, where each part of the package starts with an upper-case character.</p></div>
-<div class="paragraph"><p>In Ruby, the <span class="monospaced">java.lang.Object</span> path can be accessed using <span class="monospaced">Java::Lang::Object</span>.</p></div>
+<div class="paragraph"><p>すべての Java クラスは Ruby から直接扱えますが、Java とは異なる構文を用いてアクセスします。</p></div>
+<div class="paragraph"><p>Java にはパッケージという概念があり、コンポーネントのクラス集合をグループ化し、直接アクセスできたりインクルードされたものをアクセスできます。</p></div>
+<div class="paragraph"><p>たとえば、<span class="monospaced">java.lang.Object</span> は <span class="monospaced">java.lang</span> パッケージに定義された <span class="monospaced">Object</span> クラスへのパスを表します。Java クラスはしばしばパッケージのフルパスで記述されたりします。</p></div>
+<div class="paragraph"><p>RubyMotion では、それぞれのパッケージが英大文字から始まる Ruby の定数チェーンとして定義されているかのように Java パッケージをアクセスします。</p></div>
+<div class="paragraph"><p><span class="monospaced">java.lang.Object</span> というパスは、Ruby では <span class="monospaced">Java::Lang::Object</span> でアクセスできます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>obj = Java::Lang::Object.new</pre>
 </div>
 </div>
-<div class="paragraph"><p>Java classes which are not defined as <em>final</em> can be subclassed. As an example, the public non-final <a href="http://developer.android.com/reference/android/app/Activity.html"><span class="monospaced">android.app.Activity</span></a> class is available as <span class="monospaced">Android::App::Activity</span> in Ruby, and can be subclasses as following.</p></div>
+<div class="paragraph"><p><em>final</em> 修飾子が付いていない Java クラスは、サブクラスにすることができます。たとえば、final が付いていないパブリックな <a href="http://developer.android.com/reference/android/app/Activity.html"><span class="monospaced">android.app.Activity</span></a> クラスは、Ruby で <span class="monospaced">Android::App::Activity</span> として利用でき、次のようにサブクラスにすることができます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>class MyActivity &lt; Android::App::Activity
@@ -1869,13 +1869,13 @@ end</pre>
 <td class="icon">
 <img src="../../icons/note.png" alt="Note">
 </td>
-<td class="content">At the time of this writing, packages cannot be included in Ruby, so you have to use full paths.</td>
+<td class="content">執筆時点では、Ruby にパッケージをインクルードできないので、フルパスを使用する必要があります。</td>
 </tr></table>
 </div>
 </div>
 <div class="sect3">
 <span class="anchor_helper" id="_primitive_java_types"></span><h4 data-anchor="_primitive_java_types">2.1.2. Primitive Java Types</h4>
-<div class="paragraph"><p>Like Objective-C, Java comes with a set of primitive / builtin data types. Java methods make use of these types, and it is important to describe how they are interfaced with Ruby code.</p></div>
+<div class="paragraph"><p>Objective-C のように、プリミティブな Java に組み込まれているデータ型が Java にあります。Java のメソッドはこれらの型を使用し、どのように Ruby コードと連結するかを示す重要なものです。</p></div>
 <table class="tableblock frame-all grid-all" style="
 ">
 <col>
@@ -1889,13 +1889,13 @@ end</pre>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">boolean</span></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">If the object is <span class="monospaced">false</span> or <span class="monospaced">nil</span>, <span class="monospaced">false</span>, otherwise, <span class="monospaced">true</span>. Note: the <span class="monospaced">0</span> fixnum will evaluate to <span class="monospaced">true</span>.</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">Either <span class="monospaced">true</span> or <span class="monospaced">false</span>.</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">オブジェクトが <span class="monospaced">false+、+nil</span> のときは <span class="monospaced">false+。それ以外は +true+。Note: +0</span> は <span class="monospaced">true</span> になります。</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><span class="monospaced">true</span> と <span class="monospaced">false</span> のどちらか。</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">byte</span></p></td>
-<td class="tableblock halign-left valign-middle" rowspan="5"><p class="tableblock">If the object is a <span class="monospaced">Fixnum</span> or a <span class="monospaced">Bignum</span>, the value is returned. If the object is <span class="monospaced">true</span> or <span class="monospaced">false</span>, <span class="monospaced">1</span> or <span class="monospaced">0</span> are respectively returned. If the object responds to the <span class="monospaced">to_i</span> message, it is sent and the result is returned.</p></td>
-<td class="tableblock halign-left valign-middle" rowspan="5"><p class="tableblock">Either a <span class="monospaced">Fixnum</span> or a <span class="monospaced">Bignum</span> object.</p></td>
+<td class="tableblock halign-left valign-middle" rowspan="5"><p class="tableblock">オブジェクトが <span class="monospaced">Fixnum</span> か <span class="monospaced">Bignum</span> の場合、その値が返されます。オブジェクトが <span class="monospaced">true</span> か <span class="monospaced">false</span> の場合、それぞれ <span class="monospaced">1</span> と <span class="monospaced">0</span> が返されます。もしオブジェクトが <span class="monospaced">to_i</span> メソッドに応答できれば、そのメソッドの実行結果を返します。</p></td>
+<td class="tableblock halign-left valign-middle" rowspan="5"><p class="tableblock"><span class="monospaced">Fixnum</span> か <span class="monospaced">Bignum</span> オブジェクトのどちらか。</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">char</span></p></td>
@@ -1911,8 +1911,8 @@ end</pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">float</span></p></td>
-<td class="tableblock halign-left valign-middle" rowspan="2"><p class="tableblock">If the object is a <span class="monospaced">Float</span>, the value is returned. If the object is <span class="monospaced">true</span> or <span class="monospaced">false</span>, <span class="monospaced">1.0</span> or <span class="monospaced">0.0</span> are respectively returned. If the object responds to the <span class="monospaced">to_f</span> message, it is sent and the result is returned.</p></td>
-<td class="tableblock halign-left valign-middle" rowspan="2"><p class="tableblock">A <span class="monospaced">Float</span> object.</p></td>
+<td class="tableblock halign-left valign-middle" rowspan="2"><p class="tableblock">オブジェクトが <span class="monospaced">Float</span> の場合、その値が返されます。オブジェクトが <span class="monospaced">true</span> か <span class="monospaced">false</span> の場合、それぞれ <span class="monospaced">1.0</span> と <span class="monospaced">0.0</span> が返されます。もしオブジェクトが <span class="monospaced">to_f</span> メソッドに応答できれば、そのメソッドの実行結果を返します。</p></td>
+<td class="tableblock halign-left valign-middle" rowspan="2"><p class="tableblock"><span class="monospaced">Float</span> オブジェクト。</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="monospaced">double</span></p></td>
@@ -1922,10 +1922,10 @@ end</pre>
 </div>
 <div class="sect3">
 <span class="anchor_helper" id="_builtin_ruby_classes"></span><h4 data-anchor="_builtin_ruby_classes">2.1.3. Builtin Ruby Classes</h4>
-<div class="paragraph"><p>Some of the built-in classes of RubyMotion are based on the <a href="http://en.wikipedia.org/wiki/Java_Development_Kit">Java Class Library</a>, the core classes of the Android SDK.</p></div>
-<div class="paragraph"><p>Java comes with a class called <a href="http://developer.android.com/reference/java/lang/Object.html:"><span class="monospaced">java.lang.Object</span></a>, which is the root class of all Java classes.</p></div>
-<div class="paragraph"><p>Because of RubyMotion’s unified runtime approach, all Ruby classes are also based on <span class="monospaced">java.lang.Object</span>. The <span class="monospaced">Object</span> constant point to that class as well.</p></div>
-<div class="paragraph"><p>Here is a table showing the base class of a newly created class, <span class="monospaced">Hello</span>, as well as some of the Ruby built-in classes.</p></div>
+<div class="paragraph"><p>RubyMotion の組み込みクラスのいくつかは、Android SDK のコアクラスである <a href="http://en.wikipedia.org/wiki/Java_Development_Kit">Java Class Library</a> をベースにしています。</p></div>
+<div class="paragraph"><p>すべての Java クラスはルートクラスに <a href="http://developer.android.com/reference/java/lang/Object.html:"><span class="monospaced">java.lang.Object</span></a> と呼ばれるクラスを持っています。</p></div>
+<div class="paragraph"><p>RubyMotion のランタイムを統合するアプローチのために、すべての Ruby クラスも <span class="monospaced">java.lang.Object</span> をベースにしています。<span class="monospaced">Object</span> という定数も同様にそのクラスを指し示します。</p></div>
+<div class="paragraph"><p>以下の表に、Ruby 組み込みクラスと新しく <span class="monospaced">Hello</span> というクラスを作成した場合のベースクラスを記載します。</p></div>
 <table class="tableblock frame-all grid-all" style="
 ">
 <col>
@@ -1977,8 +1977,8 @@ end</pre>
 </tr>
 </tbody>
 </table>
-<div class="paragraph"><p>The main purpose of this design is to allow the exchange of primitive types between Java and Ruby at no performance cost, since they don’t have to be converted. This is important as most of the types that will be exchanged in a typical application are likely going to be built-in types.</p></div>
-<div class="paragraph"><p>A String object created in Ruby can have its object reference passed as the argument of an Java method that expects an object that implements the <span class="monospaced">java.lang.CharSequence</span> interface, such as the <span class="monospaced">setText</span> method of <span class="monospaced">android.widget.TextView</span> class.</p></div>
+<div class="paragraph"><p>この設計の主な目的は、Java と Ruby との間でデータ変換が不要なため、パフォーマンスの犠牲なしにプリミティブな型の変換を行えることにあります。典型的なアプリケーションで変換される型の多くは組み込み型なので、このことは重要です。</p></div>
+<div class="paragraph"><p>Ruby で作成した String オブジェクトは <span class="monospaced">java.lang.CharSequence</span> インタフェースを実装したオブジェクトです。たとえば、これは <span class="monospaced">android.widget.TextView</span> クラスの <span class="monospaced">setText</span> という Java メソッドが引数として期待するオブジェクトです。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>textView.text = "foo"</pre>
@@ -1987,14 +1987,14 @@ end</pre>
 </div>
 <div class="sect3">
 <span class="anchor_helper" id="_methods"></span><h4 data-anchor="_methods">2.1.4. Methods</h4>
-<div class="paragraph"><p>Java methods are natively exposed to Ruby, and can be accessed as if they have been defined as Ruby methods.</p></div>
-<div class="paragraph"><p>As an example, the <span class="monospaced">java.lang.Object</span> class implements the <span class="monospaced">toString()</span> method.</p></div>
+<div class="paragraph"><p>Java メソッドは Ruby にネイティブに展開され、Ruby メソッドで定義されているかのようにアクセスできます。</p></div>
+<div class="paragraph"><p>たとえば、<span class="monospaced">java.lang.Object</span> クラスは <span class="monospaced">toString()</span> メソッドを実装しています。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>String  toString()</pre>
 </div>
 </div>
-<div class="paragraph"><p>That method can be called on all objects in Ruby.</p></div>
+<div class="paragraph"><p>そのメソッドは、Ruby ですべてのオブジェクトに対して呼び出すことができます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>42.toString         #=&gt; "42"
@@ -2002,14 +2002,14 @@ true.toString       #=&gt; "true"
 textView.toString   #=&gt; "android.widget.TextView{3607..."</pre>
 </div>
 </div>
-<div class="paragraph"><p>When you are subclassing a Java class in Ruby, you can override any of its methods.</p></div>
-<div class="paragraph"><p>As an example, the <span class="monospaced">android.app.Activity</span> class implements the <span class="monospaced">onCreate()</span> method, which is meant to be overridden by subclasses.</p></div>
+<div class="paragraph"><p>Ruby で Java クラスをサブクラスにすると、Java のメソッドをオーバーライドできます。</p></div>
+<div class="paragraph"><p>例として、<span class="monospaced">android.app.Activity</span> クラスには <span class="monospaced">onCreate()</span> メソッドがあり、これをサブクラス化によってオーバーライドしてみましょう。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>void onCreate (Bundle savedInstanceState)</pre>
 </div>
 </div>
-<div class="paragraph"><p>We can do that naturally from Ruby.</p></div>
+<div class="paragraph"><p>Ruby で自然に行うことができます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>class MyActivity &lt; Android::App::Activity
@@ -2020,11 +2020,11 @@ textView.toString   #=&gt; "android.widget.TextView{3607..."</pre>
 end</pre>
 </div>
 </div>
-<div class="paragraph"><p>Note that we use the <span class="monospaced">super</span> Ruby language keyword to call the super class implementation, defined in Java.</p></div>
+<div class="paragraph"><p>Java で定義されたスーパークラスの実装を呼び出すのに、Ruby 言語の <span class="monospaced">super</span> を使用しています。</p></div>
 </div>
 <div class="sect3">
 <span class="anchor_helper" id="_method_shortcuts"></span><h4 data-anchor="_method_shortcuts">2.1.5. Method Shortcuts</h4>
-<div class="paragraph"><p>The RubyMotion runtime provides convenience shortcuts for certain Java methods.</p></div>
+<div class="paragraph"><p>RubyMotion ランタイムは、便利な Java メソッドのショートカットを提供します。</p></div>
 <table class="tableblock frame-all grid-all" style="
 ">
 <col>
@@ -2044,7 +2044,7 @@ end</pre>
 </tr>
 </tbody>
 </table>
-<div class="paragraph"><p>As an example, the <span class="monospaced">getText</span> and <span class="monospaced">setText</span> methods of <span class="monospaced">android.widget.TextView</span> can be called using the <span class="monospaced">text</span> and <span class="monospaced">text=</span> shortcuts.</p></div>
+<div class="paragraph"><p>たとえば、<span class="monospaced">android.widget.TextView</span> の <span class="monospaced">getText</span> と <span class="monospaced">setText</span> メソッドは、<span class="monospaced">text</span> と <span class="monospaced">text=</span> というショートカットで呼び出すことができます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>view.text          # instead of view.getText
@@ -2054,24 +2054,24 @@ view.text = "foo"  # instead of view.setText("foo")</pre>
 </div>
 <div class="sect3">
 <span class="anchor_helper" id="_interfaces"></span><h4 data-anchor="_interfaces">2.1.6. Interfaces</h4>
-<div class="paragraph"><p><a href="http://en.wikipedia.org/wiki/Interface_(Java)">Java interfaces</a> are an important concept to understand when programming Android apps with RubyMotion.</p></div>
-<div class="paragraph"><p>In Java, an interface is basically a list of method declarations. A class is said to implement an interface when it provides definitions for all the methods in the interface.</p></div>
+<div class="paragraph"><p><a href="http://en.wikipedia.org/wiki/Interface_(Java)">Java interfaces</a> は、RubyMotion で Android アプリをプログラミングする際に知っておく重要な概念です。</p></div>
+<div class="paragraph"><p>Java では、インタフェースは基本的にメソッド宣言のリストです。インタフェースのすべてのメソッドを定義すると、クラスはインタフェースを実装したと言えます。</p></div>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
 <img src="../../icons/note.png" alt="Note">
 </td>
-<td class="content">Java interfaces are similar to protocols in Objective-C.</td>
+<td class="content">Java インタフェースは Objective-C のプロトコルと同様のものです。</td>
 </tr></table>
 </div>
-<div class="paragraph"><p>In RubyMotion, you can implement an interface in a class just by defining the required methods. There is no need to specify the name of the interface, the compiler will determine that for you automatically.</p></div>
-<div class="paragraph"><p>As an example, the <span class="monospaced">setOnClickListener</span> method of <span class="monospaced">android.view.View</span> expects an object that implements the <a href="http://developer.android.com/reference/android/view/View.OnClickListener.html"><span class="monospaced">android.view.View.OnClickListener</span></a> interface, which features only one method, <span class="monospaced">onClick</span>.</p></div>
+<div class="paragraph"><p>RubyMotion では、クラスに必要なメソッドを単に定義することによって実装できます。インタフェース名を指定する必要はなく、コンパイラが自動的に補います。</p></div>
+<div class="paragraph"><p>例として、<span class="monospaced">android.view.View</span> の <span class="monospaced">setOnClickListener</span> メソッドは、<a href="http://developer.android.com/reference/android/view/View.OnClickListener.html"><span class="monospaced">android.view.View.OnClickListener</span></a> インタフェース (<span class="monospaced">onClick</span> というたった一つのメソッドが宣言されています) を実装したオブジェクトを必要とします。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>abstract void   onClick(View v)</pre>
 </div>
 </div>
-<div class="paragraph"><p>In order to implement that interface in Ruby, you just need to provide an implementation for that method in a class.</p></div>
+<div class="paragraph"><p>Ruby でインタフェースを実装するのは、ただクラスにメソッドを実装を記述だけです。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>class MyButtonListener
@@ -2087,9 +2087,9 @@ button.onClickListener = MyButtonListener.new</pre>
 </div>
 <div class="sect3">
 <span class="anchor_helper" id="_methods_overloading"></span><h4 data-anchor="_methods_overloading">2.1.7. Methods Overloading</h4>
-<div class="paragraph"><p>Java features the concept of <a href="http://en.wikipedia.org/wiki/Function_overloading">method overloading</a>, which does not exist in Ruby.</p></div>
-<div class="paragraph"><p>In Java, it is possible to define the same method name multiple times but with different argument types. The compiler will then identify which method has to be called.</p></div>
-<div class="paragraph"><p>As an example, the <span class="monospaced">android.widget.TextView</span> Java class features the following <span class="monospaced">setText</span> methods:</p></div>
+<div class="paragraph"><p>Java には <a href="http://en.wikipedia.org/wiki/Function_overloading">メソッドオーバーロード</a> という概念がありますが、Ruby には存在しません。</p></div>
+<div class="paragraph"><p>Java では、引数の型が異なる同じ名前のメソッドを複数定義することができます。あとでコンパイラが呼び出されたメソッドがどれなのか特定します。</p></div>
+<div class="paragraph"><p>たとえば <span class="monospaced">android.widget.TextView</span> の Java クラスは、以下の <span class="monospaced">setText</span> メソッドを取り扱います。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>void    setText(int resid)
@@ -2099,34 +2099,34 @@ void    setText(CharSequence text)
 void    setText(CharSequence text, TextView.BufferType type)</pre>
 </div>
 </div>
-<div class="paragraph"><p>As you can see, each of these methods have the same name (and return type) but have different arguments.</p></div>
-<div class="paragraph"><p>Because Ruby is dynamically-typed, overloaded methods have to be resolved at runtime and not at compile time.</p></div>
-<div class="paragraph"><p>The <span class="monospaced">setText(int resid)</span> method will be called if you pass a Fixnum to it. The <span class="monospaced">setText(CharSequence text)</span> method will be called if you provide an object that implements the <span class="monospaced">CharSequence</span> interface (such as a string).</p></div>
+<div class="paragraph"><p>ご覧の通り、これらのメソッドは引数が異なりますが、同じ名前 (そして同じ戻り値の型) です。</p></div>
+<div class="paragraph"><p>Ruby は動的型付けなので、オーバーロードされたメソッドは、コンパイル時ではなくランタイム時に解決します。</p></div>
+<div class="paragraph"><p>Fixnum を渡したときには、<span class="monospaced">setText(int resid)</span> が呼び出されます。文字列のように、<span class="monospaced">CharSequence</span> インタフェースを実装したオブジェクトを渡したときには、<span class="monospaced">setText(CharSequence text)</span> が呼び出されるでしょう。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>textView.text = 42      #=&gt; calls setText(int)
 textView.text = 'foo'   #=&gt; calls setText(CharSequence)</pre>
 </div>
 </div>
-<div class="paragraph"><p>In case the runtime cannot figure out which overloaded method to call during a method dispatch, a <span class="monospaced">NoMethodError</span> exception will be raised with an appropriate message.</p></div>
+<div class="paragraph"><p>メソッドディスパッチの際に、ランタイムがオーバーロードメソッドを把握できないケースでは、適切なメッセージで <span class="monospaced">NoMethodError</span> 例外が発生します。</p></div>
 </div>
 <div class="sect3">
 <span class="anchor_helper" id="_fields"></span><h4 data-anchor="_fields">2.1.8. Fields</h4>
-<div class="paragraph"><p>Java fields are variables attached to a class. There are two types of Java fields:</p></div>
+<div class="paragraph"><p>Java フィールドはクラスに宣言された変数です。Java フィールドには 2 種類あります。</p></div>
 <div class="olist arabic"><ol class="arabic">
 <li>
 <p>
-Instance fields; these are similar to instance variables in Ruby.
+Instance フィールド; Ruby のインスタンス変数と同様のものです。
 </p>
 </li>
 <li>
 <p>
-Static fields; these are similar to class variables in Ruby.
+Static フィールド; Ruby のクラス変数と同様のものです。
 </p>
 </li>
 </ol></div>
-<div class="paragraph"><p>In the Android SDK, constants are usually static Java fields, and can be retrieved exactly as if they were constants in Ruby.</p></div>
-<div class="paragraph"><p>For example, the <a href="http://developer.android.com/reference/android/widget/LinearLayout.html#HORIZONTAL"><span class="monospaced">android/widget/LinearLayout</span></a> class has a few constants.</p></div>
+<div class="paragraph"><p>Android SDK では、定数はたいてい Static な Java フィールドで、Ruby の定数かのように取得できます。</p></div>
+<div class="paragraph"><p>例として、<a href="http://developer.android.com/reference/android/widget/LinearLayout.html#HORIZONTAL"><span class="monospaced">android/widget/LinearLayout</span></a> には以下のような定数がいくつかあります。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>public static final int HORIZONTAL
@@ -2134,20 +2134,20 @@ public static final int VERTICAL
 ...</pre>
 </div>
 </div>
-<div class="paragraph"><p>These constants can be naturally retrieved in Ruby.</p></div>
+<div class="paragraph"><p>これらの定数は Ruby で自然に扱うことができます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>layout = Android::Widget::LinearLayout.new(self)
 layout.orientation = Android::Widget::LinearLayout::VERTICAL</pre>
 </div>
 </div>
-<div class="paragraph"><p>Instance Java fields can be retrieved in Ruby as if they were defined using <span class="monospaced">attr_accessor</span>.</p></div>
+<div class="paragraph"><p>Instance な Java フィールドは <span class="monospaced">attr_accessor</span> で定義されたかのように Ruby で扱えます。</p></div>
 </div>
 <div class="sect3">
 <span class="anchor_helper" id="_annotations"></span><h4 data-anchor="_annotations">2.1.9. Annotations</h4>
-<div class="paragraph"><p>Java annotations are special objects that can be applied to methods (and other types).</p></div>
-<div class="paragraph"><p>An example is the WebKit framework of Android, which requires methods to be exposed to JavaScript to be properly annotated, for security reasons.</p></div>
-<div class="paragraph"><p>This can be done in RubyMotion using the <span class="monospaced"><em>annotation</em></span> special method right before the definition of a method. The annotation will be retrieved at compilation time.</p></div>
+<div class="paragraph"><p>Java アノテーションは特別なデータで、メソッドなどに用いられます。</p></div>
+<div class="paragraph"><p>Android の WebKit フレームワークの例です。セキュリティ上の理由から、JavaScript に展開されるメソッドは適切なアノテーションを付加されたものが必要となります。</p></div>
+<div class="paragraph"><p>RubyMotion では、<span class="monospaced"><em>annotation</em></span> という特殊なメソッドをメソッド定義の直前に使用して行うことができます。コンパイル時にアノテーションが取り扱われます。</p></div>
 <div class="listingblock">
 <div class="content monospaced">
 <pre>class DemoJavaScriptInterface
@@ -2162,44 +2162,44 @@ end</pre>
 <td class="icon">
 <img src="../../icons/note.png" alt="Note">
 </td>
-<td class="content">At the time of this writing, only methods can be annotated in RubyMotion.</td>
+<td class="content">執筆時点では、RubyMotion はメソッドだけがアノテーションを付加できます。</td>
 </tr></table>
 </div>
 </div>
 </div>
 <div class="sect2">
 <span class="anchor_helper" id="_memory_management_2"></span><h3 data-anchor="_memory_management_2">2.2. Memory Management</h3>
-<div class="paragraph"><p>RubyMotion relies on the Dalvik or ART garbage collector to allocate and dispose of unused memory.</p></div>
-<div class="paragraph"><p>From a Ruby developer perspective, you do not have to think about memory management at all.</p></div>
-<div class="paragraph"><p>Internally, RubyMotion makes use of local references for local variables and global references for everything else. The destruction of local references is determined at compilation time.</p></div>
-<div class="paragraph"><p>There are two important things you might need to consider:</p></div>
+<div class="paragraph"><p>RubyMotion はメモリの割り当てや不要となったメモリの処理を Dalvik や ART のガベージコレクターに頼っています。</p></div>
+<div class="paragraph"><p>Ruby 開発者の観点から、メモリ管理についてまったく考える必要はありません。</p></div>
+<div class="paragraph"><p>内部的には、RubyMotion はローカル変数やグローバル変数にローカル参照を使用しています。ローカル参照の破棄はコンパイル時に決定されます。</p></div>
+<div class="paragraph"><p>みなさんが考慮すべきかもしれない重要なことが二点あります。</p></div>
 <div class="olist arabic"><ol class="arabic">
 <li>
 <p>
-The garbage collector is multithreaded. Collections might happen on other threads. If you override the <span class="monospaced">finalize</span> method of <span class="monospaced">java.lang.Object</span> in your code, make sure it’s properly re-entrant.
+ガベージコレクターはマルチスレッドです。回収処理が他のスレッドで行われるかもしれません。<span class="monospaced">java.lang.Object</span> の <span class="monospaced">finalize</span> をオーバライドする場合には、必ずリエントラントな実装にします。
 </p>
 </li>
 <li>
 <p>
-The garbage collector is able to detect and handle cyclic references. Unlike RubyMotion for iOS and OS X, you do not need to create <span class="monospaced">WeakRef</span> objects.
+ガベージコレクターは循環参照を検出し処理することができます。iOS と OS X の RubyMotion と異なり、<span class="monospaced">WeakRef</span> オブジェクトを作成する必要はありません。
 </p>
 </li>
 </ol></div>
 </div>
 <div class="sect2">
 <span class="anchor_helper" id="_concurrency_2"></span><h3 data-anchor="_concurrency_2">2.3. Concurrency</h3>
-<div class="paragraph"><p>RubyMotion has been designed for concurrency in mind.</p></div>
-<div class="paragraph"><p>RubyMotion has the concept of virtual machine objects, which wrap the state of a thread of execution. A piece of code is running through a virtual machine.</p></div>
-<div class="paragraph"><p>Virtual machines don’t have locks and there can be multiple virtual machines running at the same time, concurrently.</p></div>
+<div class="paragraph"><p>RubyMotion は並行性を念頭において設計されています。</p></div>
+<div class="paragraph"><p>スレッドの実行状態をラップした仮想マシンオブジェクトの概念を RubyMotion にあります。仮想マシンを通じてコード片が実行されます。</p></div>
+<div class="paragraph"><p>仮想マシンはロックがなく、並行して同時に実行される複数の仮想マシンがあり得ます。</p></div>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
 <img src="../../icons/caution.png" alt="Caution">
 </td>
-<td class="content">Unlike the mainstream Ruby implementation, <a href="http://en.wikipedia.org/wiki/Race_condition#Computing">race conditions</a> are possible in RubyMotion, since there is no <a href="http://en.wikipedia.org/wiki/Global_Interpreter_Lock">Global Interpreter Lock</a> (GIL) to prohibit threads from running concurrently. You must be careful to secure concurrent access to shared resources.</td>
+<td class="content">主流の Ruby 実装とは異なり、スレッドの平行実行を禁止する <a href="http://en.wikipedia.org/wiki/Global_Interpreter_Lock">Global Interpreter Lock</a> (GIL) がないため、RubyMotion では <a href="http://en.wikipedia.org/wiki/Race_condition#Computing">race conditions</a> が起こり得ます。共有リソースへ、同時にアクセスする際に注意が必要です。</td>
 </tr></table>
 </div>
-<div class="paragraph"><p>The <span class="monospaced">Thread</span> class is available for concurrency patterns. It is a direct subclass of <a href="http://developer.android.com/reference/java/lang/Thread.html"><span class="monospaced">java.lang.Thread</span></a>.</p></div>
+<div class="paragraph"><p>並行処理に <span class="monospaced">Thread</span> クラスを利用できます。このクラスは <a href="http://developer.android.com/reference/java/lang/Thread.html"><span class="monospaced">java.lang.Thread</span></a> を直接サブクラス化しています。</p></div>
 </div>
 </div>
 </div>
