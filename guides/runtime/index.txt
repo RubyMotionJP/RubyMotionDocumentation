@@ -637,7 +637,7 @@ RubyMotion では、それぞれのパッケージが英大文字から始まる
 obj = Java::Lang::Object.new
 ----
 
-'final' 修飾子が付いていない Java クラスは、サブクラスにすることができます。たとえば、final が付いていないパブリックな http://developer.android.com/reference/android/app/Activity.html[+android.app.Activity+] クラスは、Ruby で +Android::App::Activity+ として利用でき、次のようにサブクラスにすることができます。
+'final' 修飾子が付いていない Java クラスは、継承することができます。たとえば、final が付いていないパブリックな http://developer.android.com/reference/android/app/Activity.html[+android.app.Activity+] クラスは、Ruby で +Android::App::Activity+ として利用でき、次のように継承することができます。
 
 ----
 class MyActivity < Android::App::Activity
